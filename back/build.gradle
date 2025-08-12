@@ -24,6 +24,14 @@ repositories {
 }
 
 dependencies {
+
+    implementation 'org.springframework:spring-oxm'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.20'
+
+//     Spring Batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    testImplementation 'org.springframework.batch:spring-batch-test'
+
 //    Database - H-2
     runtimeOnly 'com.h2database:h2'
 
