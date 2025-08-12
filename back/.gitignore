@@ -38,6 +38,6 @@ out/
 
 ### Custom ###
 # Security
-*/application-secret.yml
+**/application-secret.yml
 # DataBase File
 **/data/
