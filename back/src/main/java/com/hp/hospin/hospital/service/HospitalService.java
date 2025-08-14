@@ -12,6 +12,7 @@ import com.hp.hospin.hospital.repository.HospitalDetailRepository;
 import com.hp.hospin.hospital.repository.HospitalGradeRepository;
 import com.hp.hospin.hospital.repository.HospitalRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +22,15 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class HospitalService {
     private final HospitalRepository hospitalRepository;
     private final HospitalDetailRepository hospitalDetailRepository;
     private final HospitalGradeRepository hospitalGradeRepository;
+
+    private final static int R = 6371;
 
     public List<HospitalListResponse> getAllHospitalData() {
         return hospitalRepository.findAll().stream()
@@ -97,6 +101,34 @@ public class HospitalService {
                 .build();
     }
 
+    public List<HospitalListResponse> getHospitalsNearby(String latitude_str, String longitude_str) {
+        double latitude = Double.parseDouble(latitude_str);
+        double longitude = Double.parseDouble(longitude_str);
+
+        // DB에서 정수 기준으로 1차 필터링
+        List<Hospital> candidates = hospitalRepository.findHospitalsByLatLngInt((int)latitude, (int)longitude);
+
+        // 2차 필터링: 거리 계산 후 필터
+        return candidates.stream()
+                .filter(hospital -> {
+                    if (hospital.getLatitude() == null || hospital.getLongitude() == null) return false;
+
+                    double hospLat = Double.parseDouble(hospital.getLatitude());
+                    double hospLng = Double.parseDouble(hospital.getLongitude());
+
+                    double distance = calculateDistance(latitude, longitude, hospLat, hospLng);
+                    return distance <= 3;
+                })
+                .map(hospital -> new HospitalListResponse(
+                        hospital.getHospitalCode(),
+                        hospital.getName(),
+                        hospital.getAddress(),
+                        String.valueOf(hospital.getLatitude()),
+                        String.valueOf(hospital.getLongitude())
+                ))
+                .toList();
+    }
+
     private Hospital findHospitalByCode(String hospitalCode) {
         return hospitalRepository.findByHospitalCode(hospitalCode)
                 .orElseThrow(RuntimeException::new);
@@ -133,5 +165,18 @@ public class HospitalService {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid grade string: " + gradeStr);
         }
+    }
+
+
+//    Haversine 공식
+    private double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
     }
 }

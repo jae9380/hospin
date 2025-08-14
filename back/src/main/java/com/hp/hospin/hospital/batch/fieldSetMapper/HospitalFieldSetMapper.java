@@ -19,8 +19,8 @@ public class HospitalFieldSetMapper implements FieldSetMapper<HospitalRegister> 
                 fieldSet.readRawString(9),
                 fieldSet.readRawString(10),
                 fieldSet.readRawString(11),
-                fieldSet.readRawString(28),
-                fieldSet.readRawString(29)
+                fieldSet.readRawString(29),
+                fieldSet.readRawString(28)
         );
 
         return dto;

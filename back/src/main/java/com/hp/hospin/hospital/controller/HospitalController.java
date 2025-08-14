@@ -4,10 +4,7 @@ import com.hp.hospin.hospital.dto.HospitalInfoResponse;
 import com.hp.hospin.hospital.dto.HospitalListResponse;
 import com.hp.hospin.hospital.service.HospitalService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +22,11 @@ public class HospitalController {
     @GetMapping("/{hospitalCode}")
     public HospitalInfoResponse getHospitalDetails(@PathVariable(name = "hospitalCode") String hospitalCode) {
         return hospitalService.assembleHospitalInfo(hospitalCode);
+    }
+
+    @GetMapping("/nearby")
+    public List<HospitalListResponse> getNearbyHospitals(@RequestParam String latitude,
+                                                         @RequestParam String longitude) {
+        return hospitalService.getHospitalsNearby(latitude, longitude);
     }
 }
