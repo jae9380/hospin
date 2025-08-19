@@ -53,45 +53,51 @@ public class HospitalService {
         HospitalDetail detail = hospitalDetailRepository.findByHospitalCode(hospitalCode)
                 .orElse(null);
 
-        if (detail == null) return null;
+        DetailInfo detailInfo = null;
 
-        DetailInfo detailInfo = DetailInfo.builder()
-                .departmentCodes(detail.getDepartmentCodes())
-                .closedSunday(detail.getClosedSunday())
-                .closedHoliday(detail.getClosedHoliday())
-                .emergencyDayYn(detail.getEmergencyDayYn())
-                .emergencyDayPhone1(detail.getEmergencyDayPhone1())
-                .emergencyDayPhone2(detail.getEmergencyDayPhone2())
-                .emergencyNightYn(detail.getEmergencyNightYn())
-                .emergencyNightPhone1(detail.getEmergencyNightPhone1())
-                .emergencyNightPhone2(detail.getEmergencyNightPhone2())
-                .lunchWeekday(detail.getLunchWeekday())
-                .lunchSaturday(detail.getLunchSaturday())
-                .receptionWeekday(detail.getReceptionWeekday())
-                .receptionSaturday(detail.getReceptionSaturday())
-                .treatSunStart(detail.getTreatSunStart())
-                .treatSunEnd(detail.getTreatSunEnd())
-                .treatMonStart(detail.getTreatMonStart())
-                .treatMonEnd(detail.getTreatMonEnd())
-                .treatTueStart(detail.getTreatTueStart())
-                .treatTueEnd(detail.getTreatTueEnd())
-                .treatWedStart(detail.getTreatWedStart())
-                .treatWedEnd(detail.getTreatWedEnd())
-                .treatThuStart(detail.getTreatThuStart())
-                .treatThuEnd(detail.getTreatThuEnd())
-                .treatFriStart(detail.getTreatFriStart())
-                .treatFriEnd(detail.getTreatFriEnd())
-                .treatSatStart(detail.getTreatSatStart())
-                .treatSatEnd(detail.getTreatSatEnd())
-                .build();
+        if (detail != null) {
+            detailInfo = DetailInfo.builder()
+                    .departmentCodes(detail.getDepartmentCodes())
+                    .closedSunday(detail.getClosedSunday())
+                    .closedHoliday(detail.getClosedHoliday())
+                    .emergencyDayYn(detail.getEmergencyDayYn())
+                    .emergencyDayPhone1(detail.getEmergencyDayPhone1())
+                    .emergencyDayPhone2(detail.getEmergencyDayPhone2())
+                    .emergencyNightYn(detail.getEmergencyNightYn())
+                    .emergencyNightPhone1(detail.getEmergencyNightPhone1())
+                    .emergencyNightPhone2(detail.getEmergencyNightPhone2())
+                    .lunchWeekday(detail.getLunchWeekday())
+                    .lunchSaturday(detail.getLunchSaturday())
+                    .receptionWeekday(detail.getReceptionWeekday())
+                    .receptionSaturday(detail.getReceptionSaturday())
+                    .treatSunStart(detail.getTreatSunStart())
+                    .treatSunEnd(detail.getTreatSunEnd())
+                    .treatMonStart(detail.getTreatMonStart())
+                    .treatMonEnd(detail.getTreatMonEnd())
+                    .treatTueStart(detail.getTreatTueStart())
+                    .treatTueEnd(detail.getTreatTueEnd())
+                    .treatWedStart(detail.getTreatWedStart())
+                    .treatWedEnd(detail.getTreatWedEnd())
+                    .treatThuStart(detail.getTreatThuStart())
+                    .treatThuEnd(detail.getTreatThuEnd())
+                    .treatFriStart(detail.getTreatFriStart())
+                    .treatFriEnd(detail.getTreatFriEnd())
+                    .treatSatStart(detail.getTreatSatStart())
+                    .treatSatEnd(detail.getTreatSatEnd())
+                    .build();
+        }
+
 
         HospitalGrade grade = hospitalGradeRepository.findByHospitalCode(hospitalCode)
                 .orElse(null);
 
-        if (grade == null) return null;
-        GradeInfo gradeInfo =  GradeInfo.builder()
-                .grades(extractGrades(grade))
-                .build();
+        GradeInfo gradeInfo = null;
+
+        if (grade != null) {
+            gradeInfo =  GradeInfo.builder()
+                    .grades(extractGrades(grade))
+                    .build();
+        }
 
 
         return HospitalInfoResponse.builder()
