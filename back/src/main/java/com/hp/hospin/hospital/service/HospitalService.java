@@ -5,14 +5,19 @@ import com.hp.hospin.hospital.dto.HospitalInfoResponse.BaseInfo;
 import com.hp.hospin.hospital.dto.HospitalInfoResponse.DetailInfo;
 import com.hp.hospin.hospital.dto.HospitalInfoResponse.GradeInfo;
 import com.hp.hospin.hospital.dto.HospitalListResponse;
+import com.hp.hospin.hospital.dto.HospitalSearchRequest;
 import com.hp.hospin.hospital.entity.Hospital;
 import com.hp.hospin.hospital.entity.HospitalDetail;
 import com.hp.hospin.hospital.entity.HospitalGrade;
 import com.hp.hospin.hospital.repository.HospitalDetailRepository;
 import com.hp.hospin.hospital.repository.HospitalGradeRepository;
 import com.hp.hospin.hospital.repository.HospitalRepository;
+import com.hp.hospin.hospital.repository.HospitalSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -133,6 +138,18 @@ public class HospitalService {
                         String.valueOf(hospital.getLongitude())
                 ))
                 .toList();
+    }
+
+    public Page<HospitalListResponse> search(HospitalSearchRequest req, Pageable pageable) {
+        Specification<Hospital> spec = Specification.where(HospitalSpecs.nameContains(req.name()))
+                .and(HospitalSpecs.categoryEq(req.categoryCode()))
+                .and(HospitalSpecs.regionEq(req.regionCode()))
+                .and(HospitalSpecs.districtEq(req.districtCode()))
+                .and(HospitalSpecs.postalEq(req.postalCode()))
+                .and(HospitalSpecs.addressContains(req.address()));
+
+        return hospitalRepository.findAll(spec, pageable)
+                .map(HospitalListResponse::from); // ✅ 엔티티 → DTO 변환
     }
 
     private Hospital findHospitalByCode(String hospitalCode) {
