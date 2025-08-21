@@ -3,23 +3,21 @@
 	let { children } = $props();
 </script>
 
-<header>
-	<div class="main-bar fixed-div">
-		<div class="navbar bg-base-100 flex justify-center">
-			<a class="btn btn-ghost text-xl font-mono" href="/">
-				<img src="/logo.png" alt="HosPin Logo" class="h-10 w-auto" />
-			</a>
-		</div>
-	</div>
+<header class="fixed top-0 inset-x-0 z-[2000] bg-base-100/95 backdrop-blur">
+  <div class="navbar flex justify-center">
+    <a class="btn btn-ghost text-xl font-mono" href="/">
+      <img src="/logo.png" alt="HosPin Logo" class="h-10 w-auto" />
+    </a>
+  </div>
 </header>
 
-<main>
+<main class="pt-16 pb-20">
 	{@render children?.()}
 </main>
 
 <footer>
 	<div
-		class="fixed bottom-0 left-1/2 z-50 w-full -translate-x-1/2 border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
+		class="fixed bottom-0 left-1/2 z-[1200] w-full -translate-x-1/2 border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700"
 	>
 		<div class="mx-auto grid h-full max-w-lg grid-cols-5">
 			<button
