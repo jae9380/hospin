@@ -1,6 +1,6 @@
-package com.hp.hospin.hospital.dto;
+package com.hp.hospin.hospital.application.dto;
 
-import com.hp.hospin.hospital.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.Hospital;
 
 public record HospitalListResponse(
         String hospital_code,

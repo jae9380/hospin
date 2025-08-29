@@ -1,9 +1,9 @@
 package com.hp.hospin.hospital.batch.itemProcessor;
 
-import com.hp.hospin.hospital.entity.Hospital;
-import com.hp.hospin.hospital.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
 import com.hp.hospin.hospital.batch.dto.HospitalDetailRegister;
-import com.hp.hospin.hospital.repository.HospitalRepository;
+import com.hp.hospin.hospital.infrastructure.repository.jpa.HospitalJPARepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class HospitalDetailProcessor implements ItemProcessor<HospitalDetailRegister, HospitalDetail> {
-    private final HospitalRepository hospitalRepository;
+    private final HospitalJPARepository hospitalJPARepository;
 
     @Override
     public HospitalDetail process(HospitalDetailRegister item) throws Exception {
@@ -30,7 +30,7 @@ public class HospitalDetailProcessor implements ItemProcessor<HospitalDetailRegi
     }
 
     private Hospital validationData(String hospitalCode) {
-        Optional<Hospital> entity = hospitalRepository.findByHospitalCode(hospitalCode);
+        Optional<Hospital> entity = hospitalJPARepository.findByHospitalCode(hospitalCode);
         return entity.orElseThrow(RuntimeException::new);
     }
 }

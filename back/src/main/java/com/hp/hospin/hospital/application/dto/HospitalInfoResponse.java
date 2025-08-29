@@ -1,4 +1,4 @@
-package com.hp.hospin.hospital.dto;
+package com.hp.hospin.hospital.application.dto;
 
 
 import lombok.Builder;

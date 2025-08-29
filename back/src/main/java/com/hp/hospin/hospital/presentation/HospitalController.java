@@ -1,9 +1,9 @@
-package com.hp.hospin.hospital.controller;
+package com.hp.hospin.hospital.presentation;
 
-import com.hp.hospin.hospital.dto.HospitalInfoResponse;
-import com.hp.hospin.hospital.dto.HospitalListResponse;
-import com.hp.hospin.hospital.dto.HospitalSearchRequest;
-import com.hp.hospin.hospital.service.HospitalService;
+import com.hp.hospin.hospital.application.dto.HospitalInfoResponse;
+import com.hp.hospin.hospital.application.dto.HospitalListResponse;
+import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
+import com.hp.hospin.hospital.presentation.port.HospitalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

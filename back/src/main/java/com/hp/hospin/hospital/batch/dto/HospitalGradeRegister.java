@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.dto;
 
-import com.hp.hospin.hospital.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
 import lombok.Data;
 
 @Data

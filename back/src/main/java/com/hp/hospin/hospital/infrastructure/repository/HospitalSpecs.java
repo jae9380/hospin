@@ -1,6 +1,6 @@
-package com.hp.hospin.hospital.repository;
+package com.hp.hospin.hospital.infrastructure.repository;
 
-import com.hp.hospin.hospital.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.Hospital;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
