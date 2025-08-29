@@ -1,5 +1,6 @@
 package com.hp.hospin.hospital.presentation;
 
+import com.hp.hospin.global.apiResponse.ApiResponse;
 import com.hp.hospin.hospital.application.dto.HospitalInfoResponse;
 import com.hp.hospin.hospital.application.dto.HospitalListResponse;
 import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
@@ -19,23 +20,23 @@ public class HospitalController {
     private final HospitalService hospitalService;
 
     @GetMapping
-    public List<HospitalListResponse> getAllHospital() {
-        return hospitalService.getAllHospitalData();
+    public ApiResponse<List<HospitalListResponse>> getAllHospital() {
+        return ApiResponse.ok(hospitalService.getAllHospitalData());
     }
 
     @GetMapping("/{hospitalCode}")
-    public HospitalInfoResponse getHospitalDetails(@PathVariable(name = "hospitalCode") String hospitalCode) {
-        return hospitalService.assembleHospitalInfo(hospitalCode);
+    public ApiResponse<HospitalInfoResponse> getHospitalDetails(@PathVariable(name = "hospitalCode") String hospitalCode) {
+        return ApiResponse.ok(hospitalService.assembleHospitalInfo(hospitalCode));
     }
 
     @GetMapping("/nearby")
-    public List<HospitalListResponse> getNearbyHospitals(@RequestParam String latitude,
+    public ApiResponse<List<HospitalListResponse>> getNearbyHospitals(@RequestParam String latitude,
                                                          @RequestParam String longitude) {
-        return hospitalService.getHospitalsNearby(latitude, longitude);
+        return ApiResponse.ok(hospitalService.getHospitalsNearby(latitude, longitude));
     }
 
     @GetMapping("/search")
-    public Page<HospitalListResponse> search(
+    public ApiResponse<Page<HospitalListResponse>> search(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long categoryCode,
             @RequestParam(required = false) Long regionCode,
@@ -47,6 +48,6 @@ public class HospitalController {
         HospitalSearchRequest req = new HospitalSearchRequest(
                 name, categoryCode, regionCode, districtCode, postalCode, address
         );
-        return hospitalService.search(req, pageable);
+        return ApiResponse.ok(hospitalService.search(req, pageable));
     }
 }
