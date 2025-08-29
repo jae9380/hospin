@@ -1,4 +1,4 @@
-package com.hp.hospin.hospital.entity;
+package com.hp.hospin.hospital.infrastructure.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

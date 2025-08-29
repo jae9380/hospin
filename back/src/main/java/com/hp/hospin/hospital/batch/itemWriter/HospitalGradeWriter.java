@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.itemWriter;
 
-import com.hp.hospin.hospital.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
 import jakarta.persistence.EntityManager;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;

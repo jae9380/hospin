@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.dto;
 
-import com.hp.hospin.hospital.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.Hospital;
 
 public record HospitalRegister(
         String hospitalCode,

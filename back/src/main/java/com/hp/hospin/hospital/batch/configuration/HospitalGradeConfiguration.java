@@ -1,8 +1,8 @@
 package com.hp.hospin.hospital.batch.configuration;
 
-import com.hp.hospin.hospital.entity.Hospital;
-import com.hp.hospin.hospital.entity.HospitalDetail;
-import com.hp.hospin.hospital.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
 import com.hp.hospin.hospital.batch.dto.HospitalCodeWithDepartments;
 import com.hp.hospin.hospital.batch.dto.HospitalDetailRegister;
 import com.hp.hospin.hospital.batch.dto.HospitalGradeRegister;

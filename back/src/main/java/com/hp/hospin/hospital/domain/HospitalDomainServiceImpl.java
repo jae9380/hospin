@@ -1,25 +1,21 @@
-package com.hp.hospin.hospital.service;
+package com.hp.hospin.hospital.domain;
 
-import com.hp.hospin.hospital.dto.HospitalInfoResponse;
-import com.hp.hospin.hospital.dto.HospitalInfoResponse.BaseInfo;
-import com.hp.hospin.hospital.dto.HospitalInfoResponse.DetailInfo;
-import com.hp.hospin.hospital.dto.HospitalInfoResponse.GradeInfo;
-import com.hp.hospin.hospital.dto.HospitalListResponse;
-import com.hp.hospin.hospital.dto.HospitalSearchRequest;
-import com.hp.hospin.hospital.entity.Hospital;
-import com.hp.hospin.hospital.entity.HospitalDetail;
-import com.hp.hospin.hospital.entity.HospitalGrade;
-import com.hp.hospin.hospital.repository.HospitalDetailRepository;
-import com.hp.hospin.hospital.repository.HospitalGradeRepository;
-import com.hp.hospin.hospital.repository.HospitalRepository;
-import com.hp.hospin.hospital.repository.HospitalSpecs;
+import com.hp.hospin.hospital.application.dto.HospitalInfoResponse.*;
+import com.hp.hospin.hospital.application.dto.HospitalListResponse;
+import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
+import com.hp.hospin.hospital.application.port.HospitalDomainService;
+import com.hp.hospin.hospital.domain.port.HospitalDetailRepository;
+import com.hp.hospin.hospital.domain.port.HospitalGradeRepository;
+import com.hp.hospin.hospital.domain.port.HospitalRepository;
+import com.hp.hospin.hospital.infrastructure.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.repository.HospitalSpecs;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -27,41 +23,45 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class HospitalService {
+public class HospitalDomainServiceImpl implements HospitalDomainService {
     private final HospitalRepository hospitalRepository;
     private final HospitalDetailRepository hospitalDetailRepository;
     private final HospitalGradeRepository hospitalGradeRepository;
 
     private final static int R = 6371;
 
+    @Override
     public List<HospitalListResponse> getAllHospitalData() {
-        return hospitalRepository.findAll().stream()
+        return hospitalRepository.getAllData().stream()
                 .map(HospitalListResponse::from)
                 .toList();
     }
 
-    public HospitalInfoResponse assembleHospitalInfo(String hospitalCode) {
-        Hospital hospital = findHospitalByCode(hospitalCode);
+    @Override
+    public BaseInfo getHospitalAsBaseInfoByCode(String hospitalCode) {
+        try {
+            Hospital hospital = findHospitalByCode(hospitalCode);
 
-        BaseInfo baseInfo= BaseInfo.builder()
-                .hospitalCode(hospital.getHospitalCode())
-                .name(hospital.getName())
-                .address(hospital.getAddress())
-                .callNumber(hospital.getCallNumber())
-                .latitude(hospital.getLatitude())
-                .longitude(hospital.getLongitude())
-                .build();
+            return BaseInfo.builder()
+                    .hospitalCode(hospital.getHospitalCode())
+                    .name(hospital.getName())
+                    .address(hospital.getAddress())
+                    .callNumber(hospital.getCallNumber())
+                    .latitude(hospital.getLatitude())
+                    .longitude(hospital.getLongitude())
+                    .build();
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
 
-        HospitalDetail detail = hospitalDetailRepository.findByHospitalCode(hospitalCode)
-                .orElse(null);
+    @Override
+    public DetailInfo getHospitalDetailAsDetailInfoByCode(String hospitalCode) {
+        try {
+            HospitalDetail detail = findHospitalDetailByCode(hospitalCode);
 
-        DetailInfo detailInfo = null;
-
-        if (detail != null) {
-            detailInfo = DetailInfo.builder()
+            return DetailInfo.builder()
                     .departmentCodes(detail.getDepartmentCodes())
                     .closedSunday(detail.getClosedSunday())
                     .closedHoliday(detail.getClosedHoliday())
@@ -90,29 +90,26 @@ public class HospitalService {
                     .treatSatStart(detail.getTreatSatStart())
                     .treatSatEnd(detail.getTreatSatEnd())
                     .build();
+        } catch (RuntimeException e) {
+            return null;
         }
-
-
-        HospitalGrade grade = hospitalGradeRepository.findByHospitalCode(hospitalCode)
-                .orElse(null);
-
-        GradeInfo gradeInfo = null;
-
-        if (grade != null) {
-            gradeInfo =  GradeInfo.builder()
-                    .grades(extractGrades(grade))
-                    .build();
-        }
-
-
-        return HospitalInfoResponse.builder()
-                .baseInfo(baseInfo)
-                .detailInfo(detailInfo)
-                .gradeInfo(gradeInfo)
-                .build();
     }
 
-    public List<HospitalListResponse> getHospitalsNearby(String latitude_str, String longitude_str) {
+    @Override
+    public GradeInfo getHospitalGradeAsGradeInfoByCode(String hospitalCode) {
+        try {
+            HospitalGrade grade = findHospitalGradeByCode(hospitalCode);
+
+            return GradeInfo.builder()
+                    .grades(extractGrades(grade))
+                    .build();
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<HospitalListResponse> getHospitalsNearCoordinates(String latitude_str, String longitude_str) {
         double latitude = Double.parseDouble(latitude_str);
         double longitude = Double.parseDouble(longitude_str);
 
@@ -140,6 +137,7 @@ public class HospitalService {
                 .toList();
     }
 
+    @Override
     public Page<HospitalListResponse> search(HospitalSearchRequest req, Pageable pageable) {
         Specification<Hospital> spec = Specification.where(HospitalSpecs.nameContains(req.name()))
                 .and(HospitalSpecs.categoryEq(req.categoryCode()))
@@ -148,15 +146,23 @@ public class HospitalService {
                 .and(HospitalSpecs.postalEq(req.postalCode()))
                 .and(HospitalSpecs.addressContains(req.address()));
 
-        return hospitalRepository.findAll(spec, pageable)
-                .map(HospitalListResponse::from); // ✅ 엔티티 → DTO 변환
+        return hospitalRepository.search(spec, pageable)
+                .map(HospitalListResponse::from);
     }
 
-    private Hospital findHospitalByCode(String hospitalCode) {
-        return hospitalRepository.findByHospitalCode(hospitalCode)
-                .orElseThrow(RuntimeException::new);
-    }
+//
 
+    //    Haversine 공식
+    private double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
 
     private Map<String, Long> extractGrades(HospitalGrade grade) {
         Map<String, Long> grades = new LinkedHashMap<>();
@@ -190,16 +196,19 @@ public class HospitalService {
         }
     }
 
-
-//    Haversine 공식
-    private double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLng = Math.toRadians(lng2 - lng1);
-
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+    private Hospital findHospitalByCode(String hospitalCode) {
+        return hospitalRepository.findByHospitalCode(hospitalCode)
+                .orElseThrow(RuntimeException::new);
     }
+
+    private HospitalDetail findHospitalDetailByCode(String hospitalCode) {
+        return hospitalDetailRepository.findByHospitalCode(hospitalCode)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    private HospitalGrade findHospitalGradeByCode(String hospitalCode) {
+        return hospitalGradeRepository.findByHospitalCode(hospitalCode)
+                .orElseThrow(RuntimeException::new);
+    }
+
 }

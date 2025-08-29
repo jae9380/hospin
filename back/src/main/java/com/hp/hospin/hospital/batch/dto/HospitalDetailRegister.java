@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.dto;
 
-import com.hp.hospin.hospital.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
 
 import java.util.List;
 
