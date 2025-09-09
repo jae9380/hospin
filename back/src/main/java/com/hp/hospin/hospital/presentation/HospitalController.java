@@ -45,9 +45,7 @@ public class HospitalController {
             @RequestParam(required = false) String address,
             Pageable pageable
     ) {
-        HospitalSearchRequest req = new HospitalSearchRequest(
-                name, categoryCode, regionCode, districtCode, postalCode, address
-        );
-        return ApiResponse.ok(hospitalService.search(req, pageable));
+        // TODO: 내부적으로 수정을 해야 함
+        return ApiResponse.ok(hospitalService.search(name, categoryCode, regionCode, districtCode, postalCode, address, pageable));
     }
 }

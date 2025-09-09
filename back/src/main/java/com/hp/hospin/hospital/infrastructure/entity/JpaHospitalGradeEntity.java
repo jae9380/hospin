@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity(name = "hospital_grade")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "hospital_grade")
-public class HospitalGrade {
+public class JpaHospitalGradeEntity {
     @Id
     private String hospitalCode;
 
@@ -88,7 +88,7 @@ public class HospitalGrade {
     @Column(name = "asm_grd24")
     private String asmGrd24;
 
-    private HospitalGrade(
+    private JpaHospitalGradeEntity(
             String hospitalCode,
             String asmGrd01, String asmGrd02, String asmGrd03, String asmGrd04,
             String asmGrd05, String asmGrd06, String asmGrd07, String asmGrd08,
@@ -105,7 +105,7 @@ public class HospitalGrade {
         this.asmGrd21 = asmGrd21;this.asmGrd22 = asmGrd22;this.asmGrd23 = asmGrd23;this.asmGrd24 = asmGrd24;
     }
 
-    public static HospitalGrade create(
+    public static JpaHospitalGradeEntity create(
             String hospitalCode,
             String asmGrd01, String asmGrd02, String asmGrd03, String asmGrd04,
             String asmGrd05, String asmGrd06, String asmGrd07, String asmGrd08,
@@ -114,7 +114,7 @@ public class HospitalGrade {
             String asmGrd17, String asmGrd18, String asmGrd19, String asmGrd20,
             String asmGrd21, String asmGrd22, String asmGrd23, String asmGrd24
     ) {
-        return new HospitalGrade(
+        return new JpaHospitalGradeEntity(
                 hospitalCode,
                 asmGrd01, asmGrd02, asmGrd03, asmGrd04, asmGrd05,
                 asmGrd06, asmGrd07, asmGrd08, asmGrd09, asmGrd10,

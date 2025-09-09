@@ -1,9 +1,9 @@
 package com.hp.hospin.hospital.domain.port;
 
-import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
 
 import java.util.Optional;
 
 public interface HospitalGradeRepository {
-    Optional<HospitalGrade> findByHospitalCode(String hospitalCode);
+    Optional<JpaHospitalGradeEntity> findByHospitalCode(String hospitalCode);
 }

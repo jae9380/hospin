@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.dto;
 
-import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
 import lombok.Data;
 
 @Data
@@ -47,8 +47,8 @@ public class HospitalGradeRegister {
         this.asmGrd21 = asmGrd21;this.asmGrd22 = asmGrd22;this.asmGrd23 = asmGrd23;this.asmGrd24 = asmGrd24;
     }
 
-    public HospitalGrade to() {
-        return HospitalGrade.create(
+    public JpaHospitalGradeEntity to() {
+        return JpaHospitalGradeEntity.create(
                 this.hospitalCode,
                 this.asmGrd01, this.asmGrd02, this.asmGrd03, this.asmGrd04, this.asmGrd05,
                 this.asmGrd06, this.asmGrd07, this.asmGrd08, this.asmGrd09, this.asmGrd10,

@@ -1,5 +1,6 @@
 package com.hp.hospin.hospital.domain;
 
+import com.hp.hospin.global.exception.HospinCustomException.*;
 import com.hp.hospin.hospital.application.dto.HospitalInfoResponse.*;
 import com.hp.hospin.hospital.application.dto.HospitalListResponse;
 import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
@@ -7,9 +8,12 @@ import com.hp.hospin.hospital.application.port.HospitalDomainService;
 import com.hp.hospin.hospital.domain.port.HospitalDetailRepository;
 import com.hp.hospin.hospital.domain.port.HospitalGradeRepository;
 import com.hp.hospin.hospital.domain.port.HospitalRepository;
-import com.hp.hospin.hospital.infrastructure.entity.Hospital;
-import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
-import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
+import com.hp.hospin.hospital.domain.type.Hospital;
+import com.hp.hospin.hospital.domain.type.HospitalSearchCriteria;
+import com.hp.hospin.hospital.domain.type.PageResult;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
 import com.hp.hospin.hospital.infrastructure.repository.HospitalSpecs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -51,7 +55,7 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
                     .latitude(hospital.getLatitude())
                     .longitude(hospital.getLongitude())
                     .build();
-        } catch (RuntimeException e) {
+        } catch (HospitalNotExist e) {
             return null;
         }
     }
@@ -59,7 +63,7 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
     @Override
     public DetailInfo getHospitalDetailAsDetailInfoByCode(String hospitalCode) {
         try {
-            HospitalDetail detail = findHospitalDetailByCode(hospitalCode);
+            JpaHospitalDetailEntity detail = findHospitalDetailByCode(hospitalCode);
 
             return DetailInfo.builder()
                     .departmentCodes(detail.getDepartmentCodes())
@@ -90,7 +94,7 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
                     .treatSatStart(detail.getTreatSatStart())
                     .treatSatEnd(detail.getTreatSatEnd())
                     .build();
-        } catch (RuntimeException e) {
+        } catch (HospitalNotExist e) {
             return null;
         }
     }
@@ -98,12 +102,12 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
     @Override
     public GradeInfo getHospitalGradeAsGradeInfoByCode(String hospitalCode) {
         try {
-            HospitalGrade grade = findHospitalGradeByCode(hospitalCode);
+            JpaHospitalGradeEntity grade = findHospitalGradeByCode(hospitalCode);
 
             return GradeInfo.builder()
                     .grades(extractGrades(grade))
                     .build();
-        } catch (RuntimeException e) {
+        } catch (HospitalNotExist e) {
             return null;
         }
     }
@@ -137,19 +141,23 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
                 .toList();
     }
 
-    @Override
-    public Page<HospitalListResponse> search(HospitalSearchRequest req, Pageable pageable) {
-        Specification<Hospital> spec = Specification.where(HospitalSpecs.nameContains(req.name()))
-                .and(HospitalSpecs.categoryEq(req.categoryCode()))
-                .and(HospitalSpecs.regionEq(req.regionCode()))
-                .and(HospitalSpecs.districtEq(req.districtCode()))
-                .and(HospitalSpecs.postalEq(req.postalCode()))
-                .and(HospitalSpecs.addressContains(req.address()));
+    // TODO: 내부적으로 수정을 해야 함
+//    @Override
+//    public Page<HospitalListResponse> search(HospitalSearchRequest req, Pageable pageable) {
+//        Specification<JpaHospitalEntity> spec = Specification.where(HospitalSpecs.nameContains(req.name()))
+//                .and(HospitalSpecs.categoryEq(req.categoryCode()))
+//                .and(HospitalSpecs.regionEq(req.regionCode()))
+//                .and(HospitalSpecs.districtEq(req.districtCode()))
+//                .and(HospitalSpecs.postalEq(req.postalCode()))
+//                .and(HospitalSpecs.addressContains(req.address()));
+//
+//        return hospitalRepository.search(spec, pageable)
+//                .map(HospitalListResponse::from);
+//    }
 
-        return hospitalRepository.search(spec, pageable)
-                .map(HospitalListResponse::from);
+    public PageResult<Hospital> search(HospitalSearchCriteria query, int page, int size) {
+        return hospitalRepository.search(query, page, size);
     }
-
 //
 
     //    Haversine 공식
@@ -164,7 +172,7 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
         return R * c;
     }
 
-    private Map<String, Long> extractGrades(HospitalGrade grade) {
+    private Map<String, Long> extractGrades(JpaHospitalGradeEntity grade) {
         Map<String, Long> grades = new LinkedHashMap<>();
 
         for (int i = 1; i <= 24; i++) {
@@ -175,9 +183,9 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
         return grades;
     }
 
-    private String getGradeValue(HospitalGrade grade, String fieldName) {
+    private String getGradeValue(JpaHospitalGradeEntity grade, String fieldName) {
         try {
-            Field field = HospitalGrade.class.getDeclaredField(fieldName);
+            Field field = JpaHospitalGradeEntity.class.getDeclaredField(fieldName);
             field.setAccessible(true);
             return (String) field.get(grade);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -198,17 +206,17 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
 
     private Hospital findHospitalByCode(String hospitalCode) {
         return hospitalRepository.findByHospitalCode(hospitalCode)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(HospitalNotExist::new);
     }
 
-    private HospitalDetail findHospitalDetailByCode(String hospitalCode) {
+    private JpaHospitalDetailEntity findHospitalDetailByCode(String hospitalCode) {
         return hospitalDetailRepository.findByHospitalCode(hospitalCode)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(HospitalNotExist::new);
     }
 
-    private HospitalGrade findHospitalGradeByCode(String hospitalCode) {
+    private JpaHospitalGradeEntity findHospitalGradeByCode(String hospitalCode) {
         return hospitalGradeRepository.findByHospitalCode(hospitalCode)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(HospitalNotExist::new);
     }
 
 }

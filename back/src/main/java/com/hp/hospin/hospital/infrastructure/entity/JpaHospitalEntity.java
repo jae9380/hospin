@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name="hospital")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "hospitals")
-public class Hospital {
+public class JpaHospitalEntity {
     @Id
     @Column(name = "hospital_code")
     private String hospitalCode;
@@ -44,9 +44,9 @@ public class Hospital {
     @Column(name = "longitude")
     private String longitude;
 
-    private Hospital(String hospitalCode, String name, Long categoryCode, Long regionCode,
-                     Long districtCode, Long postalCode, String address,
-                     String callNumber, String latitude, String longitude) {
+    private JpaHospitalEntity(String hospitalCode, String name, Long categoryCode, Long regionCode,
+                              Long districtCode, Long postalCode, String address,
+                              String callNumber, String latitude, String longitude) {
         this.hospitalCode = hospitalCode;
         this.name = name;
         this.categoryCode = categoryCode;
@@ -59,10 +59,10 @@ public class Hospital {
         this.longitude = longitude;
     }
 
-    public static Hospital create(String hospitalCode, String name, String categoryCode, String regionCode,
-                                  String districtCode, String postalCode, String address,
-                                  String callNumber, String latitude, String longitude) {
-        return new Hospital(
+    public static JpaHospitalEntity create(String hospitalCode, String name, String categoryCode, String regionCode,
+                                           String districtCode, String postalCode, String address,
+                                           String callNumber, String latitude, String longitude) {
+        return new JpaHospitalEntity(
                 hospitalCode,
                 name,
                 Long.parseLong(categoryCode),

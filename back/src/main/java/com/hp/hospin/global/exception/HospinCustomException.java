@@ -7,9 +7,9 @@ public class HospinCustomException extends HospinException {
         super(e);
     }
 
-    public static class NotFoundFileException extends HospinCustomException {
-        public NotFoundFileException() {
-            super(NOT_FOUND_FILE);
+    public static class HospitalNotExist extends HospinException {
+        public HospitalNotExist() {
+            super(HOSPITAL_NOT_EXIST);
         }
     }
 }

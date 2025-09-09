@@ -12,5 +12,5 @@ public interface HospitalService {
     List<HospitalListResponse> getAllHospitalData();
     HospitalInfoResponse assembleHospitalInfo(String hospitalCode);
     List<HospitalListResponse> getHospitalsNearby(String latitude_str, String longitude_str);
-    Page<HospitalListResponse> search(HospitalSearchRequest req, Pageable pageable);
+    Page<HospitalListResponse> search(String name, Long categoryCode, Long regionCode, Long districtCode, Long postalCode, String address, Pageable pageable);
 }
