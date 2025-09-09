@@ -12,9 +12,9 @@ import java.util.Set;
 
 @Data
 @Entity(name="hospital_detail")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "hospital_detail")
-public class HospitalDetail {
+public class JpaHospitalDetailEntity {
     @Id
     @Column(name = "hospital_code", nullable = false, unique = true)
     private String hospitalCode;
@@ -101,7 +101,7 @@ public class HospitalDetail {
     @Column(name = "treatSatEnd")
     private String treatSatEnd;           // 진료종료시간_토요일
 
-    private HospitalDetail(
+    private JpaHospitalDetailEntity(
             String hospitalCode, List<String> departmentCodes,
             String closedSunday, String closedHoliday, String emergencyDayYn,
             String emergencyDayPhone1, String emergencyDayPhone2, String emergencyNightYn,
@@ -128,7 +128,7 @@ public class HospitalDetail {
         this.treatSatStart = treatSatStart;this.treatSatEnd = treatSatEnd;
     }
 
-    public static HospitalDetail create(
+    public static JpaHospitalDetailEntity create(
             String hospitalCode, List<String> departmentCodes,
             String closedSunday, String closedHoliday, String emergencyDayYn,
             String emergencyDayPhone1, String emergencyDayPhone2, String emergencyNightYn,
@@ -138,7 +138,7 @@ public class HospitalDetail {
             String treatTueEnd, String treatWedStart, String treatWedEnd, String treatThuStart,
             String treatThuEnd, String treatFriStart, String treatFriEnd, String treatSatStart, String treatSatEnd
     ) {
-        return new HospitalDetail(
+        return new JpaHospitalDetailEntity(
                 hospitalCode,
                 (departmentCodes == null || departmentCodes.isEmpty()) ? null : departmentCodes,
                 closedSunday,

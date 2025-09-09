@@ -1,8 +1,8 @@
 package com.hp.hospin.hospital.batch.configuration;
 
-import com.hp.hospin.hospital.infrastructure.entity.Hospital;
-import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
-import com.hp.hospin.hospital.infrastructure.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
 import com.hp.hospin.hospital.batch.dto.HospitalCodeWithDepartments;
 import com.hp.hospin.hospital.batch.dto.HospitalDetailRegister;
 import com.hp.hospin.hospital.batch.dto.HospitalGradeRegister;
@@ -69,7 +69,7 @@ public class HospitalGradeConfiguration {
     @Bean
     public Step loadHospitalStep() {
         return new StepBuilder("loadHospitalStep", jobRepository)
-                .<HospitalRegister, Hospital>chunk(1000,ptm)
+                .<HospitalRegister, JpaHospitalEntity>chunk(1000,ptm)
                 .reader(hospitalReader.readerByCSV())
                 .processor(hospitalProcessor)
                 .writer(hospitalWriter)
@@ -89,7 +89,7 @@ public class HospitalGradeConfiguration {
     @Bean
     public Step loadHospitalGradeStep() {
         return new StepBuilder("loadHospitalGradeStep", jobRepository)
-                .<HospitalGradeRegister, HospitalGrade>chunk(1000,ptm)
+                .<HospitalGradeRegister, JpaHospitalGradeEntity>chunk(1000,ptm)
                 .reader(hospitalGradeReader.read())
                 .processor(hospitalGradeProcessor)
                 .writer(hospitalGradeWriter)
@@ -110,7 +110,7 @@ public class HospitalGradeConfiguration {
     @Bean
     public Step loadHospitalDetailStep() {
         return new StepBuilder("loadHospitalDetailStep", jobRepository)
-                .<HospitalDetailRegister, HospitalDetail>chunk(1000,ptm)
+                .<HospitalDetailRegister, JpaHospitalDetailEntity>chunk(1000,ptm)
                 .reader(hospitalDetailReader.readerByHospitalDetail())
                 .processor(hospitalDetailProcessor)
                 .writer(hospitalDetailWriter)
@@ -121,7 +121,7 @@ public class HospitalGradeConfiguration {
     @Bean
     public Step loadHospitalDepartmentStep() {
         return new StepBuilder("loadHospitalDepartmentStep", jobRepository)
-                .<HospitalCodeWithDepartments, HospitalDetail>chunk(1000,ptm)
+                .<HospitalCodeWithDepartments, JpaHospitalDetailEntity>chunk(1000,ptm)
                 .reader(groupedHospitalDepartmentReader.readerByHospitalDepartment())
                 .processor(hospitalDepartmentProcessor)
                 .writer(hospitalDepartmentWriter)

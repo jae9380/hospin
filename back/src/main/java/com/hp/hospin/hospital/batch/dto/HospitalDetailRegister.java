@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.dto;
 
-import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ public record HospitalDetailRegister(
         String treatSatStart,
         String treatSatEnd
 ) {
-    public HospitalDetail to() {
-        return HospitalDetail.create(
+    public JpaHospitalDetailEntity to() {
+        return JpaHospitalDetailEntity.create(
                 hospitalCode, departmentCodes, closedSunday, closedHoliday,
                 emergencyDayYn, emergencyDayPhone1, emergencyDayPhone2,
                 emergencyNightYn, emergencyNightPhone1, emergencyNightPhone2,

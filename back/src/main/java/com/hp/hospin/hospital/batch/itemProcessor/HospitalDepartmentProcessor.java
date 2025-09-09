@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.itemProcessor;
 
-import com.hp.hospin.hospital.infrastructure.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
 import com.hp.hospin.hospital.batch.dto.HospitalCodeWithDepartments;
 import com.hp.hospin.hospital.infrastructure.repository.jpa.HospitalDetailJPARepository;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +13,13 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HospitalDepartmentProcessor implements ItemProcessor<HospitalCodeWithDepartments, HospitalDetail> {
+public class HospitalDepartmentProcessor implements ItemProcessor<HospitalCodeWithDepartments, JpaHospitalDetailEntity> {
     private final HospitalDetailJPARepository hospitalDetailJPARepository;
 
     @Override
-    public HospitalDetail process(HospitalCodeWithDepartments item) throws Exception {
+    public JpaHospitalDetailEntity process(HospitalCodeWithDepartments item) throws Exception {
         try {
-            HospitalDetail entity = validationData(item.getHospitalCode());
+            JpaHospitalDetailEntity entity = validationData(item.getHospitalCode());
             entity.setDepartmentCodes(item.getDepartmentCodes());
             return entity;
         }catch (RuntimeException e) {
@@ -28,8 +28,8 @@ public class HospitalDepartmentProcessor implements ItemProcessor<HospitalCodeWi
         }
     }
 
-    private HospitalDetail validationData(String hospitalCode) {
-        Optional<HospitalDetail> entity = hospitalDetailJPARepository.findByHospitalCode(hospitalCode);
+    private JpaHospitalDetailEntity validationData(String hospitalCode) {
+        Optional<JpaHospitalDetailEntity> entity = hospitalDetailJPARepository.findByHospitalCode(hospitalCode);
         return entity.orElseThrow(RuntimeException::new);
     }
 }

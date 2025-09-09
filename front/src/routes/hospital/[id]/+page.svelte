@@ -46,18 +46,19 @@
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
 			const data = (await res.json()) as HospitalInfoResponse;
-			hospital = data;
+			console.log(data);
+			hospital = data.data;
 
 			// 기본 정보 바인드
 			safeBaseInfo = {
-				name: data.baseInfo.name,
-				address: data.baseInfo.address,
-				callNumber: data.baseInfo.callNumber
+				name: data.data.baseInfo.name,
+				address: data.data.baseInfo.address,
+				callNumber: data.data.baseInfo.callNumber
 			};
 
 			// 좌표 number 변환 (NaN 방지)
-			const pLat = Number.parseFloat(data.baseInfo.latitude);
-			const pLng = Number.parseFloat(data.baseInfo.longitude);
+			const pLat = Number.parseFloat(data.data.baseInfo.latitude);
+			const pLng = Number.parseFloat(data.data.baseInfo.longitude);
 			lat = Number.isFinite(pLat) ? pLat : null;
 			lng = Number.isFinite(pLng) ? pLng : null;
 
