@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.dto;
 
-import com.hp.hospin.hospital.entity.Hospital;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
 
 public record HospitalRegister(
         String hospitalCode,
@@ -14,8 +14,8 @@ public record HospitalRegister(
         String latitude,
         String longitude
 ) {
-    public Hospital to() {
-        return Hospital.create(
+    public JpaHospitalEntity to() {
+        return JpaHospitalEntity.create(
                 hospitalCode,
                 name,
                 categoryCode,

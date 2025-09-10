@@ -1,9 +1,9 @@
 package com.hp.hospin.hospital.batch.itemProcessor;
 
-import com.hp.hospin.hospital.entity.Hospital;
-import com.hp.hospin.hospital.entity.HospitalGrade;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
 import com.hp.hospin.hospital.batch.dto.HospitalGradeRegister;
-import com.hp.hospin.hospital.repository.HospitalRepository;
+import com.hp.hospin.hospital.infrastructure.repository.jpa.HospitalJPARepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -14,11 +14,11 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HospitalGradeProcessor implements ItemProcessor<HospitalGradeRegister, HospitalGrade> {
-    private final HospitalRepository hospitalRepository;
+public class HospitalGradeProcessor implements ItemProcessor<HospitalGradeRegister, JpaHospitalGradeEntity> {
+    private final HospitalJPARepository hospitalJPARepository;
 
     @Override
-    public HospitalGrade process(HospitalGradeRegister item) throws Exception {
+    public JpaHospitalGradeEntity process(HospitalGradeRegister item) throws Exception {
         try {
             validationData(item.getHospitalCode());
             return item.to();
@@ -29,8 +29,8 @@ public class HospitalGradeProcessor implements ItemProcessor<HospitalGradeRegist
         }
     }
 
-    private Hospital validationData(String hospitalCode) {
-        Optional<Hospital> dao = hospitalRepository.findByHospitalCode(hospitalCode);
+    private JpaHospitalEntity validationData(String hospitalCode) {
+        Optional<JpaHospitalEntity> dao = hospitalJPARepository.findByHospitalCode(hospitalCode);
         return dao.orElseThrow(RuntimeException :: new);
     }
 }

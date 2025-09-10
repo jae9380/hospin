@@ -48,6 +48,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+//    mapstruct // 내부적으로 Lombok을 사용하기 때문에 Lombok 뒤에 작성
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
 //    Dev Tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
