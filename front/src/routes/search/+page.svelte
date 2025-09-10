@@ -78,10 +78,9 @@
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const data: PageResult<HospitalListItemRaw> = await response.json();
-
       // 표준화 → 항상 hospitalCode 사용 가능
-      results = data.content.map(normalizeHospitalListItem);
-      totalPages = data.totalPages ?? 0;
+      results = data.data?.content?.map(normalizeHospitalListItem);
+      totalPages = data.data?.totalPages ?? 0;
 
       console.log('검색 결과:', data);
       console.log('쿼리:', params.toString());

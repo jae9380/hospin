@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.batch.itemWriter;
 
-import com.hp.hospin.hospital.entity.HospitalDetail;
+import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
 import jakarta.persistence.EntityManager;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class HospitalDetailWriter implements ItemWriter<HospitalDetail> {
+public class HospitalDetailWriter implements ItemWriter<JpaHospitalDetailEntity> {
     @Autowired
     private EntityManager entityManager;
 
     @Override
     @Transactional
-    public void write(Chunk<? extends HospitalDetail> chunk) throws Exception {
+    public void write(Chunk<? extends JpaHospitalDetailEntity> chunk) throws Exception {
         try {
-            for (HospitalDetail entity : chunk) {
+            for (JpaHospitalDetailEntity entity : chunk) {
                 entityManager.persist(entity);
             }
         }catch (Exception e) {
