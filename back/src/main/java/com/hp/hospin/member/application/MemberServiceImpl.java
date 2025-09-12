@@ -2,6 +2,7 @@ package com.hp.hospin.member.application;
 
 import com.hp.hospin.member.application.dto.JoinRequest;
 import com.hp.hospin.member.application.port.MemberDomainService;
+import com.hp.hospin.member.persentation.dto.LoginRequest;
 import com.hp.hospin.member.persentation.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,5 +19,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void join(JoinRequest request) {
         memberDomainService.register(request);
+    }
+
+    @Override
+    public void login(LoginRequest request) {
+        memberDomainService.login(request.identifier(), request.password());
     }
 }

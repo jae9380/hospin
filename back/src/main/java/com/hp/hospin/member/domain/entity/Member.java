@@ -32,11 +32,11 @@ public class Member {
         this.birth = birth;
     }
 
-    public static Member signup(JoinRequest request) {
+    public static Member signup(JoinRequest request, String encodedPassword) {
         return Member.builder()
                 .id(null)
                 .identifier(request.identifier())
-                .password(request.password())
+                .password(encodedPassword)
                 .name(request.name())
                 .phoneNumber(request.phoneNumber())
                 .email(request.email())
