@@ -7,6 +7,8 @@ import com.hp.hospin.member.infrastructure.mapper.MemberPersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepository {
@@ -21,5 +23,11 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void register(Member member) {
         memberJPARepository.save(mapper.domainToJpa(member));
+    }
+
+    @Override
+    public Optional<Member> getByIdentifier(String Identifier) {
+        return memberJPARepository.findJpaMemberEntityByIdentifier(Identifier)
+                .map(mapper::jpaToDomain);
     }
 }
