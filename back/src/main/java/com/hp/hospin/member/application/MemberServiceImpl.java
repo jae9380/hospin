@@ -25,4 +25,9 @@ public class MemberServiceImpl implements MemberService {
     public void login(LoginRequest request) {
         memberDomainService.login(request.identifier(), request.password());
     }
+
+    @Override
+    public void checkDuplicateIdentifier(String identifier) {
+        memberDomainService.existsIdentifier(identifier);
+    }
 }

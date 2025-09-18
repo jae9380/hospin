@@ -9,9 +9,9 @@ public class MemberException extends HospinException {
     public MemberException(ErrorCode e) {
         super(e);
     }
-    public static class DuplicateUsernameException extends MemberException {
-        public DuplicateUsernameException() {
-            super(DUPLICATE_USERNAME);
+    public static class DuplicateIdentifierException extends MemberException {
+        public DuplicateIdentifierException() {
+            super(DUPLICATE_IDENTFIER);
         }
     }
 
