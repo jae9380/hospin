@@ -13,10 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,12 +41,18 @@ public class MemberController {
     }
 
     @PostMapping ("/logout")
-    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ApiResponse<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
         Stream.of("refresh_token", "access_token", "JSESSIONID")
                 .forEach(cookieName -> CookieUtil.deleteCookie(request, response, cookieName));
 
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("message", "로그아웃 되었습니다.");
-        return ResponseEntity.ok(responseMap);
+        return ApiResponse.ok(responseMap);
+    }
+
+    @GetMapping("/check-duplicate")
+    public ApiResponse<Empty> identfierDuplicationCheck(@RequestParam String identifier) {
+        memberService.checkDuplicateIdentifier(identifier);
+        return ApiResponse.noContent();
     }
 }

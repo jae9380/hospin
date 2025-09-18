@@ -46,7 +46,8 @@ public class SecurityConfig {
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers("/api/member/join", "/api/member/login").permitAll()
                             .requestMatchers(HttpMethod.GET,
-                                    "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search"
+                                    "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
+                                    "/api/member/check-duplicate"
                                 ).permitAll()
                             .anyRequest()
                             .authenticated();

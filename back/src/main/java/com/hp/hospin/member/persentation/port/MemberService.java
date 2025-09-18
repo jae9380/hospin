@@ -6,4 +6,5 @@ import com.hp.hospin.member.persentation.dto.LoginRequest;
 public interface MemberService {
     void join(JoinRequest request);
     void login(LoginRequest request);
+    void checkDuplicateIdentifier(String identifier);
 }

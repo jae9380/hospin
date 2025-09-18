@@ -17,10 +17,7 @@ public class MemberDomainServiceImpl implements MemberDomainService {
 
     @Override
     public void register(JoinRequest request) {
-        if (memberRepository.existsById(request.identifier())) {
-            throw new MemberException.DuplicateUsernameException();
-            //TODO: Policy 이동
-        }
+        isIdentifierDuplicate(request.identifier());
         //TODO: Role 선별 기준 추가해야 함
         memberRepository.register(Member.signup(request, bCryptPasswordEncoder.encode(request.password())));
     }
@@ -36,6 +33,17 @@ public class MemberDomainServiceImpl implements MemberDomainService {
         return requireByIdentifier(identifier);
     }
 
+    @Override
+    public void existsIdentifier(String identifier) {
+        isIdentifierDuplicate(identifier);
+    }
+
+    private boolean isIdentifierDuplicate(String identifier) {
+        if (memberRepository.existsById(identifier)) {
+            throw new MemberException.DuplicateIdentifierException();
+        }
+        return true;
+    }
     private Member requireByIdentifier(String identifier) {
         return memberRepository.getByIdentifier(identifier)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
