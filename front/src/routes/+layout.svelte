@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { Toaster } from "svelte-5-french-toast";
 	let { children } = $props();
 </script>
 
