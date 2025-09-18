@@ -38,6 +38,7 @@
 		"vite-plugin-devtools-json": "^0.2.0"
 	},
 	"dependencies": {
-		"daisyui": "^5.0.50"
+		"daisyui": "^5.0.50",
+		"svelte-5-french-toast": "^2.0.6"
 	}
 }
