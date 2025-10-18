@@ -1,5 +1,6 @@
-package com.hp.hospin.member.domain.entity;
+package com.hp.hospin.global.common;
 
+import com.hp.hospin.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import javax.naming.NoPermissionException;
+
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -20,8 +22,12 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 회원정보가 없습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
 
+    // Schedule
+    SCHEDULE_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 스케줄은 존재하지 않습니다."),
+
     // etc
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    NO_PERMISSION(HttpStatus.FORBIDDEN, "권한에 문제가 발생했습니다.");
 
     private final HttpStatus status;
     private final String message;
