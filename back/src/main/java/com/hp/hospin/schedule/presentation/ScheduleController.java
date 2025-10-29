@@ -24,9 +24,10 @@ public class ScheduleController {
 
     @GetMapping()
     public ApiResponse<List<ScheduleResponse>> getScheduleList(@AuthenticationPrincipal MemberDetails memberDetails) {
+        System.out.println("요청 들어옴");
         List<Schedule> schedules = scheduleService.getScheduleList(memberDetails.getId());
         if (schedules.isEmpty()) return ApiResponse.ok(List.of());
-        
+        System.out.println("요청 나감");
         return ApiResponse.ok(schedules.stream()
                 .map(mapper::domainToResponse)
                 .toList());
