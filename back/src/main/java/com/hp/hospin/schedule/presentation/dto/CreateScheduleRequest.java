@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CreateScheduleRequest {
-    private Long id;
+    private Long id; // TODO: 해당 id 칼럼은 필요 없어 보인다
     private int category;
     private int type;
     private String title;

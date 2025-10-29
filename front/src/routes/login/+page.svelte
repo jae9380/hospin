@@ -3,6 +3,7 @@
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
 	import { goto } from '$app/navigation';
+	import { au } from '$lib/au/au';
 
 	// 상태 변수
 	let identifierError = false;
@@ -15,8 +16,6 @@
 	// 각 input DOM 참조
 	let identifierInput: HTMLInputElement;
 	let passwordInput: HTMLInputElement;
-
-	const base = import.meta.env.VITE_CORE_API_BASE_URL;
 
 	async function handleLogin() {
 		identifierError = false;
@@ -42,29 +41,27 @@
 		}
 
 		try {
-			const res = await fetch(`${base}/api/member/login`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ identifier, password })
-			});
+			const response = await au.api().POST('/api/member/login', { body: { identifier, password } })
+			console.log(response.data);
+			console.log(response.data.data);	
 
-			const data: ApiResponse<any> = await res.json();
-
-			if (data.statusCode > 399) {
-				toasterError(data.message || '로그인에 실패했습니다.');
+			if (response.data.statusCode > 399) {
+				toasterError(response.data.message || '로그인에 실패했습니다.');
 
 				// 예시: 서버에서 MEMBER_NOT_FOUND 에러면 아이디로 포커스
-				if (data.errorCode === 'MEMBER_NOT_FOUND') {
+				if (response.data.errorCode === 'MEMBER_NOT_FOUND') {
                     identifierError = true;
 					identifierInput.focus();
-				}else if(data.errorCode === 'INVALID_PASSWORD') {
+				}else if(response.data.errorCode === 'INVALID_PASSWORD') {
                     passwordError = true;
                     passwordInput.focus();
                 }
 				return;
+			}else {
+				au?.setLogined(response.data?.data)
 			}
-
 			toasterSuccess('👋 로그인에 성공했습니다.');
+
 			goto('/');
 		} catch (err: any) {
 			errorMsg = err.message || '서버 오류가 발생했습니다.';
