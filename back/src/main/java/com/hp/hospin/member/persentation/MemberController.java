@@ -1,11 +1,13 @@
 package com.hp.hospin.member.persentation;
 
 import com.hp.hospin.global.apiResponse.ApiResponse;
+import com.hp.hospin.global.common.MemberDetails;
 import com.hp.hospin.global.jwt.CookieUtil;
 import com.hp.hospin.global.standard.base.Empty;
 import com.hp.hospin.member.application.dto.JoinRequest;
 import com.hp.hospin.member.application.dto.MemberResponse;
 import com.hp.hospin.member.persentation.dto.LoginRequest;
+import com.hp.hospin.member.persentation.mapper.MemberDtoMapper;
 import com.hp.hospin.member.persentation.port.AuthenticationService;
 import com.hp.hospin.member.persentation.port.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,7 +28,14 @@ import java.util.stream.Stream;
 public class MemberController {
     private final MemberService memberService;
     private final AuthenticationService authenticationService;
+    private final MemberDtoMapper mapper;
 
+    @GetMapping()
+    public ApiResponse<MemberResponse> memberInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
+        return ApiResponse.ok(
+                mapper.domainToResponse(memberService.findByIdentifier(memberDetails.getName()))
+        );
+    }
     @PostMapping("/join")
     public ApiResponse<Empty> join(@RequestBody @Valid JoinRequest request) {
         memberService.join(request);

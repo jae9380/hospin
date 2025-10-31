@@ -2,7 +2,7 @@ package com.hp.hospin.member.application.auth;
 
 import com.hp.hospin.member.application.port.MemberDomainService;
 import com.hp.hospin.member.domain.entity.Member;
-import com.hp.hospin.member.domain.entity.MemberDetails;
+import com.hp.hospin.global.common.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
