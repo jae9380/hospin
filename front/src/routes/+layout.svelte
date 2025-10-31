@@ -1,15 +1,15 @@
 <script lang="ts">
 	import '../app.css';
-	import { Toaster } from "svelte-5-french-toast";
+
 	let { children } = $props();
 </script>
 
-<header class="fixed top-0 inset-x-0 z-[2000] bg-base-100/95 backdrop-blur">
-  <div class="navbar flex justify-center">
-    <a class="btn btn-ghost text-xl font-mono" href="/">
-      <img src="/logo.png" alt="HosPin Logo" class="h-10 w-auto" />
-    </a>
-  </div>
+<header class="fixed inset-x-0 top-0 z-[2000] bg-base-100/95 backdrop-blur">
+	<div class="navbar flex justify-center">
+		<a class="btn font-mono text-xl btn-ghost" href="/">
+			<img src="/logo.png" alt="HosPin Logo" class="h-10 w-auto" />
+		</a>
+	</div>
 </header>
 
 <main class="pt-16 pb-20">
