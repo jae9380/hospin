@@ -7,7 +7,7 @@ import com.hp.hospin.member.application.port.MemberDomainService;
 import com.hp.hospin.member.domain.entity.Member;
 import com.hp.hospin.member.domain.port.MemberRepository;
 import com.hp.hospin.member.exception.MemberException.*;
-import com.hp.hospin.member.persentation.dto.LoginRequest;
+import com.hp.hospin.member.application.dto.LoginRequest;
 import com.hp.hospin.member.persentation.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void join(JoinRequest request) {
-        memberDomainService.register(request);
+        Member newMember = memberDomainService.createNewMember(request);
+
+        memberRepository.register(newMember);
     }
 
     @Override
     public void login(LoginRequest request) {
-        memberDomainService.login(request.identifier(), request.password());
+        Member member = memberRepository.getByIdentifier(request.identifier())
+                .orElseThrow(MemberNotFoundException::new);
+
+        memberDomainService.login(request.identifier(), request.password(), member);
     }
 
     @Override

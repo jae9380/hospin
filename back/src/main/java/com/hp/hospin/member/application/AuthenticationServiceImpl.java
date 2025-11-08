@@ -9,6 +9,7 @@ import com.hp.hospin.member.application.port.TokenDomainService;
 import com.hp.hospin.member.domain.entity.Member;
 import com.hp.hospin.member.domain.port.MemberRepository;
 import com.hp.hospin.member.domain.port.RefreshTokenRepository;
+import com.hp.hospin.member.infrastructure.entity.RefreshToken;
 import com.hp.hospin.member.persentation.port.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final MemberDomainService memberDomainService;
     private final TokenDomainService refreshTokenDomainService;
 
     private final MemberRepository memberRepository;
@@ -35,11 +36,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final MemberAppMapper mapper;
 
     public MemberResponse authenticateAndSetTokens(String identifier, HttpServletRequest request, HttpServletResponse response) {
-        Member member = memberDomainService.getByIdentifier(identifier);
+        Member member = memberRepository.getByIdentifier(identifier).orElse(null);
 
-        String refreshToken = jwtTokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
-        refreshTokenDomainService.saveOrReplace(member.getId(), refreshToken);
-        addTokenToCookie(request, response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_DURATION);
+        String newRefreshToken = jwtTokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
+
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserId(member.getId());
+        RefreshToken updatedRefreshToken = refreshTokenDomainService.saveOrReplace(refreshToken, member.getId(), newRefreshToken);
+        refreshTokenRepository.save(updatedRefreshToken);
+
+        addTokenToCookie(request, response, REFRESH_TOKEN_COOKIE_NAME, newRefreshToken, REFRESH_TOKEN_DURATION);
 
         String accessToken = jwtTokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
         addTokenToCookie(request, response, ACCESS_TOKEN_COOKIE_NAME, accessToken, ACCESS_TOKEN_DURATION);

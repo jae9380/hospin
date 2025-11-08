@@ -2,8 +2,7 @@ package com.hp.hospin.member.persentation.port;
 
 import com.hp.hospin.member.application.dto.JoinRequest;
 import com.hp.hospin.member.application.dto.MemberResponse;
-import com.hp.hospin.member.domain.entity.Member;
-import com.hp.hospin.member.persentation.dto.LoginRequest;
+import com.hp.hospin.member.application.dto.LoginRequest;
 
 import java.util.Map;
 
