@@ -1,4 +1,4 @@
-package com.hp.hospin.member.persentation.mapper;
+package com.hp.hospin.member.application.mapper;
 
 import com.hp.hospin.member.application.dto.MemberResponse;
 import com.hp.hospin.member.domain.entity.Member;

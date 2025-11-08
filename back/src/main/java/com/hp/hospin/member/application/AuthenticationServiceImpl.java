@@ -5,8 +5,10 @@ import com.hp.hospin.global.jwt.JwtTokenProvider;
 import com.hp.hospin.member.application.dto.MemberResponse;
 import com.hp.hospin.member.application.mapper.MemberAppMapper;
 import com.hp.hospin.member.application.port.MemberDomainService;
-import com.hp.hospin.member.application.port.RefreshTokenDomainService;
+import com.hp.hospin.member.application.port.TokenDomainService;
 import com.hp.hospin.member.domain.entity.Member;
+import com.hp.hospin.member.domain.port.MemberRepository;
+import com.hp.hospin.member.domain.port.RefreshTokenRepository;
 import com.hp.hospin.member.persentation.port.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +27,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberDomainService memberDomainService;
-    private final RefreshTokenDomainService refreshTokenDomainService;
+    private final TokenDomainService refreshTokenDomainService;
+
+    private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final MemberAppMapper mapper;
 

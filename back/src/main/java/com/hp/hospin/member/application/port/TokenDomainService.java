@@ -1,5 +1,7 @@
 package com.hp.hospin.member.application.port;
 
-public interface RefreshTokenDomainService {
+import com.hp.hospin.member.infrastructure.entity.RefreshToken;
+
+public interface TokenDomainService {
     void saveOrReplace(Long userId, String newRefreshToken);
 }

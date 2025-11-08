@@ -14,11 +14,10 @@ public class HospitalDetailWriter implements ItemWriter<JpaHospitalDetailEntity>
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public void write(Chunk<? extends JpaHospitalDetailEntity> chunk) throws Exception {
         try {
             for (JpaHospitalDetailEntity entity : chunk) {
-                entityManager.persist(entity);
+                entityManager.merge(entity);
             }
         }catch (Exception e) {
             e.printStackTrace();

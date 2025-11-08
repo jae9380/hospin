@@ -1,6 +1,6 @@
 package com.hp.hospin.member.domain;
 
-import com.hp.hospin.member.application.port.RefreshTokenDomainService;
+import com.hp.hospin.member.application.port.TokenDomainService;
 import com.hp.hospin.member.domain.port.RefreshTokenRepository;
 import com.hp.hospin.member.infrastructure.entity.RefreshToken;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenDomainServiceImpl implements RefreshTokenDomainService {
+public class TokenDomainServiceImpl implements TokenDomainService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional

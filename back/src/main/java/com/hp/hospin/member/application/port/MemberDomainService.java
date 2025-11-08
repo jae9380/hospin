@@ -7,5 +7,6 @@ public interface MemberDomainService {
     void register (JoinRequest request);
     void login (String identifier, String password);
     Member getByIdentifier (String identifier);
-    void existsIdentifier(String identifier);
+    void validatePolicy(String identifier);
+
 }

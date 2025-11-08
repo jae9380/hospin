@@ -43,7 +43,7 @@
 			const res = await fetch(`${base}/api/member/check-duplicate?identifier=${identifier}`);
 			const data: ApiResponse<any> = await res.json();
 
-			if (data.statusCode === 204) {
+			if (data.statusCode === 200) {
 				isIdDuplicate = true;
 				checkedDuplicate = true;
 				toast.success('사용 가능한 아이디입니다 👍');
