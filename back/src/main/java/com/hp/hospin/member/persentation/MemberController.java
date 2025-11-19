@@ -6,19 +6,18 @@ import com.hp.hospin.global.jwt.CookieUtil;
 import com.hp.hospin.global.standard.base.Empty;
 import com.hp.hospin.member.application.dto.JoinRequest;
 import com.hp.hospin.member.application.dto.MemberResponse;
-import com.hp.hospin.member.persentation.dto.LoginRequest;
-import com.hp.hospin.member.persentation.mapper.MemberDtoMapper;
+import com.hp.hospin.member.application.dto.LoginRequest;
+import com.hp.hospin.member.exception.MemberException;
 import com.hp.hospin.member.persentation.port.AuthenticationService;
 import com.hp.hospin.member.persentation.port.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -28,13 +27,10 @@ import java.util.stream.Stream;
 public class MemberController {
     private final MemberService memberService;
     private final AuthenticationService authenticationService;
-    private final MemberDtoMapper mapper;
 
     @GetMapping()
     public ApiResponse<MemberResponse> memberInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
-        return ApiResponse.ok(
-                mapper.domainToResponse(memberService.findByIdentifier(memberDetails.getName()))
-        );
+        return ApiResponse.ok(memberService.findByIdentifier(memberDetails.getUsername()));
     }
     @PostMapping("/join")
     public ApiResponse<Empty> join(@RequestBody @Valid JoinRequest request) {
@@ -45,9 +41,12 @@ public class MemberController {
     @PostMapping ("/login")
     public ApiResponse<MemberResponse> login(@RequestBody @Valid LoginRequest loginRequest,
                                              HttpServletRequest request, HttpServletResponse response) {
+//        TODO: 구조변경 필요 (관련 메서드 전제 수정?...
         memberService.login(loginRequest);
-        MemberResponse memberResponse = authenticationService.authenticateAndSetTokens(loginRequest.identifier(), request, response);
-        return ApiResponse.ok(memberResponse);
+
+        return ApiResponse.ok(
+                authenticationService.authenticateAndSetTokens(loginRequest.identifier(), request, response)
+        );
     }
 
     @PostMapping ("/logout")
@@ -55,14 +54,23 @@ public class MemberController {
         Stream.of("refresh_token", "access_token", "JSESSIONID")
                 .forEach(cookieName -> CookieUtil.deleteCookie(request, response, cookieName));
 
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("message", "로그아웃 되었습니다.");
-        return ApiResponse.ok(responseMap);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return ApiResponse.ok(memberService.logoutMsg());
     }
 
     @GetMapping("/check-duplicate")
-    public ApiResponse<Empty> identfierDuplicationCheck(@RequestParam String identifier) {
-        memberService.checkDuplicateIdentifier(identifier);
-        return ApiResponse.noContent();
+    public ApiResponse<String> identfierDuplicationCheck(@RequestParam String identifier) {
+
+        Map.Entry<Boolean, String> entry =
+                memberService.checkDuplicateIdentifier(identifier).entrySet().iterator().next();
+
+        return entry.getKey()
+                ? ApiResponse.ok(entry.getValue())
+                : ApiResponse.impossible(entry.getValue());
+
     }
 }

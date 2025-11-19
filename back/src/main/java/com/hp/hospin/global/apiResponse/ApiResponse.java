@@ -96,4 +96,22 @@ public class ApiResponse<T> {
                 new Empty()
         );
     }
+
+    public static ApiResponse<Empty> impossible() {
+        return new ApiResponse<>(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ApiResultType.IMPOSSIBLE,
+                new Empty()
+        );
+    }
+
+    public static <T> ApiResponse<T> impossible(T data) {
+        return new ApiResponse<>(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ApiResultType.IMPOSSIBLE,
+                data
+        );
+    }
 }

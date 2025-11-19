@@ -1,8 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-5-french-toast';
-	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
-	import { goto } from '$app/navigation';
 	import { au } from '$lib/au/au';
 
 	// 상태 변수
@@ -24,7 +21,7 @@
 
 		// 아이디 검증
 		if (identifier.length < 4 || identifier.length > 20) {
-            identifierError = true;
+			identifierError = true;
 			errorMsg = '아이디는 4자 이상 20자 이하이어야 합니다.';
 			toasterError('✋ 아이디는 4자 이상 20자 이하로 입력해주세요.');
 			identifierInput.focus(); // 문제 있는 input으로 포커스 이동
@@ -33,7 +30,7 @@
 
 		// 비밀번호 검증
 		if (password.length < 8 || password.length > 20) {
-            passwordError = true;
+			passwordError = true;
 			errorMsg = '비밀번호는 8자 이상 20자 이하이어야 합니다.';
 			toasterError('✋ 비밀번호는 8자 이상 20자 이하로 입력해주세요.');
 			passwordInput.focus(); // 문제 있는 input으로 포커스 이동
@@ -41,28 +38,29 @@
 		}
 
 		try {
-			const response = await au.api().POST('/api/member/login', { body: { identifier, password } })
+			const response = await au.api().POST('/api/member/login', { body: { identifier, password } });
 			console.log(response.data);
-			console.log(response.data.data);	
+			console.log(response.data.data);
 
 			if (response.data.statusCode > 399) {
 				toasterError(response.data.message || '로그인에 실패했습니다.');
 
 				// 예시: 서버에서 MEMBER_NOT_FOUND 에러면 아이디로 포커스
 				if (response.data.errorCode === 'MEMBER_NOT_FOUND') {
-                    identifierError = true;
+					identifierError = true;
 					identifierInput.focus();
-				}else if(response.data.errorCode === 'INVALID_PASSWORD') {
-                    passwordError = true;
-                    passwordInput.focus();
-                }
+				} else if (response.data.errorCode === 'INVALID_PASSWORD') {
+					passwordError = true;
+					passwordInput.focus();
+				}
 				return;
-			}else {
-				au?.setLogined(response.data?.data)
+			} else {
+				au?.setLogined(response.data?.data);
 			}
 			toasterSuccess('👋 로그인에 성공했습니다.');
 
-			goto('/');
+			// goto('/');
+			au?.goTo('/');
 		} catch (err: any) {
 			errorMsg = err.message || '서버 오류가 발생했습니다.';
 			toasterError(errorMsg);

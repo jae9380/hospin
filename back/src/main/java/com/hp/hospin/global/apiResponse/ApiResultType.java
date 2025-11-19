@@ -6,5 +6,6 @@ import lombok.Getter;
 public enum ApiResultType {
     SUCCESS,
     VALIDATION_EXCEPTION,
+    IMPOSSIBLE,
     CUSTOM_EXCEPTION
 }

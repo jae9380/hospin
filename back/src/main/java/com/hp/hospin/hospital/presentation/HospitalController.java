@@ -3,7 +3,6 @@ package com.hp.hospin.hospital.presentation;
 import com.hp.hospin.global.apiResponse.ApiResponse;
 import com.hp.hospin.hospital.application.dto.HospitalInfoResponse;
 import com.hp.hospin.hospital.application.dto.HospitalListResponse;
-import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
 import com.hp.hospin.hospital.presentation.port.HospitalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/hospital")
-@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class HospitalController {
     private final HospitalService hospitalService;

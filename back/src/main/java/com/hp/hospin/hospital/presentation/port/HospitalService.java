@@ -2,7 +2,6 @@ package com.hp.hospin.hospital.presentation.port;
 
 import com.hp.hospin.hospital.application.dto.HospitalInfoResponse;
 import com.hp.hospin.hospital.application.dto.HospitalListResponse;
-import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

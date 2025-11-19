@@ -26,4 +26,10 @@ public class MemberException extends HospinException {
             super(INVALID_PASSWORD);
         }
     }
+
+    public static class InvalidIdentiferPolicy extends MemberException {
+        public InvalidIdentiferPolicy() {
+            super(INVALID_IDENTIFIER_POLICY);
+        }
+    }
 }

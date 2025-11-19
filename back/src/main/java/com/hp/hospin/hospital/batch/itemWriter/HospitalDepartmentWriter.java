@@ -14,7 +14,6 @@ public class HospitalDepartmentWriter implements ItemWriter<JpaHospitalDetailEnt
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public void write(Chunk<? extends JpaHospitalDetailEntity> chunk) throws Exception {
 
         for (JpaHospitalDetailEntity entity : chunk) {
