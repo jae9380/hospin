@@ -1,4 +1,4 @@
-package com.hp.hospin.member.persentation.dto;
+package com.hp.hospin.member.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
