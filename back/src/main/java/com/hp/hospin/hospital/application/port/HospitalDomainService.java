@@ -9,11 +9,5 @@ import com.hp.hospin.hospital.domain.type.PageResult;
 import java.util.List;
 
 public interface HospitalDomainService {
-    List<HospitalListResponse> getAllHospitalData();
-    BaseInfo getHospitalAsBaseInfoByCode(String hospitalCode);
-    DetailInfo getHospitalDetailAsDetailInfoByCode(String hospitalCode);
-    GradeInfo getHospitalGradeAsGradeInfoByCode(String hospitalCode);
-    List<HospitalListResponse> getHospitalsNearCoordinates(String latitude_str, String longitude_str);
-//    Page<HospitalListResponse> search(HospitalSearchRequest req, Pageable pageable);
-    PageResult<Hospital> search(HospitalSearchCriteria query, int page, int size);
+    List<Hospital> getHospitalsNearCoordinates(double latitude, double longitude, List<Hospital> hospitalList);
 }

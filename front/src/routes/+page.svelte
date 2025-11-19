@@ -1,11 +1,21 @@
 <script>
-  import "../app.css";
+	import '../app.css';
+	import { au } from '$lib/au/au';
+
+	async function handleLogout() {
+		await au?.logoutAndRedirect('/'); // 기본적으로 '/login'으로 이동
+		// 또는 커스텀 경로 지정 가능
+		// await au?.logout('/');        // 홈으로 이동
+	}
 </script>
+
 <h1>Welcome to SvelteKit</h1>
-<br>
+<br />
+
+<button class="btn btn-primary" on:click={handleLogout}> 로그아웃 </button>
 
 <button class="btn btn-primary">Hello daisyUI</button>
-<br>
+<br />
 <!-- Primary 버튼 -->
 <button class="btn btn-primary">Primary</button>
 
@@ -18,30 +28,30 @@
 <!-- Disabled 버튼 -->
 <button class="btn btn-primary" disabled>Disabled</button>
 
-<br>
+<br />
 
 <div class="card w-96 bg-base-100 shadow-xl">
-  <figure>
-    <img src="https://placekitten.com/400/300" alt="Kitten" />
-  </figure>
-  <div class="card-body">
-    <h2 class="card-title">귀여운 고양이</h2>
-    <p>고양이는 모든 것을 더 귀엽게 만든다.</p>
-    <div class="card-actions justify-end">
-      <button class="btn btn-primary">Adopt</button>
-    </div>
-  </div>
+	<figure>
+		<img src="https://placekitten.com/400/300" alt="Kitten" />
+	</figure>
+	<div class="card-body">
+		<h2 class="card-title">귀여운 고양이</h2>
+		<p>고양이는 모든 것을 더 귀엽게 만든다.</p>
+		<div class="card-actions justify-end">
+			<button class="btn btn-primary">Adopt</button>
+		</div>
+	</div>
 </div>
 
-<br>
+<br />
 <div class="alert alert-success">
-  <span>성공적으로 저장되었습니다!</span>
+	<span>성공적으로 저장되었습니다!</span>
 </div>
 
 <div class="alert alert-error">
-  <span>에러가 발생했습니다.</span>
+	<span>에러가 발생했습니다.</span>
 </div>
 
-<br>
+<br />
 
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>

@@ -31,11 +31,20 @@
 	let selectedEvent: any = null;
 	let isEditMode = false;
 	let calendar;
+	let isLogined = true;
 
 	// (임시 데이터) 서버에서 받아올 일정 목록
 
 	onMount(async () => {
-		au?.initAuth();
+		await au.initAuth();
+
+		console.log(au?.isLogin());
+
+		if (!au?.isLogin()) {
+			console.log(au.isLogin());
+			toast.error('회원 유저에게 제공되는 서비스 입니다.');
+			isLogined = false;
+		}
 		try {
 			const { data, error } = await au.api().GET('/api/schedule');
 
@@ -47,6 +56,9 @@
 			// ✅ 서버 응답 구조 확인 후 변환
 			const schedules = data?.data || []; // 백엔드가 ApiResponse 형식으로 응답한다고 가정
 
+			const headerButtons = isLogined ? 'addEventButton,dayGridMonth,timeGridWeek,timeGridDay' : '';
+
+			console.log(headerButtons);
 			const events = schedules.map((s: any) => ({
 				id: s.id.toString(),
 				title: s.title,
@@ -100,7 +112,7 @@
 				headerToolbar: {
 					left: 'prev,next today',
 					center: 'title',
-					right: 'addEventButton,dayGridMonth,timeGridWeek,timeGridDay'
+					right: headerButtons
 				},
 				buttonText: {
 					today: '현재 날짜',
@@ -261,7 +273,17 @@
 
 <div class="flex min-h-screen flex-col items-center bg-white p-6">
 	<div bind:this={calendarEl}></div>
-
+	<!-- 로그인되지 않은 경우 -->
+	{#if !isLogined}
+		<div class="mt-4">
+			<button
+				class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+				on:click={() => (window.location.href = '/login')}
+			>
+				로그인 후 일정 관리 이용하기
+			</button>
+		</div>
+	{/if}
 	<!-- 신규 일정 등록 모달 -->
 	{#if showModal}
 		<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
