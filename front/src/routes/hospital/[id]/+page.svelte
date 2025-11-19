@@ -1,15 +1,19 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
-	import { get } from 'svelte/store';
 	import FixedMap from '$lib/FixedMap.svelte';
 	import type { HospitalInfoResponse } from '$lib/types/hospital/info';
 	import { asmGrdMap } from '$lib/constants/asmGradeMap';
+	import { deptCodeMap } from '$lib/constants/deptCodeMap';
+	import { au } from '$lib/au/au';
+	import toast, { Toaster } from 'svelte-5-french-toast';
 
 	// --- 상태 ---
 	let loading = true;
 	let errorMsg = '';
 	let hospital: HospitalInfoResponse | null = null;
+
+	let id: string = '';
 
 	// 기본 정보(로딩 중 표시용)
 	let safeBaseInfo = {
@@ -37,16 +41,12 @@
 	}
 
 	onMount(async () => {
+		id = $page.params.id;
 		try {
-			const id = get(page).params.id; // [id] 라우트 파라미터
-			const base = import.meta.env.VITE_CORE_API_BASE_URL;
-			const url = `${base}/api/hospital/${encodeURIComponent(id)}`;
+			const { data, error } = await au.api().GET('/api/hospital/{id}', {
+				params: { path: { id } }
+			});
 
-			const res = await fetch(url);
-			if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-			const data = (await res.json()) as HospitalInfoResponse;
-			console.log(data);
 			hospital = data.data;
 
 			// 기본 정보 바인드
@@ -72,6 +72,7 @@
 		} catch (e: any) {
 			loading = false;
 			errorMsg = e?.message ?? '데이터 로드 실패';
+			toast.error('데이터 로드 실패 ❌');
 		}
 	});
 
@@ -89,11 +90,22 @@
 				// 렌더링용 형태로 변환
 				.map(([k, v]) => ({ key: k, label: asmGrdMap[k], value: v }) satisfies VisibleGrade)
 		: [];
+
+	$: visibleDepartments = hospital?.detailInfo?.departmentCodes
+		? hospital.detailInfo.departmentCodes
+				.filter((code) => Boolean(deptCodeMap[code])) // 매핑 존재하는 코드만
+				.map((code) => ({
+					key: code,
+					label: deptCodeMap[code] // 진료과 이름
+				}))
+		: [];
 </script>
 
 <svelte:head>
 	<title>{safeBaseInfo.name}</title>
 </svelte:head>
+
+<Toaster />
 
 <div class="flex min-h-screen flex-col items-center bg-white p-6">
 	<!-- 병원 기본 정보 -->
@@ -200,8 +212,8 @@
 						<div class="flex-1">
 							<h3 class="mb-2 font-semibold">진료과</h3>
 							<div class="flex flex-wrap gap-2">
-								{#each hospital.detailInfo.departmentCodes as code}
-									<span class="badge badge-outline">{code}</span>
+								{#each visibleDepartments as dept (dept.key)}
+									<span class="badge badge-outline">{dept.label}</span>
 								{/each}
 							</div>
 						</div>
