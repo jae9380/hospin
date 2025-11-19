@@ -29,6 +29,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void join(JoinRequest request) {
+
+        if (memberRepository.existsById(request.identifier()))
+            throw new DuplicateIdentifierException();
+
         Member newMember = memberDomainService.createNewMember(request);
 
         memberRepository.register(newMember);

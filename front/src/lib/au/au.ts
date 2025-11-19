@@ -19,6 +19,7 @@ export class Au {
 	private _email = writable('');
 	private _birth = writable('');
 	private _genderCode = writable(2);
+	private _logined = writable(false);
 
 	// 외부에 노출되는 뷰(게터/세터). this 바인딩 금지 → 캡처 사용.
 	public member = (() => {
@@ -29,6 +30,7 @@ export class Au {
 			email = this._email,
 			birth = this._birth,
 			genderCode = this._genderCode;
+		const logined = this._logined;
 		return {
 			get id() {
 				return get(id);
@@ -71,6 +73,9 @@ export class Au {
 			},
 			set gender(v: GenderStr) {
 				genderCode.set(toGenderCode(v));
+			},
+			get logined() {
+				return get(logined);
 			}
 		};
 	})();
@@ -85,8 +90,17 @@ export class Au {
 
 	public async initAuth() {
 		if (!browser) return;
-		const { data } = await this.api().GET('/api/member');
-		if (data?.data) this.setLogined(data.data);
+		try {
+			const { data } = await this.api().GET('/api/member');
+			if (data?.data) {
+				this.setLogined(data.data);
+				this._logined.set(true);
+			} else {
+				this._logined.set(false);
+			}
+		} catch (e) {
+			this._logined.set(false);
+		}
 	}
 
 	public setLogined(dto: components['schemas']['MemberDto']) {
@@ -110,11 +124,13 @@ export class Au {
 		this.member.email = '';
 		this.member.gender = 'UNDEFINED';
 		this.member.birth = '';
+		this._logined.set(false);
 	}
 
 	public isLogin() {
-		return this.member.id !== 0;
+		return get(this._logined);
 	}
+
 	public isLogout() {
 		return !this.isLogin();
 	}

@@ -30,7 +30,7 @@ public class MemberController {
 
     @GetMapping()
     public ApiResponse<MemberResponse> memberInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
-        return ApiResponse.ok(memberService.findByIdentifier(memberDetails.getName()));
+        return ApiResponse.ok(memberService.findByIdentifier(memberDetails.getUsername()));
     }
     @PostMapping("/join")
     public ApiResponse<Empty> join(@RequestBody @Valid JoinRequest request) {

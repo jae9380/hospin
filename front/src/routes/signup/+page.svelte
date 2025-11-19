@@ -31,24 +31,32 @@
 	// select에서 선택된 값 ("male", "female", "other")
 	let genderCode: number | null = null; // 숫자 코드 값
 
-	const base = import.meta.env.VITE_CORE_API_BASE_URL;
-
 	// 아이디 중복 확인
 	async function checkIdDuplicate() {
 		if (!identifier) {
 			toast.error('아이디를 입력해주세요');
 			return;
 		}
-		try {
-			const res = await fetch(`${base}/api/member/check-duplicate?identifier=${identifier}`);
-			const data: ApiResponse<any> = await res.json();
 
-			if (data.statusCode === 200) {
+		try {
+			// Au의 api() 사용
+			const { data, error } =
+				(await au?.api().GET('/api/member/check-duplicate', {
+					params: { query: { identifier } }
+				})) ?? {};
+
+			if (error) {
+				toast.error('서버 오류 발생');
+				return;
+			}
+
+			if (data?.statusCode === 200) {
 				isIdDuplicate = true;
 				checkedDuplicate = true;
 				toast.success('사용 가능한 아이디입니다 👍');
 			} else {
 				isIdDuplicate = false;
+				checkedDuplicate = true;
 				identifierInput.focus();
 				toast.error('이미 존재하는 아이디입니다 ❌');
 			}
@@ -57,9 +65,7 @@
 		}
 	}
 
-	// 비밀번호 일치 확인
-	$: passwordMismatch = password && confirmPassword && password !== confirmPassword;
-
+	// 회원가입 처리
 	async function handleSignUp() {
 		if (!checkedDuplicate) {
 			toast.error('아이디 중복 확인이 필요합니다 ❌');
@@ -79,43 +85,25 @@
 			return;
 		}
 
-		const payload = {
-			identifier,
-			password,
-			name,
-			phoneNumber,
-			email,
-			genderCode, // 숫자 코드
-			birth
-		};
-
-		// 콘솔에 확인
-		console.log('회원가입 요청 데이터:', JSON.stringify(payload, null, 2));
+		const payload = { identifier, password, name, phoneNumber, email, genderCode, birth };
 
 		try {
-			const res = await fetch(`${base}/api/member/join`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(payload)
-			});
+			const { data, error } =
+				(await au?.api().POST('/api/member/join', {
+					body: payload
+				})) ?? {};
 
-			if (!res.ok) {
+			if (error || !data || data.statusCode !== 200) {
 				toast.error('회원가입 요청 실패 ❌');
 				return;
 			}
 
-			const data = await res.json();
-			console.log('백엔드 응답:', data);
+			toast.success('회원가입 성공 🎉');
+			goto('/login');
 		} catch (err: any) {
 			console.error('회원가입 에러:', err);
 			toast.error('서버 오류 발생 ❌');
 		}
-
-		// 그 외 검증 통과 시 회원가입 로직
-		toast.success('회원가입 성공 🎉');
-		goto('/login');
 	}
 
 	// 이메일 정규식 검증 함수

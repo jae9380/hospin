@@ -21,7 +21,6 @@ public class MemberDomainServiceImpl implements MemberDomainService {
 
     @Override
     public Member createNewMember(JoinRequest request) throws DuplicateIdentifierException{
-        isIdentifierDuplicate(request.identifier());
         // TODO: Role 선별 기준 추가해야 함
         // Note: 회원가입 내 도메인 로직 생각하기
         return Member.signup(request, bCryptPasswordEncoder.encode(request.password()));
@@ -34,6 +33,7 @@ public class MemberDomainServiceImpl implements MemberDomainService {
 
     @Override
     public Member getByIdentifier(String identifier) {
+//        Note: CustomUserDetailsService을 위해 작성
         return requireByIdentifier(identifier);
     }
 
@@ -70,12 +70,6 @@ public class MemberDomainServiceImpl implements MemberDomainService {
         }
     }
 
-    private boolean isIdentifierDuplicate(String identifier) {
-        if (memberRepository.existsById(identifier)) {
-            throw new DuplicateIdentifierException();
-        }
-        return true;
-    }
     private Member requireByIdentifier(String identifier) {
         return memberRepository.getByIdentifier(identifier)
                 .orElseThrow(MemberNotFoundException::new);
