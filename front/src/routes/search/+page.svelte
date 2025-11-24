@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { au } from '$lib/au/au';
 	import { normalizeHospitalListItem } from '$lib/types/hospital/list';
 	import { regionOptions } from '$lib/constants/regions';
@@ -22,6 +23,14 @@
 
 	let districtOptions: { code: string; parent: string; label: string }[] = [];
 	$: districtOptions = selectedRegion ? getDistrictsByRegion(selectedRegion) : [];
+
+	onMount(() => {
+		const urlName = new URLSearchParams(window.location.search).get('name') ?? '';
+		if (urlName) {
+			name = urlName; // input 값도 세팅
+			handleSearch(0); // 페이지 0으로 검색 실행
+		}
+	});
 
 	async function handleSearch(targetPage: number, pageSize: number = 10) {
 		hasSearched = true;
