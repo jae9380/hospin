@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { au } from '$lib/au/au';
 	import { normalizeHospitalListItem } from '$lib/types/hospital/list';
 	import { regionOptions } from '$lib/constants/regions';
@@ -23,6 +24,14 @@
 	let districtOptions: { code: string; parent: string; label: string }[] = [];
 	$: districtOptions = selectedRegion ? getDistrictsByRegion(selectedRegion) : [];
 
+	onMount(() => {
+		const urlName = new URLSearchParams(window.location.search).get('name') ?? '';
+		if (urlName) {
+			name = urlName; // input 값도 세팅
+			handleSearch(0); // 페이지 0으로 검색 실행
+		}
+	});
+
 	async function handleSearch(targetPage: number, pageSize: number = 10) {
 		hasSearched = true;
 		errorMsg = '';
@@ -45,18 +54,22 @@
 			});
 
 			if (error || !data?.data) {
+				console.log(error);
 				throw new Error(error?.message ?? 'API 응답 오류');
 			}
 
 			results = data.data.content?.map(normalizeHospitalListItem) ?? [];
 			totalPages = data.data.totalPages ?? 0;
 
-			console.log('검색 결과:', data);
+			if (results.length === 0) {
+				errorMsg = '검색 결과가 없습니다.';
+			} else {
+				errorMsg = '';
+			}
 		} catch (err: any) {
-			console.error('검색 실패:', err);
 			results = [];
 			totalPages = 0;
-			errorMsg = err?.message ?? '검색 중 오류 발생';
+			errorMsg = '검색 중 서버에 문제가 발생했습니다.';
 		}
 	}
 	$: pageNumbers = (() => {
@@ -140,7 +153,7 @@
 	<!-- 검색 결과 -->
 	<div class="mt-8 w-full max-w-3xl space-y-4" aria-live="polite">
 		{#if hasSearched && results.length === 0}
-			<p class="text-gray-500">검색 결과가 없습니다.</p>
+			<p class="mt-6 mb-4 text-center text-lg font-semibold text-gray-500">검색 결과가 없습니다.</p>
 		{:else if results.length > 0}
 			{#each results as hospital (hospital.hospitalCode)}
 				<!-- 상세 라우트가 /hospital/[id]일 때 -->
