@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-
+	import { au } from '$lib/au/au';
 	let { children } = $props();
 </script>
 
@@ -12,7 +12,7 @@
 	</div>
 </header>
 
-<main class="pt-16 pb-20">
+<main class="pt-8 pb-10">
 	{@render children?.()}
 	<div class="flex-center rounded bg-base-100 p-10 text-base-content">
 		<nav class="grid grid-flow-col gap-4">
@@ -73,90 +73,9 @@
 	>
 		<div class="mx-auto grid h-full max-w-lg grid-cols-5">
 			<button
-				data-tooltip-target="tooltip-home"
-				type="button"
-				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
-			>
-				<svg
-					class="mb-1 h-5 w-5 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500"
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="currentColor"
-					viewBox="0 0 20 20"
-				>
-					<path
-						d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"
-					/>
-				</svg>
-				<span class="sr-only">Home</span>
-			</button>
-			<div
-				id="tooltip-home"
-				role="tooltip"
-				class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-			>
-				Home
-				<div class="tooltip-arrow" data-popper-arrow></div>
-			</div>
-			<button
-				data-tooltip-target="tooltip-bookmark"
-				type="button"
-				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
-			>
-				<svg
-					class="mb-1 h-5 w-5 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500"
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="currentColor"
-					viewBox="0 0 14 20"
-				>
-					<path
-						d="M13 20a1 1 0 0 1-.64-.231L7 15.3l-5.36 4.469A1 1 0 0 1 0 19V2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v17a1 1 0 0 1-1 1Z"
-					/>
-				</svg>
-				<span class="sr-only">Bookmark</span>
-			</button>
-			<div
-				id="tooltip-bookmark"
-				role="tooltip"
-				class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-			>
-				Bookmark
-				<div class="tooltip-arrow" data-popper-arrow></div>
-			</div>
-			<button
-				data-tooltip-target="tooltip-post"
-				type="button"
-				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
-			>
-				<svg
-					class="mb-1 h-5 w-5 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500"
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 18 18"
-				>
-					<path
-						stroke="currentColor"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M9 1v16M1 9h16"
-					/>
-				</svg>
-				<span class="sr-only">New post</span>
-			</button>
-			<div
-				id="tooltip-post"
-				role="tooltip"
-				class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-			>
-				New post
-				<div class="tooltip-arrow" data-popper-arrow></div>
-			</div>
-			<button
 				data-tooltip-target="tooltip-search"
 				type="button"
+				on:click={() => au?.goTo('/search')}
 				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
 			>
 				<svg
@@ -184,6 +103,99 @@
 				Search
 				<div class="tooltip-arrow" data-popper-arrow></div>
 			</div>
+
+			<button
+				data-tooltip-target="tooltip-bookmark"
+				type="button"
+				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
+			>
+				<svg
+					class="mb-1 h-5 w-5 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="currentColor"
+					viewBox="0 0 14 20"
+				>
+					<path
+						d="M13 20a1 1 0 0 1-.64-.231L7 15.3l-5.36 4.469A1 1 0 0 1 0 19V2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v17a1 1 0 0 1-1 1Z"
+					/>
+				</svg>
+				<span class="sr-only">Bookmark</span>
+			</button>
+			<div
+				id="tooltip-bookmark"
+				role="tooltip"
+				class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
+			>
+				Bookmark
+				<div class="tooltip-arrow" data-popper-arrow></div>
+			</div>
+
+			<button
+				data-tooltip-target="tooltip-home"
+				type="button"
+				on:click={() => au?.goTo('/')}
+				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
+			>
+				<svg
+					class="mb-1 h-5 w-5 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="currentColor"
+					viewBox="0 0 20 20"
+				>
+					<path
+						d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"
+					/>
+				</svg>
+				<span class="sr-only">Home</span>
+			</button>
+			<div
+				id="tooltip-home"
+				role="tooltip"
+				class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
+			>
+				Home
+				<div class="tooltip-arrow" data-popper-arrow></div>
+			</div>
+
+			<button
+				data-tooltip-target="tooltip-post"
+				type="button"
+				on:click={() => au?.goTo('/map')}
+				class="group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="size-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+					/>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+					/>
+				</svg>
+
+				<span class="sr-only">Map</span>
+			</button>
+			<div
+				id="tooltip-post"
+				role="tooltip"
+				class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
+			>
+				Map
+				<div class="tooltip-arrow" data-popper-arrow></div>
+			</div>
+
 			<button
 				data-tooltip-target="tooltip-settings"
 				type="button"
