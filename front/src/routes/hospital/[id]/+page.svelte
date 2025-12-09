@@ -92,7 +92,7 @@
 		: [];
 
 	$: visibleDepartments = hospital?.detailInfo?.departmentCodes
-		? hospital.detailInfo.departmentCodes
+		? hospital.detailInfo?.departmentCodes
 				.filter((code) => Boolean(deptCodeMap[code])) // 매핑 존재하는 코드만
 				.map((code) => ({
 					key: code,
@@ -165,55 +165,121 @@
 				<div class="h-4 w-5/6 skeleton"></div>
 			{:else if hospital}
 				<div class="flex flex-col gap-6">
-					<div class="flex gap-6">
-						<div class="flex-1">
-							<h3 class="mb-2 font-semibold">진료 안내</h3>
-							<ul class="list-inside list-disc space-y-1">
-								<li>접수(평일): {hospital.detailInfo.receptionWeekday || '-'}</li>
-								<li>접수(토): {hospital.detailInfo.receptionSaturday || '-'}</li>
-								<li>점심(평일): {hospital.detailInfo.lunchWeekday || '-'}</li>
-								<li>점심(토): {hospital.detailInfo.lunchSaturday || '-'}</li>
-								<li>
-									일/공휴일 휴무: {hospital.detailInfo.closedSunday}/{hospital.detailInfo
-										.closedHoliday}
-								</li>
-							</ul>
+					<!-- 진료 안내 -->
+					<div class="rounded-xl bg-base-100 p-4 shadow-sm">
+						<h3 class="mb-4 text-lg font-bold">진료 안내</h3>
+						<div class="overflow-x-auto">
+							<table class="table w-full table-auto">
+								<tbody>
+									<tr>
+										<th class="w-40 font-medium">접수(평일)</th>
+										<td>{hospital.detailInfo?.receptionWeekday || '-'}</td>
+									</tr>
+									<tr>
+										<th class="font-medium">접수(토)</th>
+										<td>{hospital.detailInfo?.receptionSaturday || '-'}</td>
+									</tr>
+									<tr>
+										<th class="font-medium">점심(평일)</th>
+										<td>{hospital.detailInfo?.lunchWeekday || '-'}</td>
+									</tr>
+									<tr>
+										<th class="font-medium">점심(토)</th>
+										<td>{hospital.detailInfo?.lunchSaturday || '-'}</td>
+									</tr>
+									<tr>
+										<th class="font-medium">일/공휴일 휴무</th>
+										<td
+											>{hospital.detailInfo?.closedSunday || '-'} / {hospital.detailInfo
+												?.closedHoliday || '-'}</td
+										>
+									</tr>
+								</tbody>
+							</table>
 						</div>
-						<div class="flex-1">
-							<h3 class="mb-2 font-semibold">진료 시간</h3>
-							<ul class="list-inside list-disc space-y-1">
-								<li>월: {hospital.detailInfo.treatMonStart} ~ {hospital.detailInfo.treatMonEnd}</li>
-								<li>화: {hospital.detailInfo.treatTueStart} ~ {hospital.detailInfo.treatTueEnd}</li>
-								<li>수: {hospital.detailInfo.treatWedStart} ~ {hospital.detailInfo.treatWedEnd}</li>
-								<li>목: {hospital.detailInfo.treatThuStart} ~ {hospital.detailInfo.treatThuEnd}</li>
-								<li>금: {hospital.detailInfo.treatFriStart} ~ {hospital.detailInfo.treatFriEnd}</li>
-								<li>토: {hospital.detailInfo.treatSatStart} ~ {hospital.detailInfo.treatSatEnd}</li>
-								<li>일: {hospital.detailInfo.treatSunStart} ~ {hospital.detailInfo.treatSunEnd}</li>
-							</ul>
+					</div>
+
+					<!-- 진료 시간 -->
+					<div class="rounded-xl bg-base-100 p-4 shadow-sm">
+						<h3 class="mb-4 text-lg font-bold">진료 시간</h3>
+						<div class="overflow-x-auto">
+							<table class="table w-full table-auto text-center">
+								<thead class="bg-base-200">
+									<tr>
+										<th class="w-24">구분</th>
+										<th>월</th>
+										<th>화</th>
+										<th>수</th>
+										<th>목</th>
+										<th>금</th>
+										<th>토</th>
+										<th>일</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th class="font-semibold">시작</th>
+										<td>{hospital.detailInfo?.treatMonStart || '-'}</td>
+										<td>{hospital.detailInfo?.treatTueStart || '-'}</td>
+										<td>{hospital.detailInfo?.treatWedStart || '-'}</td>
+										<td>{hospital.detailInfo?.treatThuStart || '-'}</td>
+										<td>{hospital.detailInfo?.treatFriStart || '-'}</td>
+										<td>{hospital.detailInfo?.treatSatStart || '-'}</td>
+										<td>{hospital.detailInfo?.treatSunStart || '-'}</td>
+									</tr>
+									<tr>
+										<th class="font-semibold">종료</th>
+										<td>{hospital.detailInfo?.treatMonEnd || '-'}</td>
+										<td>{hospital.detailInfo?.treatTueEnd || '-'}</td>
+										<td>{hospital.detailInfo?.treatWedEnd || '-'}</td>
+										<td>{hospital.detailInfo?.treatThuEnd || '-'}</td>
+										<td>{hospital.detailInfo?.treatFriEnd || '-'}</td>
+										<td>{hospital.detailInfo?.treatSatEnd || '-'}</td>
+										<td>{hospital.detailInfo?.treatSunEnd || '-'}</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 
 					<div class="flex gap-6">
-						<div class="flex-1">
-							<h3 class="mb-2 font-semibold">응급</h3>
-							<ul class="list-inside list-disc space-y-1">
-								<li>
-									주간: {hospital.detailInfo.emergencyDayYn} / {hospital.detailInfo
-										.emergencyDayPhone1}
-									{hospital.detailInfo.emergencyDayPhone2}
-								</li>
-								<li>
-									야간: {hospital.detailInfo.emergencyNightYn} / {hospital.detailInfo
-										.emergencyNightPhone1}
-									{hospital.detailInfo.emergencyNightPhone2}
-								</li>
-							</ul>
+						<!-- 응급 정보 테이블 -->
+						<div class="flex-1 rounded-xl bg-base-100 p-4 shadow-sm">
+							<h3 class="mb-4 text-lg font-bold">응급</h3>
+							<div class="overflow-x-auto">
+								<table class="table w-full table-auto text-left">
+									<tbody>
+										<tr>
+											<th class="w-32 font-medium">주간</th>
+											<td>
+												{hospital.detailInfo?.emergencyDayYn || '-'} /
+												{hospital.detailInfo?.emergencyDayPhone1 || ''}
+												{hospital.detailInfo?.emergencyDayPhone2 || ''}
+											</td>
+										</tr>
+										<tr>
+											<th class="font-medium">야간</th>
+											<td>
+												{hospital.detailInfo?.emergencyNightYn || '-'} /
+												{hospital.detailInfo?.emergencyNightPhone1 || ''}
+												{hospital.detailInfo?.emergencyNightPhone2 || ''}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
-						<div class="flex-1">
-							<h3 class="mb-2 font-semibold">진료과</h3>
+
+						<!-- 진료과 배지 나열 -->
+						<div class="flex-1 rounded-xl bg-base-100 p-4 shadow-sm">
+							<h3 class="mb-4 text-lg font-bold">진료과</h3>
 							<div class="flex flex-wrap gap-2">
 								{#each visibleDepartments as dept (dept.key)}
-									<span class="badge badge-outline">{dept.label}</span>
+									<span
+										class="dept-badge badge max-w-[8rem] overflow-hidden badge-outline text-ellipsis whitespace-nowrap"
+									>
+										{dept?.label}
+									</span>
 								{/each}
 							</div>
 						</div>
