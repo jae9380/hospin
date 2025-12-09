@@ -45,9 +45,9 @@ public class HospitalServiceImpl implements HospitalService {
         Hospital hospital = hospitalRepository.findByHospitalCode(hospitalCode)
                 .orElseThrow(HospitalNotExist::new);
         HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospitalCode(hospitalCode)
-                .orElseThrow(HospitalNotExist::new);
+                .orElse(null);
         HospitalGrade hospitalGrade = hospitalGradeRepository.findByHospitalCode(hospitalCode)
-                .orElseThrow(HospitalNotExist::new);
+                .orElse(null);
 
         return mapper.toHospitalInfoResponse(hospital, hospitalDetail, hospitalGrade);
     }
