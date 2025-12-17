@@ -53,16 +53,24 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     public List<HospitalListResponse> getHospitalsNearby(String latitude_str, String longitude_str) {
-        double latitude = Double.parseDouble(latitude_str);
-        double longitude = Double.parseDouble(longitude_str);
+        Double latitude = Double.parseDouble(latitude_str);
+        Double longitude = Double.parseDouble(longitude_str);
 
         // DB에서 정수 기준으로 1차 필터링
-        List<Hospital> candidates = hospitalRepository.findHospitalsByLatLngInt((int)latitude, (int)longitude);
+        List<Hospital> candidates = hospitalRepository.findHospitalsByBoundingBox(latitude, longitude);
 
+        log.info("-----------------");
+        log.info("candidates size is "+candidates.size());
+        log.info("-----------------");
 
-        return hospitalDomainService.getHospitalsNearCoordinates(latitude, longitude, candidates).stream()
+        List<HospitalListResponse> result = hospitalDomainService.getHospitalsNearCoordinates(latitude, longitude, candidates).stream()
                 .map(mapper::hospitalToListResponse)
                 .toList();
+
+        log.info("-----------------");
+        log.info("result size is "+result.size());
+        log.info("-----------------");
+        return result;
     }
 
     public Page<HospitalListResponse> search(String name, Long categoryCode, Long regionCode, Long districtCode,

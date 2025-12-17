@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface HospitalRepository {
     List<Hospital> getAllData();
     Optional<Hospital> findByHospitalCode(String hospitalCode);
-    List<Hospital> findHospitalsByLatLngInt(int latInt, int lngInt);
+    List<Hospital> findHospitalsByBoundingBox(Double latInt, Double lngInt);
 //    Page<JpaHospitalEntity> search(Specification<JpaHospitalEntity> spec, Pageable pageable);
     PageResult<Hospital> search(HospitalSearchCriteria query, int page, int size);
 }
