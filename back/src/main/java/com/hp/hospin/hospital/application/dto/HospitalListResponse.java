@@ -6,8 +6,8 @@ public record HospitalListResponse(
         String hospital_code,
         String name,
         String address,
-        String latitude,
-        String longitude
+        Double latitude,
+        Double longitude
 ) {
     public static HospitalListResponse from(Hospital entity) {
         return new HospitalListResponse(

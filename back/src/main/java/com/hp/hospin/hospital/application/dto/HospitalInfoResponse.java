@@ -18,8 +18,8 @@ public record HospitalInfoResponse(
             String name,
             String address,
             String callNumber,
-            String latitude,
-            String longitude
+            Double latitude,
+            Double longitude
     ) {
     }
 
