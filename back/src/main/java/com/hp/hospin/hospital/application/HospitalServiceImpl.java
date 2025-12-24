@@ -59,17 +59,10 @@ public class HospitalServiceImpl implements HospitalService {
         // DB에서 정수 기준으로 1차 필터링
         List<Hospital> candidates = hospitalRepository.findHospitalsByBoundingBox(latitude, longitude);
 
-        log.info("-----------------");
-        log.info("candidates size is "+candidates.size());
-        log.info("-----------------");
-
         List<HospitalListResponse> result = hospitalDomainService.getHospitalsNearCoordinates(latitude, longitude, candidates).stream()
                 .map(mapper::hospitalToListResponse)
                 .toList();
 
-        log.info("-----------------");
-        log.info("result size is "+result.size());
-        log.info("-----------------");
         return result;
     }
 
