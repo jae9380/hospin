@@ -11,8 +11,8 @@ public record HospitalRegister(
         String postalCode,
         String address,
         String callNumber,
-        String latitude,
-        String longitude
+        Double latitude,
+        Double longitude
 ) {
     public JpaHospitalEntity to() {
         return JpaHospitalEntity.create(

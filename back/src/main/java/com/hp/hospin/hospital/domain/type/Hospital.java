@@ -12,8 +12,8 @@ public class Hospital {
     private final Long postalCode;
     private final String address;
     private final String callNumber;
-    private final String latitude;
-    private final String longitude;
+    private final Double latitude;
+    private final Double longitude;
 
     public Hospital(String hospitalCode,
                     String name,
@@ -23,8 +23,8 @@ public class Hospital {
                     Long postalCode,
                     String address,
                     String callNumber,
-                    String latitude,
-                    String longitude) {
+                    Double latitude,
+                    Double longitude) {
         this.hospitalCode = hospitalCode;
         this.name = name;
         this.categoryCode = categoryCode;

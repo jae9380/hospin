@@ -6,6 +6,7 @@
 	import { categoryOptions } from '$lib/constants/categories';
 	import type { PageResult, HospitalListItemRaw, HospitalListItem } from '$lib/types/hospital/list';
 	import { allDistrictOptions, getDistrictsByRegion } from '$lib/constants/districts';
+	import { browser } from '$app/environment';
 
 	let name = '';
 	let address = '';
@@ -25,10 +26,22 @@
 	$: districtOptions = selectedRegion ? getDistrictsByRegion(selectedRegion) : [];
 
 	onMount(() => {
-		const urlName = new URLSearchParams(window.location.search).get('name') ?? '';
-		if (urlName) {
-			name = urlName; // input 값도 세팅
-			handleSearch(0); // 페이지 0으로 검색 실행
+		if (!browser) return;
+
+		const params = new URLSearchParams(window.location.search);
+
+		// 🔹 URL에서 모든 검색 조건 복원
+		name = params.get('name') ?? '';
+		categoryCode = params.get('categoryCode') ?? '';
+		selectedRegion = params.get('regionCode') ?? '';
+		selectedDistrict = params.get('districtCode') ?? '';
+		postalCode = params.get('postalCode') ?? '';
+		address = params.get('address') ?? '';
+		page = Number(params.get('page') ?? 0);
+
+		// 🔹 URL에 조건이 하나라도 있으면 검색 실행
+		if (name || categoryCode || selectedRegion || selectedDistrict || postalCode || address) {
+			handleSearch(page);
 		}
 	});
 
@@ -38,7 +51,7 @@
 		page = Math.max(0, targetPage);
 
 		try {
-			const { data, error } = await au.api().GET('/api/hospital/search', {
+			const { data, error } = await au?.api().GET('/api/hospital/search', {
 				params: {
 					query: {
 						name,
@@ -66,6 +79,8 @@
 			} else {
 				errorMsg = '';
 			}
+
+			updateUrlWithSearchParams();
 		} catch (err: any) {
 			results = [];
 			totalPages = 0;
@@ -83,6 +98,21 @@
 
 		return pages;
 	})();
+
+	function updateUrlWithSearchParams() {
+		if (!browser) return;
+
+		const params = new URLSearchParams();
+		if (name) params.set('name', name);
+		if (categoryCode) params.set('categoryCode', categoryCode);
+		if (selectedRegion) params.set('regionCode', selectedRegion);
+		if (selectedDistrict) params.set('districtCode', selectedDistrict);
+		if (postalCode) params.set('postalCode', postalCode);
+		if (address) params.set('address', address);
+		params.set('page', String(page));
+
+		au?.goTo(`/search?${params.toString()}`, { replaceState: true });
+	}
 </script>
 
 <svelte:head>
