@@ -38,8 +38,6 @@
 	onMount(async () => {
 		await au.initAuth();
 
-		console.log(au?.isLogin());
-
 		if (!au?.isLogin()) {
 			console.log(au.isLogin());
 			toast.error('회원 유저에게 제공되는 서비스 입니다.');

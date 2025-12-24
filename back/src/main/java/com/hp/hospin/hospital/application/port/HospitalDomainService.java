@@ -9,5 +9,5 @@ import com.hp.hospin.hospital.domain.type.PageResult;
 import java.util.List;
 
 public interface HospitalDomainService {
-    List<Hospital> getHospitalsNearCoordinates(double latitude, double longitude, List<Hospital> hospitalList);
+    List<Hospital> getHospitalsNearCoordinates(Double latitude, Double longitude, List<Hospital> hospitalList);
 }
