@@ -136,7 +136,7 @@ export class Au {
 	}
 
 	public goTo(url: string) {
-		if (browser) goto(url);
+		if (browser) goto(url, { replaceState: true });
 	}
 	public replace(url: string) {
 		if (browser) goto(url, { replaceState: true });

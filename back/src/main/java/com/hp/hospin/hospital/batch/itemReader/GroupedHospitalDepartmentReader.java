@@ -27,7 +27,8 @@ public class GroupedHospitalDepartmentReader implements ItemReader<HospitalCodeW
         this.delegate = new FlatFileItemReaderBuilder<HospitalDepartmentRow>()
                 .name("groupedHospitalDepartmentReader")
                 .resource(new ClassPathResource("/csv/hospital_department.csv"))
-                .linesToSkip(1) // 테스트 시엔 1, 실제 구동 시엔 3815507
+//                .linesToSkip(1) // 테스트 시엔 1, 실제 구동 시엔 3815507
+                .linesToSkip(3815507) // 테스트 시엔 1, 실제 구동 시엔 3815507
                 .delimited().delimiter(",")
                 .names("hospitalCode", "hospitalName", "departmentCode", "departmentName", "specialistCount", "optionalDoctorCount")
                 .fieldSetMapper(new HospitalDepartmentFieldSetMapper())

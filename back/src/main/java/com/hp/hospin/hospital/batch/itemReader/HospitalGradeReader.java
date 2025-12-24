@@ -74,8 +74,8 @@ public class HospitalGradeReader{
     private String fetchFromAPI() throws Exception {
         String serviceKey = env.getProperty("openapi.key.encoding");
 //        TODO: 배포 전 모든 데이터를 읽어 오기 위해 수정 해야 함
-//        Long numOfRows = 35962L;  // API를 통해 얻을 수 있는 데이터 수
-        Long numOfRows = 10000L;  //
+        Long numOfRows = 35962L;  // API를 통해 얻을 수 있는 데이터 수
+//        Long numOfRows = 10000L;  //
 
         StringBuilder urlBuilder = new StringBuilder("https://apis.data.go.kr/B551182/hospAsmInfoService1/getHospAsmInfo1");
         urlBuilder.append("?serviceKey=").append(serviceKey);
