@@ -39,14 +39,14 @@ public class JpaHospitalEntity {
     private String callNumber;
 
     @Column(name = "latitude")
-    private String latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private String longitude;
+    private Double longitude;
 
     private JpaHospitalEntity(String hospitalCode, String name, Long categoryCode, Long regionCode,
                               Long districtCode, Long postalCode, String address,
-                              String callNumber, String latitude, String longitude) {
+                              String callNumber, Double latitude, Double longitude) {
         this.hospitalCode = hospitalCode;
         this.name = name;
         this.categoryCode = categoryCode;
@@ -61,7 +61,7 @@ public class JpaHospitalEntity {
 
     public static JpaHospitalEntity create(String hospitalCode, String name, String categoryCode, String regionCode,
                                            String districtCode, String postalCode, String address,
-                                           String callNumber, String latitude, String longitude) {
+                                           String callNumber, Double latitude, Double longitude) {
         return new JpaHospitalEntity(
                 hospitalCode,
                 name,

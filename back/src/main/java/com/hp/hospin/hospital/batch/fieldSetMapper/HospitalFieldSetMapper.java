@@ -10,6 +10,19 @@ public class HospitalFieldSetMapper implements FieldSetMapper<HospitalRegister> 
     public HospitalRegister mapFieldSet(FieldSet fieldSet) throws BindException {
         if (fieldSet == null) return null;
 
+        Double longitude = null;
+        Double latitude = null;
+
+        String lonStr = fieldSet.readRawString(29);
+        if (lonStr != null && !lonStr.isBlank()) {
+            longitude = Double.parseDouble(lonStr);
+        }
+
+        String latStr = fieldSet.readRawString(28);
+        if (latStr != null && !latStr.isBlank()) {
+            latitude = Double.parseDouble(latStr);
+        }
+
         HospitalRegister dto = new HospitalRegister(
                 fieldSet.readRawString(0),
                 fieldSet.readRawString(1),
@@ -19,8 +32,8 @@ public class HospitalFieldSetMapper implements FieldSetMapper<HospitalRegister> 
                 fieldSet.readRawString(9),
                 fieldSet.readRawString(10),
                 fieldSet.readRawString(11),
-                fieldSet.readRawString(29),
-                fieldSet.readRawString(28)
+                longitude,
+                latitude
         );
 
         return dto;
