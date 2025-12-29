@@ -28,6 +28,10 @@ spring:
     job:
       enabled: false
 
+  ai:
+    openai:
+      api-key: ${openai.api-key}
+
 logging:
   level:
     com.ms.back: DEBUG

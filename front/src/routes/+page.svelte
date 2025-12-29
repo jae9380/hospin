@@ -82,9 +82,9 @@
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/any')}
+			on:click={() => handleClick('/symptomCheck')}
 		>
-			Any..
+			증상 기반 진료과 안내
 		</div>
 	</div>
 
