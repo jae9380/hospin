@@ -1,11 +1,37 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { au } from '$lib/au/au';
 
+	let lat: number | null = null;
+	let lng: number | null = null;
+	let error: string | null = null;
 	let symptom = '';
 	let loading = false;
 	let submitted = false;
 	let result = '';
+
+	onMount(async () => {
+		if (!navigator.geolocation) {
+			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+			return;
+		}
+
+		await new Promise<void>((resolve) => {
+			navigator.geolocation.getCurrentPosition(
+				(pos) => {
+					lat = pos.coords.latitude;
+					lng = pos.coords.longitude;
+					console.log(lat, lng); // temp
+					resolve();
+				},
+				(err) => {
+					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
+					resolve();
+				}
+			);
+		});
+	});
 
 	const submit = async () => {
 		if (!symptom.trim()) {

@@ -1,5 +1,6 @@
 package com.hp.hospin.hospital.domain;
 
+import com.hp.hospin.hospital.application.dto.SymptomAnalyzeResponse;
 import com.hp.hospin.hospital.application.port.HospitalDomainService;
 import com.hp.hospin.hospital.domain.type.Hospital;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,11 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
                     return distance <= 3;
                 })
                 .toList();
+    }
+    @Override
+    public String findHospitalsBySymptoms(SymptomAnalyzeResponse response, String latitude, String longitude) {
+
+        return null;
     }
 
     //    Haversine 공식

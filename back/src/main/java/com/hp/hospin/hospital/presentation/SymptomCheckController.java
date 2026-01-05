@@ -13,9 +13,11 @@ import reactor.core.publisher.Flux;
 public class SymptomCheckController {
     private final SymptomCheckService symptomCheckService;
     @PostMapping("")
-    public ApiResponse<String> percheck(@RequestBody String str) {
+    public ApiResponse<String> percheck(@RequestBody String str,
+                                        @RequestBody String latitude,
+                                        @RequestBody String longitude) {
         try {
-            String result = symptomCheckService.generate(str); // 호출 시 401 발생 가능
+            String result = symptomCheckService.generate(str, latitude, longitude); // 호출 시 401 발생 가능
             return ApiResponse.ok(result);
         } catch (Exception e) {
             System.out.println("API 호출 실패: " + e.getMessage());
