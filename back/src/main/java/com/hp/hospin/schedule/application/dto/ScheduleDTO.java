@@ -1,6 +1,6 @@
-package com.hp.hospin.schedule.domain.entity;
+package com.hp.hospin.schedule.application.dto;
 
-import com.hp.hospin.schedule.domain.form.ScheduleForm;
+import com.hp.hospin.schedule.presentation.dto.ScheduleRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +8,10 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
-public class Schedule {
+public class ScheduleDTO {
+
     private Long id;
     private Long userId;
     private int category;
@@ -23,9 +25,9 @@ public class Schedule {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Schedule(Long id, Long userId, int category, int type,
-                     String title, String memo, LocalDateTime startDatetime, LocalDateTime endDatetime,
-                     int recurringType, Long recurrenceRule, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ScheduleDTO(Long id, Long userId, int category, int type, String title, String memo,
+                       LocalDateTime startDatetime, LocalDateTime endDatetime, int recurringType,
+                       Long recurrenceRule, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
         this.category = category;
@@ -40,24 +42,9 @@ public class Schedule {
         this.updatedAt = updatedAt;
     }
 
-    public static Schedule create(Long userId, ScheduleForm request) {
-        return Schedule.builder()
-                .id(null)
-                .userId(userId)
-                .category(request.getCategory())
-                .type(request.getType())
-                .title(request.getTitle())
-                .memo(request.getMemo())
-                .startDatetime(request.getStartDatetime())
-                .endDatetime(request.getEndDatetime())
-                .recurringType(request.getRecurringType())
-                .recurrenceRule(request.getRecurrenceRule())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(null)
-                .build();
-    }
-
-    public Schedule update(ScheduleForm request) {
+    public ScheduleDTO(ScheduleRequest request) {
+        this.id = null;
+        this.userId = null;
         this.category = request.getCategory();
         this.type = request.getType();
         this.title = request.getTitle();
@@ -66,8 +53,7 @@ public class Schedule {
         this.endDatetime = request.getEndDatetime();
         this.recurringType = request.getRecurringType();
         this.recurrenceRule = request.getRecurrenceRule();
-        this.updatedAt = LocalDateTime.now();
-
-        return this;
+        this.createdAt = null;
+        this.updatedAt = null;
     }
 }

@@ -1,9 +1,8 @@
 package com.hp.hospin.schedule.application;
 
+import com.hp.hospin.schedule.application.dto.ScheduleDTO;
+import com.hp.hospin.schedule.application.mapper.ScheduleDtoMapper;
 import com.hp.hospin.schedule.application.port.ScheduleDomainService;
-import com.hp.hospin.schedule.domain.entity.Schedule;
-import com.hp.hospin.schedule.presentation.dto.CreateScheduleRequest;
-import com.hp.hospin.schedule.presentation.dto.UpdateScheduleRequest;
 import com.hp.hospin.schedule.presentation.port.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,18 +18,19 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleDomainService scheduleDomainService;
+    private final ScheduleDtoMapper mapper;
 
     @Override
     @Transactional
-    public void createSchedule(Long userId, CreateScheduleRequest request) {
-        validDateRange(request.getStartDatetime(), request.getEndDatetime());
-        scheduleDomainService.createSchedule(userId, request);
+    public ScheduleDTO createSchedule(Long userId, ScheduleDTO createRequest) {
+        validDateRange(createRequest.getStartDatetime(), createRequest.getEndDatetime());
+        return mapper.toDto(scheduleDomainService.createSchedule(userId, mapper.toForm(createRequest)));
     }
 
     @Override
     @Transactional
-    public void modifySchedule(Long userId, Long scheduleId, UpdateScheduleRequest updateScheduleRequest) {
-        scheduleDomainService.modifySchedule(scheduleId, updateScheduleRequest, userId);
+    public ScheduleDTO modifySchedule(Long userId, Long scheduleId, ScheduleDTO updateRequest) {
+        return mapper.toDto(scheduleDomainService.modifySchedule(scheduleId, mapper.toForm(updateRequest), userId));
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<Schedule> getScheduleList(Long userId) {
-        List<Schedule> schedules = scheduleDomainService.getScheduleList(userId);
+    public List<ScheduleDTO> getScheduleList(Long userId) {
+        List<ScheduleDTO> schedules = scheduleDomainService.getScheduleList(userId).stream().map(mapper::toDto).toList();
         // TODO: 나중에 추가 조건 생성 로직 (예: 날짜 범위, 카테고리, 반복 여부 등)
         return schedules;
     }

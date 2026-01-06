@@ -2,10 +2,9 @@ package com.hp.hospin.schedule.domain;
 
 import com.hp.hospin.schedule.application.port.ScheduleDomainService;
 import com.hp.hospin.schedule.domain.entity.Schedule;
+import com.hp.hospin.schedule.domain.form.ScheduleForm;
 import com.hp.hospin.schedule.domain.port.ScheduleRepository;
 import com.hp.hospin.schedule.exception.ScheduleException.*;
-import com.hp.hospin.schedule.presentation.dto.CreateScheduleRequest;
-import com.hp.hospin.schedule.presentation.dto.UpdateScheduleRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +17,20 @@ public class ScheduleDomainServiceImpl implements ScheduleDomainService {
     private final ScheduleRepository scheduleRepository;
 
     @Override
-    public void createSchedule(Long userId, CreateScheduleRequest request) {
+    public Schedule createSchedule(Long userId, ScheduleForm request) {
         Schedule newSchedule = Schedule.create(userId, request);
         scheduleRepository.save(newSchedule);
+
+        return newSchedule;
     }
 
     @Override
-    public void modifySchedule(Long scheduleId, UpdateScheduleRequest updateScheduleRequest, Long userId) {
+    public Schedule modifySchedule(Long scheduleId, ScheduleForm updateScheduleRequest, Long userId) {
         Schedule schedule = getSchedule(scheduleId);
         // NOTE: 검증 로직
         if (!schedule.getUserId().equals(userId)) throw new NoPerissionException();
 
-        schedule.update(updateScheduleRequest);
+        return schedule.update(updateScheduleRequest);
     }
 
     @Override

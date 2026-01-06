@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UpdateScheduleRequest {
+public class ScheduleRequest {
     private int category;
     private int type;
     private String title;
