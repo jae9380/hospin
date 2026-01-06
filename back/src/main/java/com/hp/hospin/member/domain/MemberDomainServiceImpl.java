@@ -1,6 +1,7 @@
 package com.hp.hospin.member.domain;
 
-import com.hp.hospin.member.application.dto.JoinRequest;
+import com.hp.hospin.member.domain.form.JoinForm;
+import com.hp.hospin.member.domain.form.LoginForm;
 import com.hp.hospin.member.application.port.MemberDomainService;
 import com.hp.hospin.member.domain.entity.Member;
 import com.hp.hospin.member.domain.port.MemberRepository;
@@ -25,19 +26,19 @@ public class MemberDomainServiceImpl implements MemberDomainService {
     }
 
     @Override
-    public void createNewMember(JoinRequest request) throws DuplicateIdentifierException{
+    public void createNewMember(JoinForm form) throws DuplicateIdentifierException{
         // TODO: Role 선별 기준 추가해야 함
         // Note: 회원가입 내 도메인 로직 생각하기
-        Member member = Member.signup(request, bCryptPasswordEncoder.encode(request.password()));
+        Member member = Member.signup(form, bCryptPasswordEncoder.encode(form.getPassword()));
 
         memberRepository.register(member);
     }
 
     @Override
-    public void login(String identifier, String password) throws InvalidPasswordException {
-        Member target = requireByIdentifier(identifier);
+    public void login(LoginForm form) throws InvalidPasswordException {
+        Member target = requireByIdentifier(form.getIdentifier());
 
-        verificationPassword(target.getPassword(), password);
+        verificationPassword(target.getPassword(), form.getPassword());
     }
 
     @Override

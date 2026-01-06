@@ -3,12 +3,10 @@ package com.hp.hospin.schedule.application.dto;
 import com.hp.hospin.schedule.presentation.dto.ScheduleRequest;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Builder
 public class ScheduleDTO {
 

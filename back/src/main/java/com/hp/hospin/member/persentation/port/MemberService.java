@@ -1,15 +1,13 @@
 package com.hp.hospin.member.persentation.port;
 
-import com.hp.hospin.member.application.dto.JoinRequest;
-import com.hp.hospin.member.application.dto.MemberResponse;
-import com.hp.hospin.member.application.dto.LoginRequest;
+import com.hp.hospin.member.application.dto.MemberDTO;
 
 import java.util.Map;
 
 public interface MemberService {
-    void join(JoinRequest request);
-    void login(LoginRequest request);
+    void join(MemberDTO request);
+    void login(MemberDTO request);
     Map<Boolean, String> checkDuplicateIdentifier(String identifier);
-    MemberResponse findByIdentifier(String name);
+    MemberDTO findByIdentifier(String name);
     Map<String, String> logoutMsg();
 }
