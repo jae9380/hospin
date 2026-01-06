@@ -20,14 +20,23 @@ public class MemberDomainServiceImpl implements MemberDomainService {
     static final List<String> BANNED_WORDS = List.of("admin", "root", "master");
 
     @Override
-    public Member createNewMember(JoinRequest request) throws DuplicateIdentifierException{
-        // TODO: Role 선별 기준 추가해야 함
-        // Note: 회원가입 내 도메인 로직 생각하기
-        return Member.signup(request, bCryptPasswordEncoder.encode(request.password()));
+    public boolean existsById(String id) {
+        return memberRepository.existsById(id);
     }
 
     @Override
-    public void login(String identifier, String password, Member target) throws InvalidPasswordException {
+    public void createNewMember(JoinRequest request) throws DuplicateIdentifierException{
+        // TODO: Role 선별 기준 추가해야 함
+        // Note: 회원가입 내 도메인 로직 생각하기
+        Member member = Member.signup(request, bCryptPasswordEncoder.encode(request.password()));
+
+        memberRepository.register(member);
+    }
+
+    @Override
+    public void login(String identifier, String password) throws InvalidPasswordException {
+        Member target = requireByIdentifier(identifier);
+
         verificationPassword(target.getPassword(), password);
     }
 
