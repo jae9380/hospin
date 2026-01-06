@@ -4,8 +4,6 @@ import com.hp.hospin.member.application.dto.JoinRequest;
 import com.hp.hospin.member.application.dto.MemberResponse;
 import com.hp.hospin.member.application.mapper.MemberDtoMapper;
 import com.hp.hospin.member.application.port.MemberDomainService;
-import com.hp.hospin.member.domain.entity.Member;
-import com.hp.hospin.member.domain.port.MemberRepository;
 import com.hp.hospin.member.exception.MemberException.*;
 import com.hp.hospin.member.application.dto.LoginRequest;
 import com.hp.hospin.member.persentation.port.MemberService;
@@ -24,26 +22,18 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
     private final MemberDomainService memberDomainService;
-    private final MemberRepository memberRepository;
     private final MemberDtoMapper mapper;
 
     @Override
     public void join(JoinRequest request) {
+        if (memberDomainService.existsById(request.identifier())) throw new DuplicateIdentifierException();
 
-        if (memberRepository.existsById(request.identifier()))
-            throw new DuplicateIdentifierException();
-
-        Member newMember = memberDomainService.createNewMember(request);
-
-        memberRepository.register(newMember);
+        memberDomainService.createNewMember(request);
     }
 
     @Override
     public void login(LoginRequest request) {
-        Member member = memberRepository.getByIdentifier(request.identifier())
-                .orElseThrow(MemberNotFoundException::new);
-
-        memberDomainService.login(request.identifier(), request.password(), member);
+        memberDomainService.login(request.identifier(), request.password());
     }
 
     @Override
@@ -53,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
         try {
             memberDomainService.validatePolicy(identifier);
 
-            boolean exists = memberRepository.existsById(identifier);
+            boolean exists = memberDomainService.existsById(identifier);
             if (exists) {
                 resultMap.put(false, "이미 존재하는 아이디입니다.");
             } else {
@@ -70,7 +60,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse findByIdentifier(String identifier) {
         // TODO: 해당 유저가 없을 경우에 대한 예외 설정 필요
-        return mapper.domainToResponse(memberRepository.getByIdentifier(identifier).get());
+        return mapper.domainToResponse(memberDomainService.getByIdentifier(identifier));
     }
 
     @Override

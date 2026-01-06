@@ -4,8 +4,9 @@ import com.hp.hospin.member.application.dto.JoinRequest;
 import com.hp.hospin.member.domain.entity.Member;
 
 public interface MemberDomainService {
-    Member createNewMember (JoinRequest request);
-    void login (String inputIdentifier, String inpitPassword, Member target);
+    boolean existsById(String id);
+    void createNewMember (JoinRequest request);
+    void login (String inputIdentifier, String inpitPassword);
     Member getByIdentifier (String identifier);
     void validatePolicy(String identifier);
 
