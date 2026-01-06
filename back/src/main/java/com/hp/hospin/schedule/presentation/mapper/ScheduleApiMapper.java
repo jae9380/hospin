@@ -15,7 +15,7 @@ public interface ScheduleApiMapper {
 
     ScheduleApiMapper INSTANCE = Mappers.getMapper(ScheduleApiMapper.class);
 
-    ScheduleResponse domainToResponse(ScheduleDTO schedule);
+    ScheduleResponse dtoToResponse(ScheduleDTO schedule);
 
     default ScheduleDTO requestToDomain(ScheduleRequest request) {
         return new ScheduleDTO(request);

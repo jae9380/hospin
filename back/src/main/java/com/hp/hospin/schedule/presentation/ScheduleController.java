@@ -26,14 +26,14 @@ public class ScheduleController {
         List<ScheduleDTO> schedules = scheduleService.getScheduleList(memberDetails.getId());
         if (schedules.isEmpty()) return ApiResponse.ok(List.of());
         return ApiResponse.ok(schedules.stream()
-                .map(mapper::domainToResponse)
+                .map(mapper::dtoToResponse)
                 .toList());
     }
 
     @PostMapping()
     public ApiResponse<ScheduleResponse> createdSchedule(@AuthenticationPrincipal MemberDetails memberDetails,
                                               @RequestBody ScheduleRequest createScheduleRequest) {
-        ScheduleResponse schedule =  mapper.domainToResponse(
+        ScheduleResponse schedule =  mapper.dtoToResponse(
                 scheduleService.createSchedule(memberDetails.getId(), mapper.requestToDomain(createScheduleRequest))
         );
         return ApiResponse.created(schedule);
@@ -43,7 +43,7 @@ public class ScheduleController {
     public ApiResponse<ScheduleResponse> modifySchedule(@AuthenticationPrincipal MemberDetails memberDetails,
                                              @PathVariable Long scheduleId,
                                              @RequestBody ScheduleRequest updateScheduleRequest) {
-        ScheduleResponse schdule =  mapper.domainToResponse(
+        ScheduleResponse schdule =  mapper.dtoToResponse(
                 scheduleService.modifySchedule(memberDetails.getId(), scheduleId, mapper.requestToDomain(updateScheduleRequest))
         );
         return ApiResponse.ok(schdule);

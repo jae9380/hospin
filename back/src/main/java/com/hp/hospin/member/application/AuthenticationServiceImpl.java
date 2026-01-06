@@ -2,9 +2,8 @@ package com.hp.hospin.member.application;
 
 import com.hp.hospin.global.jwt.CookieUtil;
 import com.hp.hospin.global.jwt.JwtTokenProvider;
-import com.hp.hospin.member.application.dto.MemberResponse;
-import com.hp.hospin.member.application.mapper.MemberAppMapper;
-import com.hp.hospin.member.application.port.MemberDomainService;
+import com.hp.hospin.member.application.dto.MemberDTO;
+import com.hp.hospin.member.application.mapper.MemberDtoMapper;
 import com.hp.hospin.member.application.port.TokenDomainService;
 import com.hp.hospin.member.domain.entity.Member;
 import com.hp.hospin.member.domain.port.MemberRepository;
@@ -33,9 +32,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final MemberAppMapper mapper;
+    private final MemberDtoMapper mapper;
 
-    public MemberResponse authenticateAndSetTokens(String identifier, HttpServletRequest request, HttpServletResponse response) {
+    public MemberDTO authenticateAndSetTokens(String identifier, HttpServletRequest request, HttpServletResponse response) {
         Member member = memberRepository.getByIdentifier(identifier).orElse(null);
 
         String newRefreshToken = jwtTokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);

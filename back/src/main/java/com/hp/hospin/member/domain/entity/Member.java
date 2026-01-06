@@ -1,6 +1,6 @@
 package com.hp.hospin.member.domain.entity;
 
-import com.hp.hospin.member.application.dto.JoinRequest;
+import com.hp.hospin.member.domain.form.JoinForm;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -32,17 +32,17 @@ public class Member {
         this.birth = birth;
     }
 
-    public static Member signup(JoinRequest request, String encodedPassword) {
+    public static Member signup(JoinForm form, String encodedPassword) {
         return Member.builder()
                 .id(null)
-                .identifier(request.identifier())
+                .identifier(form.getIdentifier())
                 .password(encodedPassword)
-                .name(request.name())
-                .phoneNumber(request.phoneNumber())
-                .email(request.email())
+                .name(form.getName())
+                .phoneNumber(form.getPhoneNumber())
+                .email(form.getEmail())
                 .role(2)
-                .gender(request.gender())
-                .birth(request.birth())
+                .gender(form.getGender())
+                .birth(form.getBirth())
                 .build();
     }
 }

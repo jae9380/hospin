@@ -1,11 +1,9 @@
 package com.hp.hospin.member.application;
 
-import com.hp.hospin.member.application.dto.JoinRequest;
-import com.hp.hospin.member.application.dto.MemberResponse;
+import com.hp.hospin.member.application.dto.MemberDTO;
 import com.hp.hospin.member.application.mapper.MemberDtoMapper;
 import com.hp.hospin.member.application.port.MemberDomainService;
 import com.hp.hospin.member.exception.MemberException.*;
-import com.hp.hospin.member.application.dto.LoginRequest;
 import com.hp.hospin.member.persentation.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +23,15 @@ public class MemberServiceImpl implements MemberService {
     private final MemberDtoMapper mapper;
 
     @Override
-    public void join(JoinRequest request) {
-        if (memberDomainService.existsById(request.identifier())) throw new DuplicateIdentifierException();
+    public void join(MemberDTO request) {
+        if (memberDomainService.existsById(request.getIdentifier())) throw new DuplicateIdentifierException();
 
-        memberDomainService.createNewMember(request);
+        memberDomainService.createNewMember(mapper.dtoToJoinForm(request));
     }
 
     @Override
-    public void login(LoginRequest request) {
-        memberDomainService.login(request.identifier(), request.password());
+    public void login(MemberDTO request) {
+        memberDomainService.login(mapper.dtoToLoginForm(request));
     }
 
     @Override
@@ -58,9 +56,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponse findByIdentifier(String identifier) {
+    public MemberDTO findByIdentifier(String identifier) {
         // TODO: 해당 유저가 없을 경우에 대한 예외 설정 필요
-        return mapper.domainToResponse(memberDomainService.getByIdentifier(identifier));
+        return mapper.domainToDto(memberDomainService.getByIdentifier(identifier));
     }
 
     @Override

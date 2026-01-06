@@ -1,4 +1,4 @@
-package com.hp.hospin.member.application.dto;
+package com.hp.hospin.member.persentation.dto;
 
 import java.time.LocalDate;
 
