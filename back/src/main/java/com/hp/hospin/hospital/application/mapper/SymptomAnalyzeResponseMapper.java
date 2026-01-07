@@ -2,8 +2,8 @@
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.hp.hospin.hospital.application.dto.RecommendedSpecialty;
-//import com.hp.hospin.hospital.application.dto.SymptomAnalyzeResponse;
+//import com.hp.hospin.hospital.presentation.dto.RecommendedSpecialty;
+//import com.hp.hospin.hospital.presentation.dto.SymptomAnalyzeResponse;
 //import org.mapstruct.Mapper;
 //import org.mapstruct.ReportingPolicy;
 //import org.mapstruct.factory.Mappers;

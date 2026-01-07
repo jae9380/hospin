@@ -1,6 +1,6 @@
 package com.hp.hospin.hospital.domain;
 
-import com.hp.hospin.hospital.application.dto.SymptomAnalyzeResponse;
+import com.hp.hospin.hospital.presentation.dto.SymptomAnalyzeResponse;
 import com.hp.hospin.hospital.application.port.HospitalDomainService;
 import com.hp.hospin.hospital.domain.port.HospitalDetailRepository;
 import com.hp.hospin.hospital.domain.port.HospitalGradeRepository;
