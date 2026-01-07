@@ -1,8 +1,8 @@
 package com.hp.hospin.hospital.application;
 
 import com.hp.hospin.global.exception.HospinCustomException.*;
-import com.hp.hospin.hospital.application.dto.HospitalInfoResponse;
-import com.hp.hospin.hospital.application.dto.HospitalListResponse;
+import com.hp.hospin.hospital.application.dto.HospitalBaseDTO;
+import com.hp.hospin.hospital.application.dto.HospitalDTO;
 import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
 import com.hp.hospin.hospital.application.mapper.HospitalDtoMapper;
 import com.hp.hospin.hospital.application.port.HospitalDomainService;
@@ -29,15 +29,15 @@ public class HospitalServiceImpl implements HospitalService {
     private final HospitalDomainService hospitalDomainService;
     private final HospitalDtoMapper mapper;
 
-    public List<HospitalListResponse> getAllHospitalData() {
+    public List<HospitalBaseDTO> getAllHospitalData() {
         List<Hospital> hospitals = hospitalDomainService.getAllHospitalData();
 
         return hospitals.stream()
-                .map(mapper::hospitalToListResponse)
+                .map(mapper::toBaseDto)
                 .toList();
     }
 
-    public HospitalInfoResponse assembleHospitalInfo(String hospitalCode) {
+    public HospitalDTO assembleHospitalInfo(String hospitalCode) {
         Hospital hospital = hospitalDomainService.getHospitalByHospitalCode(hospitalCode)
                 .orElseThrow(HospitalNotExist::new);
         HospitalDetail hospitalDetail = hospitalDomainService.getHospitalDetailByHospitalCode(hospitalCode)
@@ -48,16 +48,16 @@ public class HospitalServiceImpl implements HospitalService {
         return mapper.toHospitalInfoResponse(hospital, hospitalDetail, hospitalGrade);
     }
 
-    public List<HospitalListResponse> getHospitalsNearby(String latitude_str, String longitude_str) {
-        List<HospitalListResponse> result = hospitalDomainService.getHospitalsNearCoordinates(latitude_str, longitude_str).stream()
-                .map(mapper::hospitalToListResponse)
+    public List<HospitalBaseDTO> getHospitalsNearby(String latitude_str, String longitude_str) {
+        List<HospitalBaseDTO> result = hospitalDomainService.getHospitalsNearCoordinates(latitude_str, longitude_str).stream()
+                .map(mapper::toBaseDto)
                 .toList();
 
         return result;
     }
 
 @Override
-public Page<HospitalListResponse> search(String name, Long categoryCode, Long regionCode,
+public Page<HospitalBaseDTO> search(String name, Long categoryCode, Long regionCode,
                                             Long districtCode, Long postalCode, String address, Pageable pageable) {
     HospitalSearchRequest req = new HospitalSearchRequest(
             name, categoryCode, regionCode, districtCode, postalCode, address
@@ -70,7 +70,7 @@ public Page<HospitalListResponse> search(String name, Long categoryCode, Long re
     );
 
     var content = result.content().stream()
-            .map(mapper::hospitalToListResponse)
+            .map(mapper::toBaseDto)
             .toList();
 
     return new PageImpl<>(content, pageable, result.totalElements());

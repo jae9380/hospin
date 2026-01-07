@@ -1,4 +1,4 @@
-package com.hp.hospin.hospital.application.dto;
+package com.hp.hospin.hospital.presentation.dto;
 
 import com.hp.hospin.hospital.domain.type.Hospital;
 

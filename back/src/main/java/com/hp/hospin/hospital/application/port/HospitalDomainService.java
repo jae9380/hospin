@@ -1,9 +1,6 @@
 package com.hp.hospin.hospital.application.port;
 
-import com.hp.hospin.hospital.application.dto.HospitalInfoResponse.*;
-import com.hp.hospin.hospital.application.dto.HospitalListResponse;
-import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
-import com.hp.hospin.hospital.application.dto.SymptomAnalyzeResponse;
+import com.hp.hospin.hospital.presentation.dto.SymptomAnalyzeResponse;
 import com.hp.hospin.hospital.domain.type.*;
 
 import java.util.List;
