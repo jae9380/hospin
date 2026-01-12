@@ -28,6 +28,10 @@ public class OpenAiChatClientConfig {
                 .defaultOptions(OpenAiChatOptions.builder()
                         .model("gpt-5-nano")
                         .temperature(1.0)
+//                        .topP(0.9)                  // 누적 확률 상위 후보만 선택
+//                        .frequencyPenalty(0.8)     // 반복 단어 억제
+//                        .presencePenalty(0.5)      // 새로운 단어/진료과 유도
+//                        .maxCompletionTokens(500)             // 충분히 긴 답변 가능
                         .build())
                 .build();
     }
