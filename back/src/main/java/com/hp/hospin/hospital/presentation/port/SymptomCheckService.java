@@ -1,7 +1,7 @@
 package com.hp.hospin.hospital.presentation.port;
 
-import reactor.core.publisher.Flux;
+import com.hp.hospin.hospital.presentation.dto.SymptomAnalyzeResponse;
 
 public interface SymptomCheckService {
-    String generate(String text, String latitude, String longitude);
+    SymptomAnalyzeResponse generate(String text, Double latitude, Double longitude);
 }

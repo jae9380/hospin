@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> {
                     requests
                             .requestMatchers("/h2-console/**").permitAll()
-                            .requestMatchers("/api/member/join", "/api/member/login","api/batch/**","api/symptomcheck").permitAll()
+                            .requestMatchers("/api/member/join", "/api/member/login","/api/batch/**","/api/symptomcheck").permitAll()
                             .requestMatchers(HttpMethod.GET,
                                     "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
                                     "/api/member/check-duplicate"

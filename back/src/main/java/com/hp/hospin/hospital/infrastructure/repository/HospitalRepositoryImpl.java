@@ -58,6 +58,23 @@ public class HospitalRepositoryImpl implements HospitalRepository {
         return new PageResult<>(content, page, size, result.getTotalElements());
     }
 
+    @Override
+    public List<Hospital> findByLocationAndDeptCodes(
+            double minLat, double maxLat,
+            double minLng, double maxLng,
+            List<String> deptCodes
+    ) {
+        return hospitalJPARepository
+                .findHospitalsByLocationAndDeptCodes(
+                        minLat, maxLat,
+                        minLng, maxLng,
+                        deptCodes
+                )
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
 //    @Override
 //    public Page<JpaHospitalEntity> search(Specification<JpaHospitalEntity> spec, Pageable pageable) {
 //

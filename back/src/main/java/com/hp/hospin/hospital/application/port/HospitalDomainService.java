@@ -13,5 +13,5 @@ public interface HospitalDomainService {
     Optional<HospitalGrade> getHospitalGradeByHospitalCode(String hospitalCode);
     PageResult<Hospital> search(HospitalSearchCriteria query, int page, int size);
     List<Hospital> getHospitalsNearCoordinates(String latitude, String longitude);
-    String findHospitalsBySymptoms(SymptomAnalyzeResponse response, String latitude, String longitude);
+    List<List<Hospital>> findHospitalsBySymptoms(List<String> deptList, Double latitude, Double longitude);
 }

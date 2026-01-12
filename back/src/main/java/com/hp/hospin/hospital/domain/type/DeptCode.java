@@ -92,4 +92,34 @@ public enum DeptCode {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown DeptCode: " + code));
     }
+    public static DeptCode match(String input) {
+        if (input == null || input.isBlank()) {
+            throw new IllegalArgumentException("input is null or blank");
+        }
+
+        String normalized = input.trim().toLowerCase();
+
+        return Arrays.stream(values())
+                .filter(dept ->
+                        // code 비교
+                        equalsOrContains(normalized, dept.code) ||
+
+                                // description 비교
+                                equalsOrContains(normalized, dept.description) ||
+
+                                // enum name 비교
+                                equalsOrContains(normalized, dept.name())
+                )
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException("No matching DeptCode for input: " + input)
+                );
+    }
+
+    private static boolean equalsOrContains(String input, String target) {
+        String normalizedTarget = target.toLowerCase();
+        return normalizedTarget.equals(input)
+                || normalizedTarget.contains(input)
+                || input.contains(normalizedTarget);
+    }
 }

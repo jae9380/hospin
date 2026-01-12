@@ -79,9 +79,46 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
     }
 
     @Override
-    public String findHospitalsBySymptoms(SymptomAnalyzeResponse response, String latitude, String longitude) {
+    public List<List<Hospital>> findHospitalsBySymptoms(
+            List<String> deptList, Double latitude, Double longitude
+    ) {
+        double lat = latitude;
+        double lng = longitude;
 
-        return null;
+        double latRange = 3 / 111.0;
+        double lngRange = 3 / (111.0 * Math.cos(Math.toRadians(lat)));
+
+        // 1️⃣ 위도/경도 후보군 조회
+        List<Hospital> candidates = hospitalRepository.findHospitalsByBoundingBox(
+                lat - latRange, lat + latRange,
+                lng - lngRange, lng + lngRange
+        );
+
+        // 2️⃣ 추천 진료과별 필터링
+        return deptList.stream()
+                .limit(3) // 추천 진료과 최대 3개
+                .map(DeptCode::match)
+                .map(deptCode -> candidates.stream()
+                        .filter(hospital -> {
+                            // HospitalDetail 조회
+                            Optional<HospitalDetail> detailOpt = hospitalDetailRepository
+                                    .findByHospitalCode(hospital.getHospitalCode());
+                            return detailOpt
+                                    .map(detail -> detail.getDepartmentCodes().contains(deptCode.getCode()))
+                                    .orElse(false);
+                        })
+                        .filter(hospital -> calculateDistance(
+                                lat, lng, hospital.getLatitude(), hospital.getLongitude()) <= 3
+                        )
+                        .sorted((a, b) -> Double.compare(
+                                calculateDistance(lat, lng, a.getLatitude(), a.getLongitude()),
+                                calculateDistance(lat, lng, b.getLatitude(), b.getLongitude())
+                        ))
+                        .limit(3) // 각 진료과 최대 3개
+                        .toList()
+                )
+                .filter(list -> !list.isEmpty()) // 병원 없는 진료과 제거
+                .toList();
     }
 
     //    Haversine 공식
