@@ -1,8 +1,9 @@
 package com.hp.hospin.hospital.application.mapper;
 
-import com.hp.hospin.hospital.application.dto.HospitalInfoResponse;
-import com.hp.hospin.hospital.application.dto.HospitalInfoResponse.*;
-import com.hp.hospin.hospital.application.dto.HospitalListResponse;
+import com.hp.hospin.hospital.application.dto.HospitalBaseDTO;
+import com.hp.hospin.hospital.application.dto.HospitalDTO;
+import com.hp.hospin.hospital.application.dto.HospitalDetailDTO;
+import com.hp.hospin.hospital.application.dto.HospitalGradeDTO;
 import com.hp.hospin.hospital.domain.type.Hospital;
 import com.hp.hospin.hospital.domain.type.HospitalDetail;
 import com.hp.hospin.hospital.domain.type.HospitalGrade;
@@ -13,74 +14,23 @@ import org.mapstruct.factory.Mappers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Hospital 관련 DTO 변환기 (MapStruct 스타일로 정의, 복합 변환은 default 메서드로 처리)
- */
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(
+        componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR
+)
 public interface HospitalDtoMapper {
     HospitalDtoMapper INSTANCE = Mappers.getMapper(HospitalDtoMapper.class);
 
-    // 간단한 단일 엔티티 -> 리스트 응답 변환 (정적 팩토리 사용)
-    default HospitalListResponse hospitalToListResponse(Hospital entity) {
-        if (entity == null) return null;
-        return HospitalListResponse.from(entity);
-    }
+//    // Domain Entity -> DTO
+//    default HospitalDTO hospitalToListResponse(Hospital entity) {
+//        if (entity == null) return null;
+//
+//    }
 
-    // --- 복합 응답: BaseInfo / DetailInfo / GradeInfo를 조립하여 HospitalInfoResponse 반환 ---
-    default HospitalInfoResponse toHospitalInfoResponse(Hospital base, HospitalDetail detail, HospitalGrade grade) {
-        BaseInfo baseInfo = toBaseInfo(base);
-        DetailInfo detailInfo = toDetailInfo(detail);
-        GradeInfo gradeInfo = toGradeInfo(grade);
+    HospitalBaseDTO toBaseDto(Hospital h);
 
-        return HospitalInfoResponse.builder()
-                .baseInfo(baseInfo)
-                .detailInfo(detailInfo)
-                .gradeInfo(gradeInfo)
-                .build();
-    }
+    HospitalDetailDTO toDetailDto(HospitalDetail d);
 
-    // BaseInfo 변환
-    default BaseInfo toBaseInfo(Hospital h) {
-        if (h == null) return null;
-        return new BaseInfo(
-                h.getHospitalCode(),
-                h.getName(),
-                h.getAddress(),
-                h.getCallNumber(),
-                h.getLatitude(),
-                h.getLongitude()
-        );
-    }
-
-    // DetailInfo 변환
-    default DetailInfo toDetailInfo(HospitalDetail d) {
-        if (d == null) return null;
-        return new DetailInfo(
-                d.getDepartmentCodes(),
-                d.getClosedSunday(),
-                d.getClosedHoliday(),
-                d.getEmergencyDayYn(),
-                d.getEmergencyDayPhone1(),
-                d.getEmergencyDayPhone2(),
-                d.getEmergencyNightYn(),
-                d.getEmergencyNightPhone1(),
-                d.getEmergencyNightPhone2(),
-                d.getLunchWeekday(),
-                d.getLunchSaturday(),
-                d.getReceptionWeekday(),
-                d.getReceptionSaturday(),
-                d.getTreatSunStart(), d.getTreatSunEnd(),
-                d.getTreatMonStart(), d.getTreatMonEnd(),
-                d.getTreatTueStart(), d.getTreatTueEnd(),
-                d.getTreatWedStart(), d.getTreatWedEnd(),
-                d.getTreatThuStart(), d.getTreatThuEnd(),
-                d.getTreatFriStart(), d.getTreatFriEnd(),
-                d.getTreatSatStart(), d.getTreatSatEnd()
-        );
-    }
-
-    // GradeInfo 변환: asmGrdXX 문자열들을 Map<String, Long>으로 변환
-    default GradeInfo toGradeInfo(HospitalGrade g) {
+    default HospitalGradeDTO toGradeDto(HospitalGrade g) {
         if (g == null) return null;
 
         Map<String, Long> grades = new LinkedHashMap<>();
@@ -110,8 +60,63 @@ public interface HospitalDtoMapper {
         grades.put("asmGrd23", safeParseLong(g.getAsmGrd23()));
         grades.put("asmGrd24", safeParseLong(g.getAsmGrd24()));
 
-        return new GradeInfo(grades);
+        return new HospitalGradeDTO(grades);
     }
+
+    default HospitalDTO toHospitalInfoResponse(Hospital base, HospitalDetail detail, HospitalGrade grade) {
+        HospitalBaseDTO baseDto = toBaseDto(base);
+        HospitalDetailDTO detailDto = toDetailDto(detail);
+        HospitalGradeDTO gradeDto = toGradeDto(grade);
+
+        return HospitalDTO.builder()
+                .base(baseDto)
+                .detail(detailDto)
+                .grade(gradeDto)
+                .build();
+    }
+
+//    // BaseInfo 변환
+//    default HospitalBaseDTO toBaseDto(Hospital h) {
+//        if (h == null) return null;
+//        return new HospitalBaseDTO(
+//                h.getHospitalCode(),
+//                h.getName(),
+//                h.getAddress(),
+//                h.getCallNumber(),
+//                h.getLatitude(),
+//                h.getLongitude()
+//        );
+//    }
+//
+//    // DetailInfo 변환
+//    default HospitalDetailDTO toDetailDto(HospitalDetail d) {
+//        if (d == null) return null;
+//        return new HospitalDetailDTO(
+//                d.getDepartmentCodes(),
+//                d.getClosedSunday(),
+//                d.getClosedHoliday(),
+//                d.getEmergencyDayYn(),
+//                d.getEmergencyDayPhone1(),
+//                d.getEmergencyDayPhone2(),
+//                d.getEmergencyNightYn(),
+//                d.getEmergencyNightPhone1(),
+//                d.getEmergencyNightPhone2(),
+//                d.getLunchWeekday(),
+//                d.getLunchSaturday(),
+//                d.getReceptionWeekday(),
+//                d.getReceptionSaturday(),
+//                d.getTreatSunStart(), d.getTreatSunEnd(),
+//                d.getTreatMonStart(), d.getTreatMonEnd(),
+//                d.getTreatTueStart(), d.getTreatTueEnd(),
+//                d.getTreatWedStart(), d.getTreatWedEnd(),
+//                d.getTreatThuStart(), d.getTreatThuEnd(),
+//                d.getTreatFriStart(), d.getTreatFriEnd(),
+//                d.getTreatSatStart(), d.getTreatSatEnd()
+//        );
+//    }
+
+    // GradeInfo 변환: asmGrdXX 문자열들을 Map<String, Long>으로 변환
+
 
     // 안전 파싱 유틸 (null/빈문자열 처리, 파싱 실패 시 null 반환)
     default Long safeParseLong(String s) {
