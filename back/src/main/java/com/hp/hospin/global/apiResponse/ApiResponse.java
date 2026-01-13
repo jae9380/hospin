@@ -50,6 +50,15 @@ public class ApiResponse<T> {
         );
     }
 
+    public static <T> ApiResponse<T> created(T data) {
+        return new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                HttpStatus.CREATED.getReasonPhrase(),
+                ApiResultType.SUCCESS,
+                data
+        );
+    }
+
     public static ApiResponse<URI> created(String uri) {
         URI newUri = URI.create(uri);
         return new ApiResponse<>(

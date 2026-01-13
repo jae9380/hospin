@@ -38,16 +38,7 @@ public class HospitalRepositoryImpl implements HospitalRepository {
     }
 
     @Override
-    public List<Hospital> findHospitalsByBoundingBox(Double latitude, Double longitude) {
-
-        double latRange = 3 / 111.0;
-        double lngRange = 3 / (111.0 * Math.cos(Math.toRadians(latitude)));
-
-        double minLat = latitude - latRange;
-        double maxLat = latitude + latRange;
-        double minLng = longitude - lngRange;
-        double maxLng = longitude + lngRange;
-
+    public List<Hospital> findHospitalsByBoundingBox(Double minLat,  Double maxLat, Double minLng, Double maxLng) {
         return hospitalJPARepository.findHospitalsByBoundingBox(minLat, maxLat, minLng, maxLng)
                 .stream()
                 .map(mapper::toDomain)
@@ -65,6 +56,23 @@ public class HospitalRepositoryImpl implements HospitalRepository {
                 .toList();
 
         return new PageResult<>(content, page, size, result.getTotalElements());
+    }
+
+    @Override
+    public List<Hospital> findByLocationAndDeptCodes(
+            double minLat, double maxLat,
+            double minLng, double maxLng,
+            List<String> deptCodes
+    ) {
+        return hospitalJPARepository
+                .findHospitalsByLocationAndDeptCodes(
+                        minLat, maxLat,
+                        minLng, maxLng,
+                        deptCodes
+                )
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 
 //    @Override

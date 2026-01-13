@@ -24,8 +24,8 @@
 	let map: naver.maps.Map;
 	let mapContainer: HTMLDivElement;
 	let rangeCircle: naver.maps.Circle | null = null;
-	let currentInfoWindow: naver.maps.InfoWindow | null = null; // 하나의 InfoWindow만 열리도록
-	let hospitalMarkers: naver.maps.Marker[] = []; // <-- onMount 밖
+	let currentInfoWindow: naver.maps.InfoWindow | null = null;
+	let hospitalMarkers: naver.maps.Marker[] = [];
 
 	onMount(async () => {
 		await loadNaverMapScript();
@@ -42,13 +42,12 @@
 			center: new naver.maps.LatLng(lat, lng),
 			radius: 3000, // 3km
 			strokeColor: '#2563eb',
-			strokeOpacity: 0.4, // 테두리 연하게
+			strokeOpacity: 0.4,
 			strokeWeight: 2,
 			fillColor: '#2563eb',
-			fillOpacity: 0.12 // 내부 더 희미하게
+			fillOpacity: 0.12
 		});
 
-		// 지도 클릭 시 InfoWindow 닫기
 		naver.maps.Event.addListener(map, 'click', () => {
 			if (currentInfoWindow) {
 				currentInfoWindow.close();
@@ -56,7 +55,6 @@
 			}
 		});
 
-		// 현재 위치 버튼
 		naver.maps.Event.once(map, 'init', () => {
 			const wrapper = document.createElement('div');
 			wrapper.style.marginRight = '12px';

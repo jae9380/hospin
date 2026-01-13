@@ -1,9 +1,9 @@
 package com.hp.hospin.schedule.domain.entity;
 
-import com.hp.hospin.schedule.presentation.dto.CreateScheduleRequest;
-import com.hp.hospin.schedule.presentation.dto.UpdateScheduleRequest;
+import com.hp.hospin.schedule.domain.form.ScheduleForm;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -40,7 +40,7 @@ public class Schedule {
         this.updatedAt = updatedAt;
     }
 
-    public static Schedule create(Long userId, CreateScheduleRequest request) {
+    public static Schedule create(Long userId, ScheduleForm request) {
         return Schedule.builder()
                 .id(null)
                 .userId(userId)
@@ -57,7 +57,7 @@ public class Schedule {
                 .build();
     }
 
-    public void update(UpdateScheduleRequest request) {
+    public Schedule update(ScheduleForm request) {
         this.category = request.getCategory();
         this.type = request.getType();
         this.title = request.getTitle();
@@ -67,5 +67,7 @@ public class Schedule {
         this.recurringType = request.getRecurringType();
         this.recurrenceRule = request.getRecurrenceRule();
         this.updatedAt = LocalDateTime.now();
+
+        return this;
     }
 }
