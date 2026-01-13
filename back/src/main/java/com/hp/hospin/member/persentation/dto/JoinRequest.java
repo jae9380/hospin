@@ -1,4 +1,4 @@
-package com.hp.hospin.member.application.dto;
+package com.hp.hospin.member.persentation.dto;
 
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;

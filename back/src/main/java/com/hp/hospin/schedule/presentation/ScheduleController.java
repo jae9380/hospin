@@ -3,11 +3,10 @@ package com.hp.hospin.schedule.presentation;
 import com.hp.hospin.global.apiResponse.ApiResponse;
 import com.hp.hospin.global.standard.base.Empty;
 import com.hp.hospin.global.common.MemberDetails;
-import com.hp.hospin.schedule.domain.entity.Schedule;
-import com.hp.hospin.schedule.presentation.dto.CreateScheduleRequest;
+import com.hp.hospin.schedule.application.dto.ScheduleDTO;
+import com.hp.hospin.schedule.presentation.dto.ScheduleRequest;
 import com.hp.hospin.schedule.presentation.dto.ScheduleResponse;
-import com.hp.hospin.schedule.presentation.dto.UpdateScheduleRequest;
-import com.hp.hospin.schedule.presentation.mapper.ScheduleDtoMapper;
+import com.hp.hospin.schedule.presentation.mapper.ScheduleApiMapper;
 import com.hp.hospin.schedule.presentation.port.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,32 +19,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
-    private final ScheduleDtoMapper mapper;
+    private final ScheduleApiMapper mapper;
 
     @GetMapping()
     public ApiResponse<List<ScheduleResponse>> getScheduleList(@AuthenticationPrincipal MemberDetails memberDetails) {
-        System.out.println("요청 들어옴");
-        List<Schedule> schedules = scheduleService.getScheduleList(memberDetails.getId());
+        List<ScheduleDTO> schedules = scheduleService.getScheduleList(memberDetails.getId());
         if (schedules.isEmpty()) return ApiResponse.ok(List.of());
-        System.out.println("요청 나감");
         return ApiResponse.ok(schedules.stream()
-                .map(mapper::domainToResponse)
+                .map(mapper::dtoToResponse)
                 .toList());
     }
 
     @PostMapping()
-    public ApiResponse<Empty> createdSchedule(@AuthenticationPrincipal MemberDetails memberDetails,
-                                              @RequestBody CreateScheduleRequest createScheduleRequest) {
-        scheduleService.createSchedule(memberDetails.getId(), createScheduleRequest);
-        return ApiResponse.created();
+    public ApiResponse<ScheduleResponse> createdSchedule(@AuthenticationPrincipal MemberDetails memberDetails,
+                                              @RequestBody ScheduleRequest createScheduleRequest) {
+        ScheduleResponse schedule =  mapper.dtoToResponse(
+                scheduleService.createSchedule(memberDetails.getId(), mapper.requestToDomain(createScheduleRequest))
+        );
+        return ApiResponse.created(schedule);
     }
 
     @PutMapping("/{scheduleId}")
-    public ApiResponse<Empty> modifySchedule(@AuthenticationPrincipal MemberDetails memberDetails,
+    public ApiResponse<ScheduleResponse> modifySchedule(@AuthenticationPrincipal MemberDetails memberDetails,
                                              @PathVariable Long scheduleId,
-                                             @RequestBody UpdateScheduleRequest updateScheduleRequest) {
-        scheduleService.modifySchedule(memberDetails.getId(), scheduleId, updateScheduleRequest);
-        return ApiResponse.noContent();
+                                             @RequestBody ScheduleRequest updateScheduleRequest) {
+        ScheduleResponse schdule =  mapper.dtoToResponse(
+                scheduleService.modifySchedule(memberDetails.getId(), scheduleId, mapper.requestToDomain(updateScheduleRequest))
+        );
+        return ApiResponse.ok(schdule);
     }
 
     @DeleteMapping("/{scheduleId}")
