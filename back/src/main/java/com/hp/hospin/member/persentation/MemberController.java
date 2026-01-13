@@ -4,10 +4,10 @@ import com.hp.hospin.global.apiResponse.ApiResponse;
 import com.hp.hospin.global.common.MemberDetails;
 import com.hp.hospin.global.jwt.CookieUtil;
 import com.hp.hospin.global.standard.base.Empty;
-import com.hp.hospin.member.application.dto.JoinRequest;
-import com.hp.hospin.member.application.dto.MemberResponse;
-import com.hp.hospin.member.application.dto.LoginRequest;
-import com.hp.hospin.member.exception.MemberException;
+import com.hp.hospin.member.persentation.dto.JoinRequest;
+import com.hp.hospin.member.persentation.dto.MemberResponse;
+import com.hp.hospin.member.persentation.dto.LoginRequest;
+import com.hp.hospin.member.persentation.mapper.MemberApiMapper;
 import com.hp.hospin.member.persentation.port.AuthenticationService;
 import com.hp.hospin.member.persentation.port.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,14 +27,20 @@ import java.util.stream.Stream;
 public class MemberController {
     private final MemberService memberService;
     private final AuthenticationService authenticationService;
+    private final MemberApiMapper mapper;
 
     @GetMapping()
     public ApiResponse<MemberResponse> memberInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
-        return ApiResponse.ok(memberService.findByIdentifier(memberDetails.getUsername()));
+        return ApiResponse.ok(
+                mapper.dtoToResponse(
+                        memberService.findByIdentifier(memberDetails.getUsername())
+                )
+        );
     }
+
     @PostMapping("/join")
     public ApiResponse<Empty> join(@RequestBody @Valid JoinRequest request) {
-        memberService.join(request);
+        memberService.join(mapper.joinRequestToDto(request));
         return ApiResponse.created();
     }
 
@@ -42,10 +48,12 @@ public class MemberController {
     public ApiResponse<MemberResponse> login(@RequestBody @Valid LoginRequest loginRequest,
                                              HttpServletRequest request, HttpServletResponse response) {
 //        TODO: 구조변경 필요 (관련 메서드 전제 수정?...
-        memberService.login(loginRequest);
+        memberService.login(mapper.loginRequestToDto(loginRequest));
 
         return ApiResponse.ok(
-                authenticationService.authenticateAndSetTokens(loginRequest.identifier(), request, response)
+                mapper.dtoToResponse(
+                        authenticationService.authenticateAndSetTokens(loginRequest.identifier(), request, response)
+                )
         );
     }
 
