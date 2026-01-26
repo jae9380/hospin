@@ -9,5 +9,5 @@ public interface ScheduleRepository {
     void save(Schedule schedule);
     Optional<Schedule> getSchedule(Long scheduleId);
     void delete(Schedule schedule);
-    Optional<List<Schedule>> findByUserId(Long userId);
+    Optional<List<Schedule>> findByMemberId(Long memberId);
 }

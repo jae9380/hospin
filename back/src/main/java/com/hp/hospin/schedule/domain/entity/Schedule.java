@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Schedule {
     private Long id;
-    private Long userId;
+    private Long memberId;
     private int category;
     private int type;
     private String title;
@@ -23,11 +23,11 @@ public class Schedule {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Schedule(Long id, Long userId, int category, int type,
+    private Schedule(Long id, Long memberId, int category, int type,
                      String title, String memo, LocalDateTime startDatetime, LocalDateTime endDatetime,
                      int recurringType, Long recurrenceRule, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.userId = userId;
+        this.memberId = memberId;
         this.category = category;
         this.type = type;
         this.title = title;
@@ -40,10 +40,10 @@ public class Schedule {
         this.updatedAt = updatedAt;
     }
 
-    public static Schedule create(Long userId, ScheduleForm request) {
+    public static Schedule create(Long memberId, ScheduleForm request) {
         return Schedule.builder()
                 .id(null)
-                .userId(userId)
+                .memberId(memberId)
                 .category(request.getCategory())
                 .type(request.getType())
                 .title(request.getTitle())

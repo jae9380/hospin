@@ -32,6 +32,12 @@ spring:
     openai:
       api-key: ${openai.api-key}
 
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+
 logging:
   level:
     com.ms.back: DEBUG
@@ -39,3 +45,5 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
+
+firebaseAdminSdkPath: hospin-57573-firebase-adminsdk-fbsvc-04558e3b9d.json

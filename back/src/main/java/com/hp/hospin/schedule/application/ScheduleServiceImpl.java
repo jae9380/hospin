@@ -22,26 +22,26 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional
-    public ScheduleDTO createSchedule(Long userId, ScheduleDTO createRequest) {
+    public ScheduleDTO createSchedule(Long memberId, ScheduleDTO createRequest) {
         validDateRange(createRequest.getStartDatetime(), createRequest.getEndDatetime());
-        return mapper.toDto(scheduleDomainService.createSchedule(userId, mapper.toForm(createRequest)));
+        return mapper.toDto(scheduleDomainService.createSchedule(memberId, mapper.toForm(createRequest)));
     }
 
     @Override
     @Transactional
-    public ScheduleDTO modifySchedule(Long userId, Long scheduleId, ScheduleDTO updateRequest) {
-        return mapper.toDto(scheduleDomainService.modifySchedule(scheduleId, mapper.toForm(updateRequest), userId));
+    public ScheduleDTO modifySchedule(Long memberId, Long scheduleId, ScheduleDTO updateRequest) {
+        return mapper.toDto(scheduleDomainService.modifySchedule(scheduleId, mapper.toForm(updateRequest), memberId));
     }
 
     @Override
     @Transactional
-    public void deleteSchedule(Long userId, Long scheduleId) {
-        scheduleDomainService.deleteSchedule(scheduleId, userId);
+    public void deleteSchedule(Long memberId, Long scheduleId) {
+        scheduleDomainService.deleteSchedule(scheduleId, memberId);
     }
 
     @Override
-    public List<ScheduleDTO> getScheduleList(Long userId) {
-        List<ScheduleDTO> schedules = scheduleDomainService.getScheduleList(userId).stream().map(mapper::toDto).toList();
+    public List<ScheduleDTO> getScheduleList(Long memberId) {
+        List<ScheduleDTO> schedules = scheduleDomainService.getScheduleList(memberId).stream().map(mapper::toDto).toList();
         // TODO: 나중에 추가 조건 생성 로직 (예: 날짜 범위, 카테고리, 반복 여부 등)
         return schedules;
     }
