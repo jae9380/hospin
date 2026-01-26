@@ -17,34 +17,34 @@ public class ScheduleDomainServiceImpl implements ScheduleDomainService {
     private final ScheduleRepository scheduleRepository;
 
     @Override
-    public Schedule createSchedule(Long userId, ScheduleForm request) {
-        Schedule newSchedule = Schedule.create(userId, request);
+    public Schedule createSchedule(Long memberId, ScheduleForm request) {
+        Schedule newSchedule = Schedule.create(memberId, request);
         scheduleRepository.save(newSchedule);
 
         return newSchedule;
     }
 
     @Override
-    public Schedule modifySchedule(Long scheduleId, ScheduleForm updateScheduleRequest, Long userId) {
+    public Schedule modifySchedule(Long scheduleId, ScheduleForm updateScheduleRequest, Long memberId) {
         Schedule schedule = getSchedule(scheduleId);
         // NOTE: 검증 로직
-        if (!schedule.getUserId().equals(userId)) throw new NoPerissionException();
+        if (!schedule.getMemberId().equals(memberId)) throw new NoPerissionException();
 
         return schedule.update(updateScheduleRequest);
     }
 
     @Override
-    public void deleteSchedule(Long scheduleId, Long userId) {
+    public void deleteSchedule(Long scheduleId, Long memberId) {
         // NOTE: 검증 로직
         Schedule target = getSchedule(scheduleId);
-        if (!target.getUserId().equals(userId)) throw new NoPerissionException();
+        if (!target.getMemberId().equals(memberId)) throw new NoPerissionException();
 
         scheduleRepository.delete(target);
     }
 
     @Override
-    public List<Schedule> getScheduleList(Long userId) {
-        return scheduleRepository.findByUserId(userId).orElse(List.of());
+    public List<Schedule> getScheduleList(Long memberId) {
+        return scheduleRepository.findByMemberId(memberId).orElse(List.of());
     }
 
     private Schedule getSchedule(Long scheduleId) {

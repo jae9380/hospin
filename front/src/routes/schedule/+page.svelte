@@ -54,7 +54,7 @@
 			// ✅ 서버 응답 구조 확인 후 변환
 			const schedules = data?.data || []; // 백엔드가 ApiResponse 형식으로 응답한다고 가정
 
-			const headerButtons = isLogined ? 'addEventButton,dayGridMonth,timeGridWeek,timeGridDay' : '';
+			const headerButtons = isLogined ? 'addEventButton' : '';
 
 			console.log(headerButtons);
 			const events = schedules.map((s: any) => ({
@@ -113,10 +113,7 @@
 					right: headerButtons
 				},
 				buttonText: {
-					today: '현재 날짜',
-					month: '달 단위',
-					week: '주 단위',
-					day: '일 단위'
+					today: '현재 날짜'
 				},
 				events: events
 			});
