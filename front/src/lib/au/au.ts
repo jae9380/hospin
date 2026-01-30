@@ -1,4 +1,3 @@
-// src/lib/au.ts
 import { writable, get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { browser } from '$app/environment';
@@ -11,7 +10,6 @@ const toGenderString = (c: number): GenderStr =>
 const toGenderCode = (s: GenderStr): number => (s === 'MALE' ? 0 : s === 'FEMALE' ? 1 : 2);
 
 export class Au {
-	// 내부 스토어
 	private _id = writable(0);
 	private _identifier = writable('');
 	private _name = writable('');
@@ -21,7 +19,8 @@ export class Au {
 	private _genderCode = writable(2);
 	private _logined = writable(false);
 
-	// 외부에 노출되는 뷰(게터/세터). this 바인딩 금지 → 캡처 사용.
+	public readonly logined = this._logined;
+
 	public member = (() => {
 		const id = this._id,
 			identifier = this._identifier,
@@ -31,6 +30,7 @@ export class Au {
 			birth = this._birth,
 			genderCode = this._genderCode;
 		const logined = this._logined;
+
 		return {
 			get id() {
 				return get(id);
@@ -94,7 +94,6 @@ export class Au {
 			const { data } = await this.api().GET('/api/member');
 			if (data?.data) {
 				this.setLogined(data.data);
-				this._logined.set(true);
 			} else {
 				this._logined.set(false);
 			}
@@ -104,16 +103,17 @@ export class Au {
 	}
 
 	public setLogined(dto: components['schemas']['MemberDto']) {
-		// 숫자 성별 수용. 필드명은 실제 스키마에 맞춰 조정.
 		this.member.id = dto.id as number;
 		this.member.identifier = dto.identifier as string;
 		this.member.name = dto.name as string;
 		this.member.phoneNumber = dto.phoneNumber as string;
 		this.member.email = dto.email as string;
-		// dto.gender 또는 dto.genderCode 중 하나를 사용
+
 		const g = (dto as any).genderCode ?? (dto as any).gender;
 		this.member.gender = toGenderString(typeof g === 'number' ? g : toGenderCode(g));
 		this.member.birth = (dto as any).birth ?? '';
+
+		this._logined.set(true);
 	}
 
 	public setLogout() {
@@ -150,10 +150,19 @@ export class Au {
 	}
 
 	public async logoutAndRedirect(url: string) {
-		if (!browser) return;
-		await this.api().POST('/api/member/logout', { credentials: 'include' });
-		this.setLogout();
-		this.replace(url);
+		try {
+			try {
+				await this.api().POST('/api/FCM/deregister', { credentials: 'include' });
+			} catch (e) {
+				console.log('FCM deregister failed (ignored)', e);
+			}
+			await this.api().POST('/api/member/logout', { credentials: 'include' });
+
+			this.setLogout();
+			this.replace('/');
+		} catch (error) {
+			console.error('Logout failed:', error);
+		}
 	}
 
 	public getGoogleLoginUrl() {
@@ -167,5 +176,6 @@ export class Au {
 	}
 }
 
-// SSR 누수 방지: 브라우저에서만 싱글턴 생성
+// SSR 누수 방지
+
 export const au = browser ? new Au() : null;

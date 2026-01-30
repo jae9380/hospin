@@ -26,13 +26,10 @@ public interface ScheduleDtoMapper {
         if (dto == null) return null;
         return new ScheduleForm(
                 dto.getCategory(),
-                dto.getType(),
                 dto.getTitle(),
                 dto.getMemo(),
                 dto.getStartDatetime(),
-                dto.getEndDatetime(),
-                dto.getRecurringType(),
-                dto.getRecurrenceRule()
+                dto.getEndDatetime()
         );
     }
 }

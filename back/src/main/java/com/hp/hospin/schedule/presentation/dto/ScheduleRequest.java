@@ -9,11 +9,8 @@ import java.time.LocalDateTime;
 @Setter
 public class ScheduleRequest {
     private int category;
-    private int type;
     private String title;
     private String memo;
     private LocalDateTime startDatetime;
     private LocalDateTime endDatetime;
-    private int recurringType;
-    private Long recurrenceRule;
 }

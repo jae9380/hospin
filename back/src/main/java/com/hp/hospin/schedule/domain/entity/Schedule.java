@@ -11,47 +11,41 @@ import java.time.LocalDateTime;
 @Builder
 public class Schedule {
     private Long id;
-    private Long userId;
+    private Long memberId;
     private int category;
-    private int type;
     private String title;
     private String memo;
     private LocalDateTime startDatetime;
     private LocalDateTime endDatetime;
-    private int recurringType;
-    private Long recurrenceRule;
+    private Long notifyHours;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Schedule(Long id, Long userId, int category, int type,
-                     String title, String memo, LocalDateTime startDatetime, LocalDateTime endDatetime,
-                     int recurringType, Long recurrenceRule, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private Schedule(Long id, Long memberId, int category, String title, String memo,
+                     LocalDateTime startDatetime, LocalDateTime endDatetime, Long notifyHours,
+                     LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.userId = userId;
+        this.memberId = memberId;
         this.category = category;
-        this.type = type;
         this.title = title;
         this.memo = memo;
         this.startDatetime = startDatetime;
         this.endDatetime = endDatetime;
-        this.recurringType = recurringType;
-        this.recurrenceRule = recurrenceRule;
+        this.notifyHours = notifyHours;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public static Schedule create(Long userId, ScheduleForm request) {
+    public static Schedule create(Long memberId, ScheduleForm request) {
         return Schedule.builder()
                 .id(null)
-                .userId(userId)
+                .memberId(memberId)
                 .category(request.getCategory())
-                .type(request.getType())
                 .title(request.getTitle())
                 .memo(request.getMemo())
                 .startDatetime(request.getStartDatetime())
                 .endDatetime(request.getEndDatetime())
-                .recurringType(request.getRecurringType())
-                .recurrenceRule(request.getRecurrenceRule())
+                .notifyHours(null)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(null)
                 .build();
@@ -59,15 +53,16 @@ public class Schedule {
 
     public Schedule update(ScheduleForm request) {
         this.category = request.getCategory();
-        this.type = request.getType();
         this.title = request.getTitle();
         this.memo = request.getMemo();
         this.startDatetime = request.getStartDatetime();
         this.endDatetime = request.getEndDatetime();
-        this.recurringType = request.getRecurringType();
-        this.recurrenceRule = request.getRecurrenceRule();
         this.updatedAt = LocalDateTime.now();
 
         return this;
+    }
+
+    public void updateNotifyHours(Long notifyHours) {
+        this.notifyHours = notifyHours;
     }
 }

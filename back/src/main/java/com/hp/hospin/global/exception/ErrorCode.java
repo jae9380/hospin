@@ -29,7 +29,10 @@ public enum ErrorCode {
 
     // etc
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-    NO_PERMISSION(HttpStatus.FORBIDDEN, "권한에 문제가 발생했습니다.");
+    NO_PERMISSION(HttpStatus.FORBIDDEN, "권한에 문제가 발생했습니다."),
+
+    // Notification
+    FCM_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 FCM이 존재하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;
