@@ -124,7 +124,6 @@ export class Au {
 		this.member.email = '';
 		this.member.gender = 'UNDEFINED';
 		this.member.birth = '';
-
 		this._logined.set(false);
 	}
 
@@ -178,4 +177,5 @@ export class Au {
 }
 
 // SSR 누수 방지
+
 export const au = browser ? new Au() : null;

@@ -10,4 +10,5 @@ public interface ScheduleRepository {
     Optional<Schedule> getSchedule(Long scheduleId);
     void delete(Schedule schedule);
     Optional<List<Schedule>> findByMemberId(Long memberId);
+
 }
