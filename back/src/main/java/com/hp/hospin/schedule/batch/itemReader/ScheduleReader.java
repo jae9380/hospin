@@ -25,11 +25,21 @@ public class ScheduleReader {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString(
                         "SELECT s FROM Schedule s " +
-                                "WHERE s.startDatetime BETWEEN :now AND :next24h"
+                                "WHERE s.startDatetime BETWEEN :now AND :next24h " +
+                                "AND (" +
+                                "   (s.notifyHours IS NULL AND :diff24 = 24) OR " +
+                                "   (s.notifyHours = 24 AND :diff6 = 6) OR " +
+                                "   (s.notifyHours = 6 AND :diff3 = 3) OR " +
+                                "   (s.notifyHours = 3 AND :diff1 = 1)" +
+                                ")"
                 )
                 .parameterValues(Map.of(
                         "now", LocalDateTime.now(),
-                        "next24h", LocalDateTime.now().plusHours(24)
+                        "next24h", LocalDateTime.now().plusHours(24),
+                        "diff24", 24,
+                        "diff6", 6,
+                        "diff3", 3,
+                        "diff1", 1
                 ))
                 .pageSize(1000)
                 .build();
