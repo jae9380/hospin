@@ -43,6 +43,7 @@
 		"@fullcalendar/interaction": "^6.1.19",
 		"@fullcalendar/timegrid": "^6.1.19",
 		"daisyui": "^5.0.50",
+		"firebase": "^12.7.0",
 		"openapi-fetch": "^0.15.0",
 		"svelte-5-french-toast": "^2.0.6"
 	}

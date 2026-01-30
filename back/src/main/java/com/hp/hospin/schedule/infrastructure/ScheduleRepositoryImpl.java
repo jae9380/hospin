@@ -36,9 +36,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public Optional<List<Schedule>> findByUserId(Long userId) {
+    public Optional<List<Schedule>> findByMemberId(Long memberId) {
         return Optional.of(
-                scheduleJpaRepository.findByUserId(userId).stream()
+                scheduleJpaRepository.findByMemberId(memberId).stream()
                 .map(mapper::jpaToDomain)
                 .toList()
         );

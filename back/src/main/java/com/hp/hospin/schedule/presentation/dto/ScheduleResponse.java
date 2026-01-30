@@ -4,15 +4,13 @@ import java.time.LocalDateTime;
 
 public record ScheduleResponse(
         Long id,
-        Long userId,
+        Long memberId,
         int category,
-        int type,
         String title,
         String memo,
         LocalDateTime startDatetime,
         LocalDateTime endDatetime,
-        int recurringType,
-        Long recurrenceRule,
+        Long notifyHours,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

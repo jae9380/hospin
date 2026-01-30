@@ -1,8 +1,6 @@
 package com.hp.hospin.schedule.infrastructure.entity;
 
-import com.hp.hospin.schedule.infrastructure.entity.type.RecurringType;
 import com.hp.hospin.schedule.infrastructure.entity.type.ScheduleCategoryType;
-import com.hp.hospin.schedule.infrastructure.entity.type.ScheduleType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,27 +16,14 @@ public class JpaScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long userId;
-
+    private Long memberId;
     @Enumerated(EnumType.STRING)
     private ScheduleCategoryType category;
-
-    @Enumerated(EnumType.STRING)
-    private ScheduleType type;
-
     private String title;
     private String memo;
-
     private LocalDateTime startDatetime;
     private LocalDateTime endDatetime;
-
-    // 반복 일정용
-    @Enumerated(EnumType.STRING)
-    private RecurringType recurringType;
-
-    private Long recurrenceRule;
-
+    private Long notifyHours; // 마지막으로 알림 보낸 시점 기준 남은 시간
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

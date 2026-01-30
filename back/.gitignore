@@ -41,3 +41,5 @@ out/
 src/main/resources/application-secret.yml
 # DataBase File
 **/data/
+# Firebase Key
+src/main/resources/hospin-57573-firebase-adminsdk-fbsvc-04558e3b9d.json
