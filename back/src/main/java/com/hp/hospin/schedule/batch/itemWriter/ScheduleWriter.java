@@ -3,6 +3,8 @@ package com.hp.hospin.schedule.batch.itemWriter;
 import com.hp.hospin.notification.domain.port.FCMSender;
 import com.hp.hospin.notification.persentation.port.NotificationService;
 import com.hp.hospin.schedule.domain.entity.Schedule;
+import com.hp.hospin.schedule.infrastructure.mapper.SchedulePersistenceMapper;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
@@ -17,37 +19,13 @@ import java.time.temporal.ChronoUnit;
 @Component
 @RequiredArgsConstructor
 public class ScheduleWriter implements ItemWriter<Schedule> {
-    private final NotificationService notificationService;
+    private final SchedulePersistenceMapper mapper;
+    private final EntityManager entityManager;
 
     @Override
     public void write(Chunk<? extends Schedule> chunk) {
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        chunk.forEach(schedule -> entityManager.merge(mapper.domainToJpa(schedule)));
 
-        for (Schedule schedule : chunk) {
-            LocalDateTime start = schedule.getStartDatetime()
-                    .truncatedTo(ChronoUnit.MINUTES);
-
-            long diffMinutes = Duration.between(now, start).toMinutes();
-            long diffHours = diffMinutes / 60;
-
-            // 이미 지난 일정 방어
-            if (diffMinutes <= 0) {
-                continue;
-            }
-
-            if (isTargetHour(diffHours, diffMinutes)) {
-                notificationService.push(schedule.getMemberId(), schedule.getTitle(), diffHours, diffMinutes);
-            }
-        }
     }
 
-//    NOTE: 각 24, 6, 3, 1 초과 또는 미만일 경우 Push X
-    private boolean isTargetHour(long diffHours, long diffMinutes) {
-        return diffMinutes % 60 == 0 && (
-                diffHours == 24 ||
-                        diffHours == 6 ||
-                        diffHours == 3 ||
-                        diffHours == 1
-        );
-    }
 }

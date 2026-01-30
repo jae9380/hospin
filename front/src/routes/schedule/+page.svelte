@@ -21,9 +21,6 @@
 		title: '',
 		memo: '',
 		category: 0,
-		type: 0, // ScheduleType: ONE_TIME(0), RECURRING(1)
-		recurringType: 0, // RecurringType: NONE(0), DAILY(1), WEEKLY(2), MONTHLY(3)
-		recurrenceRule: null,
 		startDatetime: '',
 		endDatetime: ''
 	};
@@ -65,9 +62,6 @@
 				extendedProps: {
 					memo: s.memo,
 					category: s.category,
-					type: s.type,
-					recurringType: s.recurringType,
-					recurrenceRule: s.recurrenceRule,
 					createdAt: s.createdAt,
 					updatedAt: s.updatedAt
 				}
@@ -138,11 +132,8 @@
 			title: newEvent.title,
 			memo: newEvent.memo,
 			category: newEvent.category,
-			type: newEvent.type,
 			startDatetime: newEvent.startDatetime,
-			endDatetime: newEvent.endDatetime,
-			recurringType: newEvent.recurringType,
-			recurrenceRule: newEvent.recurrenceRule
+			endDatetime: newEvent.endDatetime
 		};
 
 		const { data, error } = await au.api().POST('/api/schedule', { body });
@@ -177,11 +168,8 @@
 			title: selectedEvent.title,
 			memo: selectedEvent.memo,
 			category: selectedEvent.category,
-			type: selectedEvent.type,
 			startDatetime: selectedEvent.start,
-			endDatetime: selectedEvent.end,
-			recurringType: selectedEvent.recurringType,
-			recurrenceRule: selectedEvent.recurrenceRule
+			endDatetime: selectedEvent.end
 		};
 
 		const { error } = await au.api().PUT(`/api/schedule/${selectedEvent.id}`, { body });
@@ -198,9 +186,6 @@
 			event.setEnd(selectedEvent.end);
 			event.setExtendedProp('memo', selectedEvent.memo);
 			event.setExtendedProp('category', selectedEvent.category);
-			event.setExtendedProp('type', selectedEvent.type);
-			event.setExtendedProp('recurringType', selectedEvent.recurringType);
-			event.setExtendedProp('recurrenceRule', selectedEvent.recurrenceRule);
 		}
 
 		showDetailModal = false;
@@ -232,9 +217,6 @@
 			title: '',
 			memo: '',
 			category: 0,
-			type: 0,
-			recurringType: 0,
-			recurrenceRule: null,
 			startDatetime: '',
 			endDatetime: ''
 		};
@@ -328,40 +310,6 @@
 						<option value={+code}>{label}</option>
 					{/each}
 				</select>
-
-				<!-- 일정 유형 -->
-				<label class="mb-1 block font-medium text-gray-700">일정 유형</label>
-				<select
-					class="mb-4 w-full rounded border border-gray-300 p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-					bind:value={newEvent.type}
-				>
-					<option value="0">단일 일정</option>
-					<option value="1">반복 일정</option>
-				</select>
-
-				<!-- 반복 일정 설정 -->
-				{#if newEvent.type == 1}
-					<div class="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
-						<label class="mb-1 block font-medium text-gray-700">반복 주기</label>
-						<select
-							class="mb-3 w-full rounded border border-gray-300 p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-							bind:value={newEvent.recurringType}
-						>
-							<option value="1">매일</option>
-							<option value="2">매주</option>
-							<option value="3">매월</option>
-						</select>
-
-						<label class="mb-1 block font-medium text-gray-700">반복 횟수</label>
-						<input
-							type="number"
-							min="1"
-							class="mb-3 w-full rounded border border-gray-300 p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-							placeholder="예: 5 (5회 반복)"
-							bind:value={newEvent.recurrenceRule}
-						/>
-					</div>
-				{/if}
 
 				<!-- 버튼 -->
 				<div class="mt-5 flex justify-end space-x-2">
