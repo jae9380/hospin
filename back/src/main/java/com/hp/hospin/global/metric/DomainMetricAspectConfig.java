@@ -1,4 +1,4 @@
-package com.hp.hospin.global.configuration;
+package com.hp.hospin.global.metric;
 
 import com.hp.hospin.global.standard.annotations.Monitored;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DomainMetricAspectConfig {
-
     private final MeterRegistry meterRegistry;
     private final DomainMetricHelper metricHelper;
 

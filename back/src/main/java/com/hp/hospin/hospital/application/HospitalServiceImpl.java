@@ -1,6 +1,7 @@
 package com.hp.hospin.hospital.application;
 
 import com.hp.hospin.global.exception.HospinCustomException.*;
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.hospital.application.dto.HospitalBaseDTO;
 import com.hp.hospin.hospital.application.dto.HospitalDTO;
 import com.hp.hospin.hospital.application.dto.HospitalSearchRequest;
@@ -29,6 +30,12 @@ public class HospitalServiceImpl implements HospitalService {
     private final HospitalDomainService hospitalDomainService;
     private final HospitalDtoMapper mapper;
 
+    @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "application",
+            api = "getAllHospitalData"
+    )
     public List<HospitalBaseDTO> getAllHospitalData() {
         List<Hospital> hospitals = hospitalDomainService.getAllHospitalData();
 
@@ -37,6 +44,12 @@ public class HospitalServiceImpl implements HospitalService {
                 .toList();
     }
 
+    @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "application",
+            api = "assembleHospitalInfo"
+    )
     public HospitalDTO assembleHospitalInfo(String hospitalCode) {
         Hospital hospital = hospitalDomainService.getHospitalByHospitalCode(hospitalCode)
                 .orElseThrow(HospitalNotExist::new);
@@ -48,6 +61,12 @@ public class HospitalServiceImpl implements HospitalService {
         return mapper.toHospitalInfoResponse(hospital, hospitalDetail, hospitalGrade);
     }
 
+    @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "application",
+            api = "getHospitalsNearby"
+    )
     public List<HospitalBaseDTO> getHospitalsNearby(String latitude_str, String longitude_str) {
         List<HospitalBaseDTO> result = hospitalDomainService.getHospitalsNearCoordinates(latitude_str, longitude_str).stream()
                 .map(mapper::toBaseDto)
@@ -56,23 +75,28 @@ public class HospitalServiceImpl implements HospitalService {
         return result;
     }
 
-@Override
-public Page<HospitalBaseDTO> search(String name, Long categoryCode, Long regionCode,
-                                            Long districtCode, Long postalCode, String address, Pageable pageable) {
-    HospitalSearchRequest req = new HospitalSearchRequest(
-            name, categoryCode, regionCode, districtCode, postalCode, address
-    );
+    @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "application",
+            api = "search"
+    )
+    public Page<HospitalBaseDTO> search(String name, Long categoryCode, Long regionCode,
+                                                Long districtCode, Long postalCode, String address, Pageable pageable) {
+        HospitalSearchRequest req = new HospitalSearchRequest(
+                name, categoryCode, regionCode, districtCode, postalCode, address
+        );
 
-    PageResult<Hospital> result = hospitalDomainService.search(
-            req.toDomainQuery(),
-            pageable.getPageNumber(),
-            pageable.getPageSize()
-    );
+        PageResult<Hospital> result = hospitalDomainService.search(
+                req.toDomainQuery(),
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
 
-    var content = result.content().stream()
-            .map(mapper::toBaseDto)
-            .toList();
+        var content = result.content().stream()
+                .map(mapper::toBaseDto)
+                .toList();
 
-    return new PageImpl<>(content, pageable, result.totalElements());
-}
+        return new PageImpl<>(content, pageable, result.totalElements());
+    }
 }

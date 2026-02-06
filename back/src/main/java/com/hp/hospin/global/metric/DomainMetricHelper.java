@@ -1,4 +1,4 @@
-package com.hp.hospin.global.configuration;
+package com.hp.hospin.global.metric;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class DomainMetricHelper {
-
     private final MeterRegistry meterRegistry;
 
     public Timer timer(String domain, String layer, String api) {
@@ -16,6 +15,7 @@ public class DomainMetricHelper {
                 .tag("domain", domain)
                 .tag("layer", layer)
                 .tag("api", api)
+                .publishPercentileHistogram(true)
                 .register(meterRegistry);
     }
 

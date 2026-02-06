@@ -42,8 +42,6 @@ public class SymptomCheckServiceImpl implements SymptomCheckService {
                         .toList())
                 .toList();
 
-
-        // 4️⃣ 기존 RecommendedSpecialty 객체를 새로운 hospitals 필드와 함께 생성
         List<RecommendedSpecialty> updatedSpecialties = IntStream.range(0, result.recommended_specialties().size())
                 .mapToObj(i -> {
                     RecommendedSpecialty orig = result.recommended_specialties().get(i);
@@ -52,7 +50,6 @@ public class SymptomCheckServiceImpl implements SymptomCheckService {
                 })
                 .toList();
 
-        // 5️⃣ 새 SymptomAnalyzeResponse 객체 생성
         return new SymptomAnalyzeResponse(updatedSpecialties);
     }
 }

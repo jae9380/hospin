@@ -1,0 +1,2064 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 19,
+      "panels": [],
+      "title": "Layer",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "Presentation 레이어 진입 API별 트래픽 분포\n외부 사용자 접근 패턴 파악용",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 2,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 23,
+        "x": 0,
+        "y": 1
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(domain_requests_total{layer=\"presentation\"}) by (domain, api)",
+          "legendFormat": "{{domain}}-{{api}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Presentation API별 요청 수",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "Presentation 레이어 실패 비율\n사용자 체감 장애 감지용",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "sum(domain_requests_total{layer=\"presentation\", result=\"fail\"})\n/\nsum(domain_requests_total{layer=\"presentation\"})\n*100"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(domain_requests_total{layer=\"presentation\", result=\"fail\"})\n/\nsum(domain_requests_total{layer=\"presentation\"})\n*100",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": " Presentation 실패율",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "Presentation 레이어 실패 비율\n사용자 체감 장애 감지용",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(domain_requests_total{layer=\"presentation\", result=\"fail\"})\n/\nsum(domain_requests_total{layer=\"presentation\"})\n*100",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": " Presentation 실패율",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "Presentation 레이어 p95 응답 시간\n사용자 체감 성능 기준 지표",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "histogram_quantile(\n  0.95,\n  sum(rate(domain_request_duration_seconds_bucket{layer=\"presentation\"}[5m])) by (le)\n)",
+          "legendFormat": "P95",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Presentation p95 응답 시간",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "Presentation 대비 Application 처리 지연\n비즈니스 로직 병목 여부 판단용\n\nApplication 지연이 커지면 DB/로직 병목\n\nPresentation 지연이 크면 네트워크·필터·직렬화 문제로 판단",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "(\n  sum(domain_request_duration_seconds_sum{layer=\"application\"})\n  /\n  sum(domain_request_duration_seconds_count{layer=\"application\"})\n)\n-\n(\n  sum(domain_request_duration_seconds_sum{layer=\"presentation\"})\n  /\n  sum(domain_request_duration_seconds_count{layer=\"presentation\"})\n)",
+          "legendFormat": "Application 평균 응답 - Presentation 평균 응답",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Application 처리 지연 (Presentation 대비)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "Application 레이어 평균 비즈니스 처리 시간\n순수 도메인 로직 성능 확인용",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(domain_request_duration_seconds_sum{layer=\"application\"})\n/\nsum(domain_request_duration_seconds_count{layer=\"application\"})",
+          "legendFormat": "Application",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Application 평균 비즈니스 처리 시간",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bfc73xjvx924ge"
+      },
+      "description": "외부 API 평균 응답 시간\n외부 의존성으로 인한 지연 여부 확인",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(domain_request_duration_seconds_sum{layer=\"infrastructure\"})\n/\nsum(domain_request_duration_seconds_count{layer=\"infrastructure\"})",
+          "legendFormat": "외부 의존성 평균 응답",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Infrastructure 외부 의존성 평균 응답 시간",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 51
+      },
+      "id": 16,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 141
+          },
+          "id": 14,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(domain_requests_total) by (domain)",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "도메인별 요청 수",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 141
+          },
+          "id": 15,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(rate(domain_requests_total[1m])) by (domain)",
+              "legendFormat": "{{domain}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "도메인별 요청 수 (RPS)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Domain",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 52
+      },
+      "id": 9,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisWidth": -1,
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "Bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 142
+          },
+          "id": 6,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+              "format": "time_series",
+              "instant": false,
+              "legendFormat": "{{area}} {{instance}}",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "bfc73xjvx924ge"
+              },
+              "editorMode": "code",
+              "expr": "jvm_memory_used_bytes{area=\"nonheap\"}",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{area}} {{instance}}",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "JVM Memory",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "Bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 142
+          },
+          "id": 7,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+              "format": "time_series",
+              "instant": false,
+              "legendFormat": "{{area}} {{instance}}",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "bfc73xjvx924ge"
+              },
+              "editorMode": "code",
+              "expr": "jvm_memory_used_bytes{area=\"nonheap\"}",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{area}} {{instance}}",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "JVM Memory",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "description": "- 계단식 증가 → 스레드 누수 의심\n- 톱니형 → 정상적인 요청 처리 패턴\n\n스레드 수 급증 = 블로킹 / 데드락 / 트래픽 문제 가능성",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 150
+          },
+          "id": 11,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "jvm_threads_live_threads",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Live Threads",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "#6ED0E0",
+                    "value": 0
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 100
+                  },
+                  {
+                    "color": "red",
+                    "value": 200
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "{__name__=\"jvm_threads_live_threads\", instance=\"host.docker.internal:8080\", job=\"HosPin\"}"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": []
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 150
+          },
+          "id": 10,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "jvm_threads_live_threads",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "JVM Live Threads",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "description": "- 지속적으로 80% 이상 → 스레드/GC/로직 문제\n\n- 요청 시에만 튀는 패턴 → 정상",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 158
+          },
+          "id": 13,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "process_cpu_usage * 100",
+              "legendFormat": "{{label_name}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "New panel",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "#6ED0E0",
+                    "value": 0
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 60
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 158
+          },
+          "id": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "process_cpu_usage * 100",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Process CPU Usage",
+          "type": "stat"
+        }
+      ],
+      "title": "Saturation",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 53
+      },
+      "id": 8,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "description": "Hospital 도메인에서 발생하는 요청을 레이어 단위로 수집하여,\nPresentation / Application / Infrastructure 간 트래픽 분포와 병목 여부를 확인합니다.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Requests",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 143
+          },
+          "id": 1,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "bfc73xjvx924ge"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(domain_requests_total{domain=\"hospital\"}) by (layer)",
+              "format": "time_series",
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Hospital 도메인 레이어별 요청 수",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "description": "전체 서비스로 유입되는 HTTP 요청량(RPS)을 나타냅니다.\n트래픽 증가 및 감소 추이를 통해 사용자 활동 변화를 확인합니다.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 2,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 151
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(rate(http_server_requests_seconds_count[1m]))",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "전체 HTTP 요청량 (RPS)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "description": "요청의 95퍼센트가 이 시간 이내에 응답된다는 의미의 지표\n\n실제 사용자 체감 성능을 나타냄\n\n- 값이 작을수록 → 요청 처리 시간이 빠름 (좋음)\n- 값이 커질수록 → 요청 처리 속도가 느려짐 → 성능 병목 가능성",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 160
+          },
+          "id": 3,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "http_server_requests_seconds{quantile=\"0.95\"}",
+              "legendFormat": "{{method}} {{uri}} ",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "HTTP 응답 지연 시간 (p95)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 160
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "http_server_requests_seconds{quantile=\"0.5\"}",
+              "legendFormat": "{{method}} {{uri}} P95-P50 ",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "HTTP 요청 응답 시간 (p50)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "bfc73xjvx924ge"
+          },
+          "description": "P95-P50 그래프의 의미\n- y축 = P95 − P50 → 95번째 백분위 응답 시간과 50번째 백분위 응답 시간의 차이\n- 즉 응답 시간 분포의 폭(Variability, 지연 범위)을 나타냄\n- 값이 클수록 응답 시간 편차가 크다, 값이 작으면 응답이 안정적\n\n⸻\n\n그래프에서 지점을 보는 방법\n\n옵션 1: 특정 시점 보기\n  원하는 **시간(특정 x좌표)**의 y값을 확인 → 그 시점의 지연 범위\n  예: 10:12:30 시점의 y값이 0.015 → P95가 P50보다 15ms 더 느림\n\n옵션 2: 전체 경향 보기\n  선 그래프의 고점과 저점 → 시간대별 지연 변화 확인\n  예: 고점이 0.030, 저점이 0.005 → 응답 시간 편차가 큰 시간대/작은 시간대 구분 가능\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "GET /api/hospital P95-P50 "
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": true,
+                      "viz": true
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 168
+          },
+          "id": 5,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "bfc73xjvx924ge"
+              },
+              "editorMode": "code",
+              "expr": "http_server_requests_seconds{quantile=\"0.95\"} \n  - ignoring(quantile) http_server_requests_seconds{quantile=\"0.5\"}",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "{{method}} {{uri}} P95-P50 ",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "HTTP 요청 응답 시간 (p95 - p50)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "HTTP",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "definition": "label_values(jvm_memory_used_bytes,$application)",
+        "description": "",
+        "name": "application",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(jvm_memory_used_bytes,$application)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "definition": "label_values(jvm_memory_used_bytes,$instance)",
+        "name": "instance",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(jvm_memory_used_bytes,$instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Hospin",
+  "uid": "admmqgb",
+  "version": 24
+}
