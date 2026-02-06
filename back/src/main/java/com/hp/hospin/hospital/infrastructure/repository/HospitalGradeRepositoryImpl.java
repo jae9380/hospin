@@ -1,5 +1,6 @@
 package com.hp.hospin.hospital.infrastructure.repository;
 
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.hospital.domain.port.HospitalGradeRepository;
 import com.hp.hospin.hospital.domain.type.HospitalGrade;
 import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
@@ -17,6 +18,11 @@ public class HospitalGradeRepositoryImpl implements HospitalGradeRepository {
     private final HospitalPersistenceMapper mapper;
 
     @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "infrastructure",
+            api = "findByHospitalCode(grade)"
+    )
     public Optional<HospitalGrade> findByHospitalCode(String hospitalCode) {
         return hospitalGradeJPARepository.findByHospitalCode(hospitalCode)
                 .map(mapper::toDomain);

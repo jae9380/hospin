@@ -1,5 +1,6 @@
 package com.hp.hospin.schedule.application;
 
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.schedule.application.dto.ScheduleDTO;
 import com.hp.hospin.schedule.application.mapper.ScheduleDtoMapper;
 import com.hp.hospin.schedule.application.port.ScheduleDomainService;
@@ -21,6 +22,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleDtoMapper mapper;
 
     @Override
+    @Monitored(
+            domain = "schedule",
+            layer = "application",
+            api = "createSchedule"
+    )
     @Transactional
     public ScheduleDTO createSchedule(Long memberId, ScheduleDTO createRequest) {
         validDateRange(createRequest.getStartDatetime(), createRequest.getEndDatetime());
@@ -28,18 +34,33 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Monitored(
+            domain = "schedule",
+            layer = "application",
+            api = "modifySchedule"
+    )
     @Transactional
     public ScheduleDTO modifySchedule(Long memberId, Long scheduleId, ScheduleDTO updateRequest) {
         return mapper.toDto(scheduleDomainService.modifySchedule(scheduleId, mapper.toForm(updateRequest), memberId));
     }
 
     @Override
+    @Monitored(
+            domain = "schedule",
+            layer = "application",
+            api = "deleteSchedule"
+    )
     @Transactional
     public void deleteSchedule(Long memberId, Long scheduleId) {
         scheduleDomainService.deleteSchedule(scheduleId, memberId);
     }
 
     @Override
+    @Monitored(
+            domain = "schedule",
+            layer = "application",
+            api = "getScheduleList"
+    )
     public List<ScheduleDTO> getScheduleList(Long memberId) {
         List<ScheduleDTO> schedules = scheduleDomainService.getScheduleList(memberId).stream().map(mapper::toDto).toList();
         // TODO: 나중에 추가 조건 생성 로직 (예: 날짜 범위, 카테고리, 반복 여부 등)

@@ -1,5 +1,6 @@
 package com.hp.hospin.member.application;
 
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.member.application.dto.MemberDTO;
 import com.hp.hospin.member.application.mapper.MemberDtoMapper;
 import com.hp.hospin.member.application.port.MemberDomainService;
@@ -23,6 +24,11 @@ public class MemberServiceImpl implements MemberService {
     private final MemberDtoMapper mapper;
 
     @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "join"
+    )
     public void join(MemberDTO request) {
         if (memberDomainService.existsById(request.getIdentifier())) throw new DuplicateIdentifierException();
 
@@ -30,11 +36,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "login"
+    )
     public void login(MemberDTO request) {
         memberDomainService.login(mapper.dtoToLoginForm(request));
     }
 
     @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "checkDuplicateIdentifier"
+    )
     public Map<Boolean, String> checkDuplicateIdentifier(String identifier) {
         Map<Boolean, String> resultMap = new HashMap<>();
 
@@ -56,12 +72,22 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "findByIdentifier"
+    )
     public MemberDTO findByIdentifier(String identifier) {
         // TODO: 해당 유저가 없을 경우에 대한 예외 설정 필요
         return mapper.domainToDto(memberDomainService.getByIdentifier(identifier));
     }
 
     @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "logoutMsg"
+    )
     public Map<String, String> logoutMsg() {
         Map<String, String> logoutMsg = new HashMap<>();
         logoutMsg.put("message", "로그아웃 되었습니다.");

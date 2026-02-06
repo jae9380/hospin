@@ -52,7 +52,11 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, prometheus
+        include: prometheus, health, info, metrics
   metrics:
     enable:
+      jvm: true
       all: true
+    distribution:
+      percentiles:
+        http.server.requests: 0.95, 0.5

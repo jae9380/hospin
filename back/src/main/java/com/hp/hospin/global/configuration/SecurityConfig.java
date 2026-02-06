@@ -44,6 +44,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> {
                     requests
                             .requestMatchers("/h2-console/**").permitAll()
+                            .requestMatchers("/actuator/prometheus").permitAll()
+                            .requestMatchers("/actuator/health").permitAll()
                             .requestMatchers("/api/member/join", "/api/member/login","/api/batch/**","/api/symptomcheck", "/api/FCM/**").permitAll()
                             .requestMatchers(HttpMethod.GET,
                                     "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
