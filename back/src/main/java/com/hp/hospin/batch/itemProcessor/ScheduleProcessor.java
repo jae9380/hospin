@@ -25,9 +25,9 @@ public class ScheduleProcessor implements ItemProcessor<JpaScheduleEntity, Sched
         Schedule schedule = mapper.jpaToDomain(item);
 
 //        test
-        if (schedule.getId() != null || schedule.getId() == 1L) {
-            throw new RuntimeException("TEST_PROCESSOR_FAILURE");
-        }
+//        if (schedule.getId() != null || schedule.getId() == 1L) {
+//            throw new RuntimeException("TEST_PROCESSOR_FAILURE");
+//        }
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
         LocalDateTime start = schedule.getStartDatetime()

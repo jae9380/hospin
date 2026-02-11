@@ -28,7 +28,6 @@ public class OpenAiSymptomAnalyzeAdapter implements SymptomAnalyzePort {
                     .content();
 
             metricHelper.success("openai", "symptom.analyze").increment();
-
             return result;
         } catch (Exception e) {
 
