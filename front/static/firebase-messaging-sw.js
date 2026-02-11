@@ -3,7 +3,7 @@ importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-comp
 
 // Firebase 초기화
 firebase.initializeApp({
-  apiKey: 'AIzaSyBG5RwoTEVBS5JJAGsG7AOLYq7nEydYlgo',
+  apiKey: import.meta.env.FIREBASE_API_KEY_ID,
   authDomain: 'hospin-57573.firebaseapp.com',
   projectId: 'hospin-57573',
   storageBucket: 'hospin-57573.firebasestorage.app',
