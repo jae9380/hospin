@@ -1,6 +1,7 @@
 package com.hp.hospin.schedule.presentation;
 
 import com.hp.hospin.global.apiResponse.ApiResponse;
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.global.standard.base.Empty;
 import com.hp.hospin.global.common.MemberDetails;
 import com.hp.hospin.schedule.application.dto.ScheduleDTO;
@@ -22,6 +23,11 @@ public class ScheduleController {
     private final ScheduleApiMapper mapper;
 
     @GetMapping()
+    @Monitored(
+            domain = "schedule",
+            layer = "presentation",
+            api = "getScheduleList"
+    )
     public ApiResponse<List<ScheduleResponse>> getScheduleList(@AuthenticationPrincipal MemberDetails memberDetails) {
         List<ScheduleDTO> schedules = scheduleService.getScheduleList(memberDetails.getId());
         if (schedules.isEmpty()) return ApiResponse.ok(List.of());
@@ -31,6 +37,11 @@ public class ScheduleController {
     }
 
     @PostMapping()
+    @Monitored(
+            domain = "schedule",
+            layer = "presentation",
+            api = "createdSchedule"
+    )
     public ApiResponse<ScheduleResponse> createdSchedule(@AuthenticationPrincipal MemberDetails memberDetails,
                                               @RequestBody ScheduleRequest createScheduleRequest) {
         ScheduleResponse schedule =  mapper.dtoToResponse(
@@ -40,6 +51,11 @@ public class ScheduleController {
     }
 
     @PutMapping("/{scheduleId}")
+    @Monitored(
+            domain = "schedule",
+            layer = "presentation",
+            api = "modifySchedule"
+    )
     public ApiResponse<ScheduleResponse> modifySchedule(@AuthenticationPrincipal MemberDetails memberDetails,
                                              @PathVariable Long scheduleId,
                                              @RequestBody ScheduleRequest updateScheduleRequest) {
@@ -50,6 +66,11 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{scheduleId}")
+    @Monitored(
+            domain = "schedule",
+            layer = "application",
+            api = "deleteSchedule"
+    )
     public ApiResponse<Empty> deleteSchedule(@AuthenticationPrincipal MemberDetails memberDetails,
                                              @PathVariable Long scheduleId) {
         scheduleService.deleteSchedule(memberDetails.getId(), scheduleId);
