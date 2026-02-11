@@ -28,6 +28,15 @@ repositories {
 }
 
 dependencies {
+// Micrometer
+    implementation 'io.micrometer:micrometer-core'
+
+// Prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+// Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 //    Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 

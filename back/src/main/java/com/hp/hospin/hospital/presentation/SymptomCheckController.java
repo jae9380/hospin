@@ -17,9 +17,7 @@ public class SymptomCheckController {
     @PostMapping("")
     public ApiResponse<SymptomAnalyzeResponse> percheck(@RequestBody SymptomCheckRequest request) {
         try {
-            System.out.println(request.toString());
             SymptomAnalyzeResponse result = symptomCheckService.generate(request.str(), request.latitude(), request.longitude()); // 호출 시 401 발생 가능
-            System.out.println(result.toString());
             return ApiResponse.ok(result);
         } catch (Exception e) {
             System.out.println("API 호출 실패: " + e.getMessage());

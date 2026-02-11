@@ -1,6 +1,7 @@
 package com.hp.hospin.hospital.presentation;
 
 import com.hp.hospin.global.apiResponse.ApiResponse;
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.hospital.presentation.dto.HospitalInfoResponse;
 import com.hp.hospin.hospital.presentation.dto.HospitalListResponse;
 import com.hp.hospin.hospital.presentation.mapper.HospitalApiMapper;
@@ -20,6 +21,11 @@ public class HospitalController {
     private final HospitalApiMapper mapper;
 
     @GetMapping
+    @Monitored(
+            domain = "hospital",
+            layer = "presentation",
+            api = "getAllHospital"
+    )
     public ApiResponse<List<HospitalListResponse>> getAllHospital() {
         return ApiResponse.ok(
                 hospitalService.getAllHospitalData().stream()
@@ -29,11 +35,21 @@ public class HospitalController {
     }
 
     @GetMapping("/{hospitalCode}")
+        @Monitored(
+            domain = "hospital",
+            layer = "presentation",
+            api = "getHospitalDetails"
+    )
     public ApiResponse<HospitalInfoResponse> getHospitalDetails(@PathVariable(name = "hospitalCode") String hospitalCode) {
         return ApiResponse.ok(mapper.toInfoResponse(hospitalService.assembleHospitalInfo(hospitalCode)));
     }
 
     @GetMapping("/nearby")
+        @Monitored(
+            domain = "hospital",
+            layer = "presentation",
+            api = "getNearbyHospitals"
+    )
     public ApiResponse<List<HospitalListResponse>> getNearbyHospitals(@RequestParam String latitude,
                                                          @RequestParam String longitude) {
         return ApiResponse.ok(
@@ -44,6 +60,11 @@ public class HospitalController {
     }
 
     @GetMapping("/search")
+        @Monitored(
+            domain = "hospital",
+            layer = "presentation",
+            api = "search"
+    )
     public ApiResponse<Page<HospitalListResponse>> search(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long categoryCode,

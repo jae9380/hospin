@@ -1,5 +1,6 @@
 package com.hp.hospin.hospital.infrastructure.repository;
 
+import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.hospital.domain.port.HospitalRepository;
 import com.hp.hospin.hospital.domain.type.Hospital;
 import com.hp.hospin.hospital.domain.type.HospitalSearchCriteria;
@@ -25,6 +26,11 @@ public class HospitalRepositoryImpl implements HospitalRepository {
     private final HospitalPersistenceMapper mapper;
 
     @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "infrastructure",
+            api = "getAllData"
+    )
     public List<Hospital> getAllData() {
         return hospitalJPARepository.findAll().stream()
                 .map(mapper::toDomain)
@@ -32,12 +38,22 @@ public class HospitalRepositoryImpl implements HospitalRepository {
     }
 
     @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "infrastructure",
+            api = "findByHospitalCode"
+    )
     public Optional<Hospital> findByHospitalCode(String hospitalCode) {
         return hospitalJPARepository.findByHospitalCode(hospitalCode)
                 .map(mapper::toDomain);
     }
 
     @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "infrastructure",
+            api = "findHospitalsByBoundingBox"
+    )
     public List<Hospital> findHospitalsByBoundingBox(Double minLat,  Double maxLat, Double minLng, Double maxLng) {
         return hospitalJPARepository.findHospitalsByBoundingBox(minLat, maxLat, minLng, maxLng)
                 .stream()
@@ -46,6 +62,11 @@ public class HospitalRepositoryImpl implements HospitalRepository {
     }
 
     @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "infrastructure",
+            api = "search"
+    )
     public PageResult<Hospital> search(HospitalSearchCriteria query, int page, int size) {
         var spec = HospitalSpecificationFactory.from(query);
         var pageable = PageRequest.of(page, size); // 정렬 필요시 여기서만 처리
@@ -59,6 +80,11 @@ public class HospitalRepositoryImpl implements HospitalRepository {
     }
 
     @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "infrastructure",
+            api = "findByLocationAndDeptCodes"
+    )
     public List<Hospital> findByLocationAndDeptCodes(
             double minLat, double maxLat,
             double minLng, double maxLng,
