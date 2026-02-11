@@ -11,13 +11,6 @@ import org.springframework.stereotype.Component;
 public class ExternalApiMetricHelper {
     private final MeterRegistry meterRegistry;
 
-    public Timer timer(String system, String operation) {
-        return Timer.builder("external_api_request_duration_seconds")
-                .tag("system", system)
-                .tag("operation", operation)
-                .register(meterRegistry);
-    }
-
     public Counter success(String system, String operation) {
         return Counter.builder("external_api_requests_total")
                 .tag("system", system)
@@ -32,6 +25,15 @@ public class ExternalApiMetricHelper {
                 .tag("operation", operation)
                 .tag("result", "fail")
                 .tag("error_type", errorType)
+                .register(meterRegistry);
+    }
+
+    public Timer timer(String system, String operation) {
+        return Timer.builder("external_api_request_duration")
+                .tag("system", system)
+                .tag("operation", operation)
+                .publishPercentileHistogram(true)   // ⭐ 필수
+                .publishPercentiles(0.5, 0.95, 0.99)
                 .register(meterRegistry);
     }
 }
