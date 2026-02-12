@@ -10,3 +10,23 @@ spring:
 
   config:
     import: optional:application-secret.yml
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info, metrics
+  metrics:
+    enable:
+      jvm: true
+      all: true
+    distribution:
+      percentiles:
+        http.server.requests: 0.95, 0.5
+
+firebaseAdminSdkPath: hospin-57573-firebase-adminsdk-fbsvc-04558e3b9d.json
