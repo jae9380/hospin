@@ -84,9 +84,9 @@ public class BatchConfiguration {
     @Bean(name ="loadHospitalDetailJob" )
     public Job loadHospitalDetailJob() {
         return new JobBuilder("loadHospitalDetailJob", jobRepository)
-//                .start(loadHospitalDetailStep())
-                .start(loadHospitalDepartmentStep())
-//                .next(loadHospitalDepartmentStep())
+                .start(loadHospitalDetailStep())
+//                .start(loadHospitalDepartmentStep())
+                .next(loadHospitalDepartmentStep())
                 .listener(jobListener)
                 .build();
 
