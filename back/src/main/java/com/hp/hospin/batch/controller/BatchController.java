@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +59,15 @@ public class BatchController {
     }
 
     private JobParameters createJobParameters(String jobName) {
+        String batchId = jobName + "-" +
+                LocalDateTime.now()
+                        .truncatedTo(ChronoUnit.MINUTES)
+                        .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+
         Map<String, JobParameter<?>> params = new HashMap<>();
         params.put("jobName", new JobParameter<>(jobName, String.class));
-        params.put("timestamp", new JobParameter<>(new Date().getTime(), Long.class)); // 중복 실행 방지용
+        params.put("batchId", new JobParameter<>(batchId, String.class));
+
         return new JobParameters(params);
     }
 }
