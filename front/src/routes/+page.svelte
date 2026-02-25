@@ -2,16 +2,9 @@
 	import '../app.css';
 	import { au } from '$lib/au/au';
 	import { onMount } from 'svelte';
-
-	// <!-- TODO: 사용자 기준 가까운 5개 병원 매핑, 현재 날짜 기준으로 가까운 스케줄 6개 매핑 만들어야 함
-	// <!-- NOTICE: 샘플 데이터
-	let nearHospitals = [
-		{ name: '동의병원', address: '서울 강남구', callNumber: '02-1234-5678' },
-		{ name: '미래병원', address: '서울 서초구', callNumber: '02-8765-4321' },
-		{ name: '건강의원', address: '서울 강북구', callNumber: '02-5555-5555' },
-		{ name: '건강의원', address: '서울 강북구', callNumber: '02-5555-5555' },
-		{ name: '건강의원', address: '서울 강북구', callNumber: '02-5555-5555' }
-	];
+	import type { HospitalListResponse } from '$lib/types/hospital/list';
+	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
+	import toast, { Toaster } from 'svelte-5-french-toast';
 
 	let nearSchedules = [
 		{ title: '검진 예약', date: '2025-11-25 09:00' },
@@ -22,11 +15,16 @@
 		{ title: '물리치료', date: '2025-11-26 15:00' }
 	];
 
-	let hospitalName = '';
+	let hospitals: HospitalListResponse[] = [];
+	let error: string | null = null;
 	let isLogin;
+	let lat: number | null = null;
+	let lng: number | null = null;
+	let hospitalName = '';
 
 	onMount(async () => {
 		isLogin = au?.isLogin ?? false;
+
 		if (!navigator.geolocation) {
 			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
 			return;
@@ -46,8 +44,10 @@
 			);
 		});
 
+		if (!lat || !lng) return;
+
 		try {
-			const { data } = await au.api().GET('/api/hospital/nearby', {
+			const res = await au.api().GET('/api/hospital/6nearby', {
 				params: {
 					query: {
 						latitude: String(lat),
@@ -56,8 +56,15 @@
 				}
 			});
 
-			hospitals = data?.data ?? [];
-		} catch {
+			const apiResponse = res.data as ApiResponse<HospitalListResponse[]>;
+
+			if (apiResponse.resultType !== 'SUCCESS') {
+				toast.error(apiResponse.message);
+				return;
+			}
+
+			hospitals = apiResponse.data ?? [];
+		} catch (e) {
 			toast.error('데이터 로드 실패 ❌');
 		}
 	});
@@ -70,6 +77,8 @@
 <svelte:head>
 	<title>HosPin</title>
 </svelte:head>
+
+<Toaster />
 
 <div class="flex min-h-screen flex-col items-center bg-base-200 px-4 py-12">
 	<div class="mb-6 w-full max-w-3xl">
@@ -135,13 +144,12 @@
 		<div class="rounded-xl bg-white p-6 shadow-lg">
 			<h3 class="mb-2 text-sm font-semibold text-gray-600">Quick Hospitals</h3>
 			<div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-				{#each nearHospitals as hospital}
+				{#each hospitals as hospital}
 					<div
 						class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
 					>
 						<p class="font-medium text-gray-800">{hospital.name}</p>
 						<p class="text-xs text-gray-500">{hospital.address}</p>
-						<p class="text-xs text-gray-500">{hospital.callNumber}</p>
 					</div>
 				{/each}
 			</div>
