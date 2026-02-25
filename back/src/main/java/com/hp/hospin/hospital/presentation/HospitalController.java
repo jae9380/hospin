@@ -59,6 +59,21 @@ public class HospitalController {
         );
     }
 
+    @GetMapping("/6nearby")
+    @Monitored(
+            domain = "hospital",
+            layer = "presentation",
+            api = "get6NearbyHospitals"
+    )
+    public ApiResponse<List<HospitalListResponse>> get6NearbyHospitals(@RequestParam String latitude,
+                                                                      @RequestParam String longitude) {
+        return ApiResponse.ok(
+                hospitalService.getHospitals6Nearby(latitude, longitude).stream()
+                        .map(mapper::toListResponse)
+                        .toList()
+        );
+    }
+
     @GetMapping("/search")
         @Monitored(
             domain = "hospital",

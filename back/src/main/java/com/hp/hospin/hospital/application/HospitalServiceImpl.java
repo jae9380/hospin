@@ -79,6 +79,20 @@ public class HospitalServiceImpl implements HospitalService {
     @Monitored(
             domain = "hospital",
             layer = "application",
+            api = "getHospitalsNearby"
+    )
+    public List<HospitalBaseDTO> getHospitals6Nearby(String latitude_str, String longitude_str) {
+        List<HospitalBaseDTO> result = hospitalDomainService.getTop6HospitalsNearby(latitude_str, longitude_str).stream()
+                .map(mapper::toBaseDto)
+                .toList();
+
+        return result;
+    }
+
+    @Override
+    @Monitored(
+            domain = "hospital",
+            layer = "application",
             api = "search"
     )
     public Page<HospitalBaseDTO> search(String name, Long categoryCode, Long regionCode,
