@@ -9,8 +9,7 @@ import com.hp.hospin.hospital.domain.type.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +61,7 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
         double maxLng = longitude + lngRange;
 
         // note: 1차 필터링 - DB에서 정수 기준으로 필터링
-        List<Hospital> candidates = hospitalRepository.findHospitalsByBoundingBox(latitude, latitude, longitude, longitude);
+        List<Hospital> candidates = hospitalRepository.findHospitalsByBoundingBox(minLat, maxLat, minLng, maxLng);
 
         // note: 2차 필터링 - 거리 계산 후 필터fld
         return candidates.stream()
@@ -78,6 +77,28 @@ public class HospitalDomainServiceImpl implements HospitalDomainService {
                 .toList();
     }
 
+    @Override
+    public List<Hospital> getTop6HospitalsNearby(String latitudeStr, String longitudeStr) {
+
+        double latitude = Double.parseDouble(latitudeStr);
+        double longitude = Double.parseDouble(longitudeStr);
+
+        return getHospitalsNearCoordinates(latitudeStr, longitudeStr)
+                .stream()
+                .map(hospital -> Map.entry(
+                        hospital,
+                        calculateDistance(
+                                latitude,
+                                longitude,
+                                hospital.getLatitude(),
+                                hospital.getLongitude()
+                        )
+                ))
+                .sorted(Map.Entry.comparingByValue())
+                .limit(6)
+                .map(Map.Entry::getKey)
+                .toList();
+    }
     @Override
     public List<List<Hospital>> findHospitalsBySymptoms(
             List<String> deptList, Double latitude, Double longitude

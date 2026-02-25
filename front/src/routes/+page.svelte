@@ -1,12 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { au } from '$lib/au/au';
-
-	let hospitalName = '';
-
-	const handleClick = (url: string) => {
-		au?.goTo(url);
-	};
+	import { onMount } from 'svelte';
 
 	// <!-- TODO: 사용자 기준 가까운 5개 병원 매핑, 현재 날짜 기준으로 가까운 스케줄 6개 매핑 만들어야 함
 	// <!-- NOTICE: 샘플 데이터
@@ -26,6 +21,50 @@
 		{ title: '물리치료', date: '2025-11-26 15:00' },
 		{ title: '물리치료', date: '2025-11-26 15:00' }
 	];
+
+	let hospitalName = '';
+	let isLogin;
+
+	onMount(async () => {
+		isLogin = au?.isLogin ?? false;
+		if (!navigator.geolocation) {
+			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+			return;
+		}
+
+		await new Promise<void>((resolve) => {
+			navigator.geolocation.getCurrentPosition(
+				(pos) => {
+					lat = pos.coords.latitude;
+					lng = pos.coords.longitude;
+					resolve();
+				},
+				(err) => {
+					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
+					resolve();
+				}
+			);
+		});
+
+		try {
+			const { data } = await au.api().GET('/api/hospital/nearby', {
+				params: {
+					query: {
+						latitude: String(lat),
+						longitude: String(lng)
+					}
+				}
+			});
+
+			hospitals = data?.data ?? [];
+		} catch {
+			toast.error('데이터 로드 실패 ❌');
+		}
+	});
+
+	const handleClick = (url: string) => {
+		au?.goTo(url);
+	};
 </script>
 
 <svelte:head>
