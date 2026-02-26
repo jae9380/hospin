@@ -43,18 +43,24 @@
 	});
 </script>
 
-<header class="fixed inset-x-0 top-0 z-[2000] bg-base-100/95 backdrop-blur">
-	<div class="navbar flex justify-center">
-		<a class="btn font-mono text-xl btn-ghost" href="/">
-			<img src="/logo.png" alt="HosPin Logo" class="h-10 w-auto" />
-		</a>
-		<div>
+<header
+	class="fixed inset-x-0 top-0 z-[2000] border-b border-base-200/50 bg-base-100/80 backdrop-blur-md"
+>
+	<div class="relative mx-auto navbar max-w-4xl px-4">
+		<div class="absolute left-1/2 -translate-x-1/2">
+			<a class="btn px-2 btn-ghost hover:bg-transparent" href="/">
+				<img src="/logo.png" alt="HosPin Logo" class="h-8 w-auto" />
+			</a>
+		</div>
+		<div class="ml-auto">
 			{#if isLoggedIn}
-				<button class="btn btn-outline btn-sm" on:click={() => au?.logoutAndRedirect()}>
+				<button class="btn font-medium btn-ghost btn-sm" on:click={() => au?.logoutAndRedirect()}>
 					로그아웃
 				</button>
 			{:else}
-				<button class="btn btn-sm btn-primary" on:click={() => au?.goTo('/login')}> 로그인 </button>
+				<button class="btn font-medium btn-ghost btn-sm" on:click={() => au?.goTo('/login')}>
+					로그인 / 회원가입
+				</button>
 			{/if}
 		</div>
 	</div>
