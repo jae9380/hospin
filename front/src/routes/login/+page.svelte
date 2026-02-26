@@ -10,6 +10,8 @@
 	let password: string = '';
 	let errorMsg: string = '';
 
+	let activeModal: 'findId' | 'findPassword' | null = null;
+
 	// 각 input DOM 참조
 	let identifierInput: HTMLInputElement;
 	let passwordInput: HTMLInputElement;
@@ -67,6 +69,22 @@
 		}
 	}
 
+	function handleFindId() {
+		activeModal = 'findId';
+	}
+
+	function handleFindPassword() {
+		activeModal = 'findPassword';
+	}
+
+	function handleSignup() {
+		au?.goTo('/signup');
+	}
+
+	function closeModal() {
+		activeModal = null;
+	}
+
 	function toasterSuccess(message: string) {
 		toast.success(message);
 	}
@@ -118,4 +136,45 @@
 			<button on:click={handleLogin} class="btn w-full btn-neutral"> 로그인 </button>
 		</div>
 	</div>
+	<div class="mt-8 w-80 border-t pt-4">
+		<div class="flex justify-between text-sm text-gray-500">
+			<button type="button" class="hover:text-black" on:click={handleFindId}> 아이디 찾기 </button>
+
+			<button type="button" class="hover:text-black" on:click={handleFindPassword}>
+				비밀번호 찾기
+			</button>
+
+			<button type="button" class="hover:text-black" on:click={handleSignup}> 회원가입 </button>
+		</div>
+	</div>
+	{#if activeModal === 'findId'}
+		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
+			<div class="w-96 rounded-lg bg-white p-6 shadow-lg">
+				<h3 class="mb-4 text-lg font-bold">아이디 찾기</h3>
+
+				<input type="text" placeholder="가입한 이메일 입력" class="input-bordered input w-full" />
+
+				<div class="mt-4 flex justify-end gap-2">
+					<button class="btn btn-ghost" on:click={closeModal}> 닫기 </button>
+					<button class="btn btn-neutral"> 확인 </button>
+				</div>
+			</div>
+		</div>
+	{/if}
+	{#if activeModal === 'findPassword'}
+		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
+			<div class="w-96 rounded-lg bg-white p-6 shadow-lg">
+				<h3 class="mb-4 text-lg font-bold">비밀번호 찾기</h3>
+
+				<input type="text" placeholder="아이디 입력" class="input-bordered input mb-3 w-full" />
+
+				<input type="text" placeholder="가입한 이메일 입력" class="input-bordered input w-full" />
+
+				<div class="mt-4 flex justify-end gap-2">
+					<button class="btn btn-ghost" on:click={closeModal}> 닫기 </button>
+					<button class="btn btn-neutral"> 확인 </button>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>
