@@ -158,8 +158,11 @@ export class Au {
 			}
 			await this.api().POST('/api/member/logout', { credentials: 'include' });
 
+			localStorage.clear();
+			sessionStorage.clear();
+
 			this.setLogout();
-			this.replace('/');
+			window.location.reload();
 		} catch (error) {
 			console.error('Logout failed:', error);
 		}

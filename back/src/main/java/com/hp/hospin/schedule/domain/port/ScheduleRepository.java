@@ -2,6 +2,7 @@ package com.hp.hospin.schedule.domain.port;
 
 import com.hp.hospin.schedule.domain.entity.Schedule;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,5 +11,6 @@ public interface ScheduleRepository {
     Optional<Schedule> getSchedule(Long scheduleId);
     void delete(Schedule schedule);
     Optional<List<Schedule>> findByMemberId(Long memberId);
+    Optional<List<Schedule>> getClosestSchedules(Long memberId, LocalDateTime start, LocalDateTime end);
 
 }

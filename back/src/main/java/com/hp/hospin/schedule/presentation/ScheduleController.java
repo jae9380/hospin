@@ -76,4 +76,19 @@ public class ScheduleController {
         scheduleService.deleteSchedule(memberDetails.getId(), scheduleId);
         return ApiResponse.noContent();
     }
+
+    @GetMapping("/getClosestSchedule")
+    @Monitored(
+            domain = "schedule",
+            layer = "presentation",
+            api = "getClosestSchedule"
+    )
+    public ApiResponse<List<ScheduleResponse>> getClosestSchedule(@AuthenticationPrincipal MemberDetails memberDetails) {
+        List<ScheduleDTO> schedules = scheduleService.getClosestSchedule(memberDetails.getId());
+        if (schedules.isEmpty()) return ApiResponse.ok(List.of());
+        return ApiResponse.ok(schedules.stream()
+                .map(mapper::dtoToResponse)
+                .toList());
+    }
+
 }

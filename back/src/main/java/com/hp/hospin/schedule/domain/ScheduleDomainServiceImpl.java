@@ -8,6 +8,7 @@ import com.hp.hospin.schedule.exception.ScheduleException.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // TODO: 검증 로직 분리 검토 해야 함
@@ -45,6 +46,16 @@ public class ScheduleDomainServiceImpl implements ScheduleDomainService {
     @Override
     public List<Schedule> getScheduleList(Long memberId) {
         return scheduleRepository.findByMemberId(memberId).orElse(List.of());
+    }
+
+    @Override
+    public List<Schedule> getClosestSchedule(Long memberId) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = now.minusDays(15);
+        LocalDateTime end = now.plusDays(15);
+
+        return scheduleRepository.getClosestSchedules(memberId, start, end)
+                .orElse(List.of());
     }
 
     private Schedule getSchedule(Long scheduleId) {

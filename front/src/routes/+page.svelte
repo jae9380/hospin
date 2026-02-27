@@ -2,29 +2,21 @@
 	import '../app.css';
 	import { au } from '$lib/au/au';
 	import { onMount } from 'svelte';
-	import type { HospitalListResponse } from '$lib/types/hospital/list';
-	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 
-	let nearSchedules = [
-		{ title: '검진 예약', date: '2025-11-25 09:00' },
-		{ title: '치과 예약', date: '2025-11-25 14:00' },
-		{ title: '약 처방 확인', date: '2025-11-26 10:30' },
-		{ title: '물리치료', date: '2025-11-26 15:00' },
-		{ title: '물리치료', date: '2025-11-26 15:00' },
-		{ title: '물리치료', date: '2025-11-26 15:00' }
-	];
+	import type { HospitalListResponse } from '$lib/types/hospital/list';
+	import type { ScheduleList } from '$lib/types/schedule/scheduleList';
+	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
 
+	let nearSchedules: ScheduleList[] = [];
 	let hospitals: HospitalListResponse[] = [];
 	let error: string | null = null;
-	let isLogin;
+	let isLogin: boolean | null = false;
 	let lat: number | null = null;
 	let lng: number | null = null;
 	let hospitalName = '';
 
 	onMount(async () => {
-		isLogin = au?.isLogin ?? false;
-
 		if (!navigator.geolocation) {
 			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
 			return;
@@ -66,6 +58,31 @@
 			hospitals = apiResponse.data ?? [];
 		} catch (e) {
 			toast.error('데이터 로드 실패 ❌');
+		}
+
+		if (au?.isLogin) {
+			try {
+				const res = await au.api().GET('/api/schedule/getClosestSchedule');
+
+				const apiResponse = res.data as ApiResponse<any[]>;
+
+				if (apiResponse.resultType !== 'SUCCESS') {
+					toast.error(apiResponse.message);
+					nearSchedules = [];
+					return;
+				}
+
+				const schedules = apiResponse.data ?? [];
+
+				nearSchedules = schedules.map((s) => ({
+					id: s.id,
+					title: s.title,
+					startTime: new Date(s.startDatetime).toLocaleString()
+				}));
+			} catch (e) {
+				console.error('일정 조회 실패:', e);
+				nearSchedules = [];
+			}
 		}
 	});
 
@@ -147,6 +164,7 @@
 				{#each hospitals as hospital}
 					<div
 						class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
+						on:click={() => handleClick(`/hospital/${hospital.hospital_code}`)}
 					>
 						<p class="font-medium text-gray-800">{hospital.name}</p>
 						<p class="text-xs text-gray-500">{hospital.address}</p>
@@ -159,14 +177,19 @@
 		<div class="rounded-xl bg-white p-6 shadow-lg">
 			<h3 class="mb-2 text-sm font-semibold text-gray-600">Quick Schedules</h3>
 			<div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-				{#each nearSchedules as schedule}
-					<div
-						class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
-					>
-						<p class="font-medium text-gray-800">{schedule.title}</p>
-						<p class="text-xs text-gray-500">{schedule.date}</p>
-					</div>
-				{/each}
+				{#if nearSchedules.length === 0}
+					<p class="text-sm text-gray-500">작성된 최근 일정이 없습니다.</p>
+				{:else}
+					{#each nearSchedules as schedule}
+						<div
+							class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
+							on:click={() => handleClick('/schedule')}
+						>
+							<p class="font-medium text-gray-800">{schedule.title}</p>
+							<p class="text-xs text-gray-500">{schedule.startTime}</p>
+						</div>
+					{/each}
+				{/if}
 			</div>
 		</div>
 	</div>

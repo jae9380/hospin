@@ -25,7 +25,7 @@ public class BatchJobScheduler {
         String batchId = "scheduleJob-" +
                 LocalDateTime.now()
                         .truncatedTo(ChronoUnit.MINUTES)
-                        .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+                        .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("batchId", batchId)
