@@ -80,6 +80,21 @@ public class MemberDomainServiceImpl implements MemberDomainService {
         }
     }
 
+    @Override
+    public String findId(String name, String email) {
+        Member member = memberRepository.getByEmail(email).orElseThrow(MemberNotFoundException::new);
+        // todo: application에서 없는 경우에 대한 예외 캐치 작성
+
+        member.verifyName(name);
+
+        return member.getIdentifier();
+    }
+
+    @Override
+    public String findPassword(String name, String email) {
+        return null;
+    }
+
     private Member requireByIdentifier(String identifier) {
         return memberRepository.getByIdentifier(identifier)
                 .orElseThrow(MemberNotFoundException::new);

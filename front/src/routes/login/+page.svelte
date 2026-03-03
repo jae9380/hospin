@@ -5,10 +5,14 @@
 	// 상태 변수
 	let identifierError = false;
 	let passwordError = false;
+	let showFindIdResultModal = false;
 
+	let foundIdentifier: string = '';
 	let identifier: string = '';
 	let password: string = '';
 	let errorMsg: string = '';
+	let findIdName: string = '';
+	let findIdEmail: string = '';
 
 	let activeModal: 'findId' | 'findPassword' | null = null;
 
@@ -66,6 +70,37 @@
 		} catch (err: any) {
 			errorMsg = err.message || '서버 오류가 발생했습니다.';
 			toasterError(errorMsg);
+		}
+	}
+
+	async function handleFindIdSubmit() {
+		if (!findIdName.trim() || !findIdEmail.trim()) {
+			toasterError('이름과 이메일을 모두 입력해주세요.');
+			return;
+		}
+
+		try {
+			const res = await au.api().GET('/api/member/findId', {
+				params: {
+					query: {
+						name: findIdName.trim(),
+						email: findIdEmail.trim()
+					}
+				}
+			});
+
+			const apiResponse = res.data;
+
+			if (!apiResponse || apiResponse.statusCode > 399) {
+				toasterError(apiResponse?.message || '아이디 찾기에 실패했습니다.');
+				return;
+			}
+
+			foundIdentifier = apiResponse.data;
+			activeModal = null;
+			showFindIdResultModal = true;
+		} catch (e: any) {
+			toasterError(e.message || '서버 오류가 발생했습니다.');
 		}
 	}
 
@@ -152,15 +187,58 @@
 			<div class="w-96 rounded-lg bg-white p-6 shadow-lg">
 				<h3 class="mb-4 text-lg font-bold">아이디 찾기</h3>
 
-				<input type="text" placeholder="가입한 이메일 입력" class="input-bordered input w-full" />
+				<!-- 🔥 이름 bind 추가 -->
+				<input
+					type="text"
+					placeholder="가입한 회원 이름"
+					bind:value={findIdName}
+					class="input-bordered input mb-3 w-full"
+				/>
+
+				<!-- 🔥 이메일 bind 추가 -->
+				<input
+					type="text"
+					placeholder="가입한 이메일"
+					bind:value={findIdEmail}
+					class="input-bordered input w-full"
+				/>
 
 				<div class="mt-4 flex justify-end gap-2">
-					<button class="btn btn-ghost" on:click={closeModal}> 닫기 </button>
-					<button class="btn btn-neutral"> 확인 </button>
+					<button class="btn btn-ghost" on:click={closeModal}>닫기</button>
+
+					<!-- 🔥 함수 연결 -->
+					<button class="btn btn-neutral" on:click={handleFindIdSubmit}> 확인 </button>
 				</div>
 			</div>
 		</div>
 	{/if}
+	{#if showFindIdResultModal}
+		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
+			<div class="w-96 rounded-lg bg-white p-6 shadow-lg">
+				<h3 class="mb-4 text-lg font-bold">아이디 찾기 결과</h3>
+
+				<p class="mb-2 text-sm text-gray-600">회원님의 아이디는</p>
+
+				<p class="text-lg font-semibold text-black">
+					{foundIdentifier}
+				</p>
+
+				<div class="mt-6 flex justify-end">
+					<button
+						class="btn btn-neutral"
+						on:click={() => {
+							showFindIdResultModal = false;
+							findIdName = '';
+							findIdEmail = '';
+						}}
+					>
+						확인
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
 	{#if activeModal === 'findPassword'}
 		<div class="fixed inset-0 flex items-center justify-center bg-black/40">
 			<div class="w-96 rounded-lg bg-white p-6 shadow-lg">

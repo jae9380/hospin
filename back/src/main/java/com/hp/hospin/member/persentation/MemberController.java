@@ -107,4 +107,28 @@ public class MemberController {
                 : ApiResponse.impossible(entry.getValue());
 
     }
+
+    @GetMapping("/findId")
+    @Monitored(
+            domain = "member",
+            layer = "presentation",
+            api = "findId"
+    )
+    public ApiResponse<String> findId(@RequestParam String name, @RequestParam String email) {
+        return ApiResponse.ok(
+                memberService.findId(name, email)
+        );
+    }
+
+//    @GetMapping("findPassword")
+//    @Monitored(
+//            domain = "member",
+//            layer = "presentation",
+//            api = "findPassword"
+//    )
+//    public ApiResponse<String> findPassword(@RequestParam String name, @RequestParam String id, @RequestParam String email) {
+//        return ApiResponse.ok(
+//                memberService.findPassword(name, id, email)
+//        );
+//    }
 }

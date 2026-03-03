@@ -23,6 +23,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 회원정보가 없습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     INVALID_IDENTIFIER_POLICY(HttpStatus.BAD_REQUEST, "아이디 정책에 맞지 않는 형식입니다."),
+    INVALID_MEMBER_INFO(HttpStatus.NOT_FOUND, "회원정보가 일치하지 않습니다."),
 
     // Schedule
     SCHEDULE_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 스케줄은 존재하지 않습니다."),

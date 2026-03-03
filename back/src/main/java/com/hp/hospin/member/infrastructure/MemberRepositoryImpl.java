@@ -46,4 +46,15 @@ public class MemberRepositoryImpl implements MemberRepository {
         return memberJPARepository.findJpaMemberEntityByIdentifier(Identifier)
                 .map(mapper::jpaToDomain);
     }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "infrastructure",
+            api = "getByEmail"
+    )
+    public Optional<Member> getByEmail(String email) {
+        return memberJPARepository.findByEmail(email)
+                .map(mapper::jpaToDomain);
+    }
 }

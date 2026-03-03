@@ -32,4 +32,10 @@ public class MemberException extends HospinException {
             super(INVALID_IDENTIFIER_POLICY);
         }
     }
+
+    public static class InvalidMemberInfoException extends MemberException {
+        public InvalidMemberInfoException() {
+            super(INVALID_MEMBER_INFO);
+        }
+    }
 }
