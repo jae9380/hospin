@@ -5,6 +5,7 @@ import com.hp.hospin.member.application.dto.MemberDTO;
 import com.hp.hospin.member.application.mapper.MemberDtoMapper;
 import com.hp.hospin.member.application.port.MemberDomainService;
 import com.hp.hospin.member.exception.MemberException.*;
+import com.hp.hospin.member.persentation.dto.MemberResponse;
 import com.hp.hospin.member.persentation.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,5 +94,29 @@ public class MemberServiceImpl implements MemberService {
         logoutMsg.put("message", "로그아웃 되었습니다.");
 
         return logoutMsg;
+    }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "findId"
+    )
+    public String findId(String name, String email) {
+        String identifier = memberDomainService.findId(name, email);
+
+        return identifier;
+    }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "findPassword"
+    )
+    public String findPassword(String name, String id, String email) {
+
+        String result = memberDomainService.findPassword(name, email);
+        return null;
     }
 }
