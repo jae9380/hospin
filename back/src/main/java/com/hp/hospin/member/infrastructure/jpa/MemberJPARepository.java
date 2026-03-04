@@ -9,4 +9,5 @@ public interface MemberJPARepository extends JpaRepository<JpaMemberEntity, Long
     boolean existsByIdentifier(String identifier);
     Optional<JpaMemberEntity> findJpaMemberEntityByIdentifier(String identifier);
     Optional<JpaMemberEntity> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

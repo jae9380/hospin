@@ -7,6 +7,7 @@ import com.hp.hospin.member.domain.entity.Member;
 import com.hp.hospin.member.domain.port.MemberRepository;
 import com.hp.hospin.member.exception.MemberException.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -81,9 +82,8 @@ public class MemberDomainServiceImpl implements MemberDomainService {
     }
 
     @Override
-    public String findId(String name, String email) {
+    public String findIdentifierByEmail(String name, String email) {
         Member member = memberRepository.getByEmail(email).orElseThrow(MemberNotFoundException::new);
-        // todo: application에서 없는 경우에 대한 예외 캐치 작성
 
         member.verifyName(name);
 
@@ -91,10 +91,25 @@ public class MemberDomainServiceImpl implements MemberDomainService {
     }
 
     @Override
-    public String findPassword(String name, String email) {
-        return null;
+    public void verifyMemberInfoByEmail(String email, String id, String name) {
+        Member member = memberRepository.getByEmail(email).orElseThrow(MemberNotFoundException::new);
+        member.verifyIdentifier(id);
+        member.verifyName(name);
     }
 
+    @Override
+    public void existsByEmail(String email) {
+        if(memberRepository.existsByEmail(email)) throw new DuplicateEmailException();
+    }
+
+    @Override
+    public void resetPassword(String email, String newPassword, String confirmNewPassword) {
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new PasswordMismatchException();
+        }
+        Member member = memberRepository.getByEmail(email).orElseThrow(MemberNotFoundException::new);
+        memberRepository.updatePassword(member.getId(), bCryptPasswordEncoder.encode(newPassword));
+    }
     private Member requireByIdentifier(String identifier) {
         return memberRepository.getByIdentifier(identifier)
                 .orElseThrow(MemberNotFoundException::new);

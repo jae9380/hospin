@@ -57,4 +57,25 @@ public class MemberRepositoryImpl implements MemberRepository {
         return memberJPARepository.findByEmail(email)
                 .map(mapper::jpaToDomain);
     }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "infrastructure",
+            api = "existsByEmail"
+    )
+    public boolean existsByEmail(String email) {
+        return memberJPARepository.existsByEmail(email);
+    }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "infrastructure",
+            api = "updatePassword"
+    )
+    public void updatePassword(Long memberId, String encodedPassword) {
+        memberJPARepository.findById(memberId)
+                .ifPresent(entity -> entity.changePassword(encodedPassword));
+    }
 }

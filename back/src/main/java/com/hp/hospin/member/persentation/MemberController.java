@@ -8,6 +8,7 @@ import com.hp.hospin.global.standard.base.Empty;
 import com.hp.hospin.member.persentation.dto.JoinRequest;
 import com.hp.hospin.member.persentation.dto.MemberResponse;
 import com.hp.hospin.member.persentation.dto.LoginRequest;
+import com.hp.hospin.member.persentation.dto.ResetPasswordRequest;
 import com.hp.hospin.member.persentation.mapper.MemberApiMapper;
 import com.hp.hospin.member.persentation.port.AuthenticationService;
 import com.hp.hospin.member.persentation.port.MemberService;
@@ -120,15 +121,52 @@ public class MemberController {
         );
     }
 
-//    @GetMapping("findPassword")
-//    @Monitored(
-//            domain = "member",
-//            layer = "presentation",
-//            api = "findPassword"
-//    )
-//    public ApiResponse<String> findPassword(@RequestParam String name, @RequestParam String id, @RequestParam String email) {
-//        return ApiResponse.ok(
-//                memberService.findPassword(name, id, email)
-//        );
-//    }
+    @PostMapping("/findPw")
+    @Monitored(
+            domain = "member",
+            layer = "presentation",
+            api = "findPw"
+    )
+    public ApiResponse<String> findPw(@RequestParam String name, @RequestParam String id, @RequestParam String email) {
+        return ApiResponse.ok(
+                memberService.verifyAndSendAuthCode(name, id, email)
+        );
+    }
+
+    @PostMapping("/join/sendAuthEmail")
+    @Monitored(
+            domain = "member",
+            layer = "presentation",
+            api = "sendAuthEmail"
+    )
+    public ApiResponse<Empty> sendAuthEmail(@RequestParam String email) {
+        memberService.sendAuthEmail(email);
+        return ApiResponse.noContent();
+
+    }
+
+    @PatchMapping("/join/verifyCode")
+    @Monitored(
+            domain = "member",
+            layer = "presentation",
+            api = "verifyCode"
+    )
+    public ApiResponse<Empty> verifyCode(@RequestParam String email,
+                                         @RequestParam String code) {
+        memberService.verifyCode(email, code);
+        return ApiResponse.noContent();
+
+    }
+
+    @PutMapping("/resetPassword")
+    @Monitored(
+            domain = "member",
+            layer = "presentation",
+            api = "resetPassword"
+    )
+    public ApiResponse<Empty> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        memberService.resetPassword(request.email(), request.newPassword(), request.confirmNewPassword());
+        return ApiResponse.noContent();
+    }
+
 }

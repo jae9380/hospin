@@ -36,4 +36,8 @@ public class JpaMemberEntity {
     private Gender gender;
 
     private LocalDate birth;
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }
