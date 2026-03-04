@@ -9,4 +9,6 @@ public interface MemberRepository {
     void register(Member signup);
     Optional<Member> getByIdentifier(String Identifier);
     Optional<Member> getByEmail(String email);
+    boolean existsByEmail(String email);
+    void updatePassword(Long memberId, String encodedPassword);
 }

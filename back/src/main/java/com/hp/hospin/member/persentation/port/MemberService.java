@@ -12,5 +12,8 @@ public interface MemberService {
     MemberDTO findByIdentifier(String name);
     Map<String, String> logoutMsg();
     String findId(String name, String email);
-    String findPassword(String name, String id, String email);
+    String verifyAndSendAuthCode(String name, String id, String email);
+    void sendAuthEmail(String email);
+    void verifyCode(String email, String code);
+    void resetPassword(String email, String newPassword, String confirmNewPassword);
 }

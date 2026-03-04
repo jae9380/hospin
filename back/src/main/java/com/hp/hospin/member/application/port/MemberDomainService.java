@@ -11,6 +11,8 @@ public interface MemberDomainService {
     void login (LoginForm form);
     Member getByIdentifier (String identifier);
     void validatePolicy(String identifier);
-    String findId(String name, String email);
-    String findPassword(String name, String email);
+    String findIdentifierByEmail(String name, String email);
+    void verifyMemberInfoByEmail(String email, String id, String name);
+    void existsByEmail(String email);
+    void resetPassword(String email, String newPassword, String confirmNewPassword);
 }

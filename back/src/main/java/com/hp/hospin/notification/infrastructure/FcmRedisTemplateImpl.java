@@ -12,27 +12,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FcmRedisTemplateImpl implements FcmRedisTemplate {
     private static final Duration TTL = Duration.ofDays(30);
+    private static final String FCM_KEY_PREFIX = "FCM:TOKEN:";
+
     private final StringRedisTemplate stringRedisTemplate;
-    private static final String FCM_KEY_PREFIX = "FCM:";
 
     @Override
-    public void saveToken(Long userId, String token) {
-        stringRedisTemplate.opsForValue().set(FCM_KEY_PREFIX + userId, token, TTL);
+    public void save(Long userId, String token) {
+        stringRedisTemplate.opsForValue().set(generateKey(userId), token, TTL);
     }
 
 
     @Override
-    public void updateToken(Long userId, String token) {
-        stringRedisTemplate.opsForValue().set(FCM_KEY_PREFIX + userId, token, TTL);
+    public void update(Long userId, String token) {
+        stringRedisTemplate.opsForValue().set(generateKey(userId), token, TTL);
     }
 
     @Override
-    public void deleteToken(Long userId) {
-        stringRedisTemplate.delete(FCM_KEY_PREFIX + userId);
+    public void delete(Long userId) {
+        stringRedisTemplate.delete(generateKey(userId));
     }
 
     @Override
-    public Optional<String> getToken(Long userId) {
-        return Optional.of(stringRedisTemplate.opsForValue().get(FCM_KEY_PREFIX + userId));
+    public Optional<String> find(Long userId) {
+        return Optional.ofNullable(
+                stringRedisTemplate.opsForValue().get(generateKey(userId))
+        );
+    }
+
+    private String generateKey(Long userId) {
+        return FCM_KEY_PREFIX + userId;
     }
 }

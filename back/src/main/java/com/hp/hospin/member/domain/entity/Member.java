@@ -52,4 +52,10 @@ public class Member {
             throw new InvalidMemberInfoException();
         }
     }
+
+    public void verifyIdentifier(String identifier) {
+        if (!this.identifier.equals(identifier)) {
+            throw new InvalidMemberInfoException();
+        }
+    }
 }

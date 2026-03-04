@@ -3,9 +3,9 @@ package com.hp.hospin.member.application;
 import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.member.application.dto.MemberDTO;
 import com.hp.hospin.member.application.mapper.MemberDtoMapper;
+import com.hp.hospin.member.application.port.MailAuthDomainService;
 import com.hp.hospin.member.application.port.MemberDomainService;
 import com.hp.hospin.member.exception.MemberException.*;
-import com.hp.hospin.member.persentation.dto.MemberResponse;
 import com.hp.hospin.member.persentation.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +22,7 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
     private final MemberDomainService memberDomainService;
+    private final MailAuthDomainService mailAuthDomainService;
     private final MemberDtoMapper mapper;
 
     @Override
@@ -103,7 +104,7 @@ public class MemberServiceImpl implements MemberService {
             api = "findId"
     )
     public String findId(String name, String email) {
-        String identifier = memberDomainService.findId(name, email);
+        String identifier = memberDomainService.findIdentifierByEmail(name, email);
 
         return identifier;
     }
@@ -112,11 +113,43 @@ public class MemberServiceImpl implements MemberService {
     @Monitored(
             domain = "member",
             layer = "application",
-            api = "findPassword"
+            api = "verifyAndSendAuthCode"
     )
-    public String findPassword(String name, String id, String email) {
-
-        String result = memberDomainService.findPassword(name, email);
+    public String verifyAndSendAuthCode(String name, String id, String email) {
+        memberDomainService.verifyMemberInfoByEmail(email, id, name);
+        mailAuthDomainService.sendAuthCode(email);
         return null;
+    }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "sendAuthEmail"
+    )
+    public void sendAuthEmail(String email) {
+        memberDomainService.existsByEmail(email);
+        mailAuthDomainService.sendAuthCode(email);
+    }
+
+    @Override
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "verifyCode"
+    )
+    public void verifyCode(String email, String code) {
+        mailAuthDomainService.verifyCode(email, code);
+    }
+
+    @Override
+    @Transactional
+    @Monitored(
+            domain = "member",
+            layer = "application",
+            api = "resetPassword"
+    )
+    public void resetPassword(String email, String newPassword, String confirmNewPassword) {
+        memberDomainService.resetPassword(email, newPassword, confirmNewPassword);
     }
 }
