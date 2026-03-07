@@ -7,6 +7,8 @@ import com.hp.hospin.batch.dto.HospitalRegister;
 import com.hp.hospin.batch.itemProcessor.*;
 import com.hp.hospin.batch.itemReader.*;
 import com.hp.hospin.batch.itemWriter.*;
+import com.hp.hospin.batch.listener.HospitalCodeCacheListener;
+import com.hp.hospin.batch.listener.HospitalDetailJobListener;
 import com.hp.hospin.batch.listener.JobListener;
 import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
 import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
@@ -30,6 +32,8 @@ public class BatchConfiguration {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager ptm;
     private final JobListener jobListener;
+    private final HospitalCodeCacheListener hospitalCodeCacheListener;
+    private final HospitalDetailJobListener hospitalDetailJobListener;
 
 //    Reader
 // ====== Hospital ======
@@ -78,6 +82,7 @@ public class BatchConfiguration {
         return new JobBuilder("loadHospitalGradeJob", jobRepository)
                 .start(loadHospitalGradeStep())
                 .listener(jobListener)
+                .listener(hospitalCodeCacheListener)
                 .build();
 
     }
@@ -88,6 +93,8 @@ public class BatchConfiguration {
 //                .start(loadHospitalDepartmentStep())
                 .next(loadHospitalDepartmentStep())
                 .listener(jobListener)
+                .listener(hospitalCodeCacheListener)
+                .listener(hospitalDetailJobListener)
                 .build();
 
     }
