@@ -23,7 +23,7 @@ public class FcmServiceImpl implements NotificationService {
         String t = FcmTokenUtil.parseFcmToken(token);
         String fcmToken = fcmDomainService.register(memberId, t);
 
-        fcmRedisTemplate.saveToken(memberId, fcmToken);
+        fcmRedisTemplate.save(memberId, fcmToken);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class FcmServiceImpl implements NotificationService {
     public void deregister(Long memberId) {
         fcmDomainService.deregister(memberId);
 
-        fcmRedisTemplate.deleteToken(memberId);
+        fcmRedisTemplate.delete(memberId);
     }
 
     @Override
     public void push(Long userId, String title, long diffHours, long diffMinutes) {
-        fcmRedisTemplate.getToken(userId).ifPresentOrElse(
+        fcmRedisTemplate.find(userId).ifPresentOrElse(
             t -> {
                 String message = fcmDomainService.getMessage(title, diffHours, diffMinutes);
 

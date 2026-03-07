@@ -10,4 +10,5 @@ public interface ScheduleService {
     ScheduleDTO modifySchedule(Long id, Long scheduleId, ScheduleDTO updateScheduleRequest);
     void deleteSchedule(Long id, Long scheduleId);
     List<ScheduleDTO> getScheduleList(Long memberId);
+    List<ScheduleDTO> getClosestSchedule(Long id);
 }

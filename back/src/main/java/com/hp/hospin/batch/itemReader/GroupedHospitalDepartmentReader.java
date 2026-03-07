@@ -6,9 +6,10 @@ import com.hp.hospin.batch.fieldSetMapper.HospitalDepartmentFieldSetMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemStream;
+import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -17,25 +18,37 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class GroupedHospitalDepartmentReader implements ItemReader<HospitalCodeWithDepartments>, InitializingBean {
+public class GroupedHospitalDepartmentReader implements ItemReader<HospitalCodeWithDepartments>, ItemStream {
 
     private FlatFileItemReader<HospitalDepartmentRow> delegate;
     private HospitalDepartmentRow nextRow;
 
     @Override
-    public void afterPropertiesSet() {
+    public void open(ExecutionContext executionContext) throws ItemStreamException {
         this.delegate = new FlatFileItemReaderBuilder<HospitalDepartmentRow>()
                 .name("groupedHospitalDepartmentReader")
                 .resource(new ClassPathResource("/csv/hospital_department.csv"))
-//                .linesToSkip(1) // 테스트 시엔 1, 실제 구동 시엔 3815507
-                .linesToSkip(3815507) // 테스트 시엔 1, 실제 구동 시엔 3815507
+                .linesToSkip(1) // 테스트 시엔 3815507, 실제 구동 시엔 1
+//                .linesToSkip(3815507)
                 .delimited().delimiter(",")
                 .names("hospitalCode", "hospitalName", "departmentCode", "departmentName", "specialistCount", "optionalDoctorCount")
                 .fieldSetMapper(new HospitalDepartmentFieldSetMapper())
                 .build();
 
-        // FlatFileItemReader 수동 초기화 (Batch가 직접 관리 안 하므로)
-        this.delegate.open(new ExecutionContext());
+        this.delegate.open(executionContext);
+        this.nextRow = null;
+    }
+
+    @Override
+    public void update(ExecutionContext executionContext) throws ItemStreamException {
+        this.delegate.update(executionContext);
+    }
+
+    @Override
+    public void close() throws ItemStreamException {
+        if (this.delegate != null) {
+            this.delegate.close();
+        }
     }
 
     @Override

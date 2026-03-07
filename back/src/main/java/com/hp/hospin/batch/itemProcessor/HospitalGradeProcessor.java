@@ -1,6 +1,7 @@
 package com.hp.hospin.batch.itemProcessor;
 
 import com.hp.hospin.batch.dto.HospitalGradeRegister;
+import com.hp.hospin.batch.listener.cache.HospitalCodeCache;
 import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
 import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalGradeEntity;
 import com.hp.hospin.hospital.infrastructure.repository.jpa.HospitalJPARepository;
@@ -16,21 +17,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HospitalGradeProcessor implements ItemProcessor<HospitalGradeRegister, JpaHospitalGradeEntity> {
     private final HospitalJPARepository hospitalJPARepository;
+    private final HospitalCodeCache hospitalCodeCache;
 
     @Override
     public JpaHospitalGradeEntity process(HospitalGradeRegister item) throws Exception {
-        try {
-            validationData(item.getHospitalCode());
-            return item.to();
-        } catch (RuntimeException e) {
-            // 존재하지 않는 Hospital Code가 있을 경우 해당 데이터는 Drop
-            log.error("등록되지 않은 HospitalCode"+item.getHospitalCode());
+
+        if (!hospitalCodeCache.contains(item.getHospitalCode())) {
+            log.warn("등록되지 않은 HospitalCode: {}", item.getHospitalCode());
             return null;
         }
-    }
-
-    private JpaHospitalEntity validationData(String hospitalCode) {
-        Optional<JpaHospitalEntity> dao = hospitalJPARepository.findByHospitalCode(hospitalCode);
-        return dao.orElseThrow(RuntimeException :: new);
+        return item.to();
     }
 }

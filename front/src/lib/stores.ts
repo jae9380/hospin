@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { RecommendedSpecialty } from '$lib/types/apiResponse/symptomcheck/recommendedSpecialty';
+import type { RecommendedSpecialty } from '$lib/types/symptomcheck/recommendedSpecialty';
 
 export const lastResult = writable<any>(null);
 

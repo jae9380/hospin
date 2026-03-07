@@ -9,7 +9,10 @@ import com.hp.hospin.schedule.infrastructure.jpa.ScheduleJpaRepository;
 import com.hp.hospin.schedule.infrastructure.mapper.SchedulePersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,20 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     private final ScheduleJpaRepository scheduleJpaRepository;
     private final SchedulePersistenceMapper mapper;
 
+    @Override
+    @Monitored(
+            domain = "schedule",
+            layer = "infrastructure",
+            api = "getClosestSchedules"
+    )
+    public Optional<List<Schedule>> getClosestSchedules(Long memberId, LocalDateTime start, LocalDateTime end) {
+        return Optional.of(
+                scheduleJpaRepository.findTop6ByMemberIdAndStartDatetimeBetweenOrderByStartDatetimeDesc(memberId, start, end).stream()
+                        .map(mapper::jpaToDomain)
+                        .toList()
+        );
+    }
+    
     @Override
     @Monitored(
             domain = "schedule",

@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { au } from '$lib/au/au';
-	import type { RecommendedSpecialty } from '$lib/types/apiResponse/symptomcheck/recommendedSpecialty';
+	import type { RecommendedSpecialty } from '$lib/types/symptomcheck/recommendedSpecialty';
 	import { lastResult, lastSpecialties } from '$lib/stores/stores';
 
 	let lat: number | null = null;

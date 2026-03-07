@@ -28,6 +28,7 @@ public class SymptomCheckServiceImpl implements SymptomCheckService {
 
     @Override
     public SymptomAnalyzeResponse generate(String text, Double latitude, Double longitude) {
+        log.info("[SymptomAnalyzeResponse] start");
         SymptomAnalyzeResponse result = parser.parse(symptomAnalyzePort.analyze(text));
 
         List<String> deptList =
@@ -49,7 +50,7 @@ public class SymptomCheckServiceImpl implements SymptomCheckService {
                     return new RecommendedSpecialty(orig.name(), orig.reasons(), hospitals);
                 })
                 .toList();
-
+        log.info("[SymptomAnalyzeResponse] end");
         return new SymptomAnalyzeResponse(updatedSpecialties);
     }
 }

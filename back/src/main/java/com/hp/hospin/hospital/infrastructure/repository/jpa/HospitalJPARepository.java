@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface HospitalJPARepository extends JpaRepository<JpaHospitalEntity, String>, JpaSpecificationExecutor<JpaHospitalEntity> {
     Optional<JpaHospitalEntity> findByHospitalCode(String hospitalCode);
@@ -39,4 +40,7 @@ public interface HospitalJPARepository extends JpaRepository<JpaHospitalEntity, 
             @Param("maxLng") double maxLng,
             @Param("deptCodes") List<String> deptCodes
     );
+
+    @Query("SELECT h.hospitalCode FROM hospital h")
+    Set<String> findAllHospitalCodes();
 }

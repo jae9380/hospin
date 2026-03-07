@@ -15,6 +15,12 @@ public class MemberException extends HospinException {
         }
     }
 
+    public static class DuplicateEmailException extends MemberException {
+        public DuplicateEmailException() {
+            super(DUPLICATE_EMAIL);
+        }
+    }
+
     public static class MemberNotFoundException extends MemberException {
         public MemberNotFoundException() {
             super(MEMBER_NOT_FOUND);
@@ -30,6 +36,30 @@ public class MemberException extends HospinException {
     public static class InvalidIdentiferPolicy extends MemberException {
         public InvalidIdentiferPolicy() {
             super(INVALID_IDENTIFIER_POLICY);
+        }
+    }
+
+    public static class InvalidMemberInfoException extends MemberException {
+        public InvalidMemberInfoException() {
+            super(INVALID_MEMBER_INFO);
+        }
+    }
+
+    public static class InvalidAuthCodeException extends MemberException {
+        public InvalidAuthCodeException() {
+            super(INVALID_AUTH_CODE);
+        }
+    }
+
+    public static class AuthCodeNotFoundException extends MemberException {
+        public AuthCodeNotFoundException() {
+            super(AUTH_CODE_NOT_FOUND);
+        }
+    }
+
+    public static class PasswordMismatchException extends MemberException {
+        public PasswordMismatchException() {
+            super(PASSWORD_MISMATCH);
         }
     }
 }

@@ -11,5 +11,6 @@ public interface HospitalService {
     List<HospitalBaseDTO> getAllHospitalData();
     HospitalDTO assembleHospitalInfo(String hospitalCode);
     List<HospitalBaseDTO> getHospitalsNearby(String latitude_str, String longitude_str);
+    List<HospitalBaseDTO> getHospitals6Nearby(String latitude_str, String longitude_str);
     Page<HospitalBaseDTO> search(String name, Long categoryCode, Long regionCode, Long districtCode, Long postalCode, String address, Pageable pageable);
 }

@@ -67,6 +67,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedules;
     }
 
+    @Override
+    @Monitored(
+            domain = "schedule",
+            layer = "application",
+            api = "getClosestSchedule"
+    )
+    public List<ScheduleDTO> getClosestSchedule(Long memberId) {
+        List<ScheduleDTO> schedules = scheduleDomainService.getClosestSchedule(memberId).stream().map(mapper::toDto).toList();
+
+        return schedules;
+    }
+
     private void validDateRange(LocalDateTime start, LocalDateTime end) {
         //TODO: 커스텀 예외 변경
         if (start.isAfter(end)) {

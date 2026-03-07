@@ -1,6 +1,7 @@
 package com.hp.hospin.member.domain.entity;
 
 import com.hp.hospin.member.domain.form.JoinForm;
+import com.hp.hospin.member.exception.MemberException.InvalidMemberInfoException;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -44,5 +45,17 @@ public class Member {
                 .gender(form.getGender())
                 .birth(form.getBirth())
                 .build();
+    }
+
+    public void verifyName(String name) {
+        if (!this.name.equals(name)) {
+            throw new InvalidMemberInfoException();
+        }
+    }
+
+    public void verifyIdentifier(String identifier) {
+        if (!this.identifier.equals(identifier)) {
+            throw new InvalidMemberInfoException();
+        }
     }
 }
