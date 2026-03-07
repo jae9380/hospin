@@ -1,36 +1,25 @@
 package com.hp.hospin.batch.itemProcessor;
 
 import com.hp.hospin.batch.dto.HospitalDetailRegister;
-import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalEntity;
+import com.hp.hospin.batch.listener.cache.HospitalCodeCache;
 import com.hp.hospin.hospital.infrastructure.entity.JpaHospitalDetailEntity;
-import com.hp.hospin.hospital.infrastructure.repository.jpa.HospitalJPARepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class HospitalDetailProcessor implements ItemProcessor<HospitalDetailRegister, JpaHospitalDetailEntity> {
-    private final HospitalJPARepository hospitalJPARepository;
+    private final HospitalCodeCache hospitalCodeCache;
 
     @Override
-    public JpaHospitalDetailEntity process(HospitalDetailRegister item) throws Exception {
-        try {
-            validationData(item.hospitalCode());
-            return item.to();
-        }catch (RuntimeException e) {
-            // 존재하지 않는 Hospital Code가 있을 경우 해당 데이터는 Drop
-            log.error("등록되지 않은 HospitalCode"+item.hospitalCode());
+    public JpaHospitalDetailEntity process(HospitalDetailRegister item) {
+        if (!hospitalCodeCache.contains(item.hospitalCode())) {
+            log.warn("등록되지 않은 HospitalCode: {}", item.hospitalCode());
             return null;
         }
-    }
-
-    private JpaHospitalEntity validationData(String hospitalCode) {
-        Optional<JpaHospitalEntity> entity = hospitalJPARepository.findByHospitalCode(hospitalCode);
-        return entity.orElseThrow(RuntimeException::new);
+        return item.to();
     }
 }
