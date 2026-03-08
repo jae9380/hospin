@@ -22,7 +22,7 @@ export async function requestPermissionAndGetToken(): Promise<string | null> {
 	if (permission !== 'granted') return null;
 
 	return await getToken(mg, {
-		vapidKey: import.meta.env.VITE_FCM_VAPID_KEY,
+		vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
 		serviceWorkerRegistration: await navigator.serviceWorker.register('/firebase-messaging-sw.js')
 	});
 }

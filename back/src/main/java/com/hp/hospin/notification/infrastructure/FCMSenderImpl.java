@@ -23,6 +23,8 @@ public class FCMSenderImpl implements FCMSender {
 
     @Override
     public void send(String token, String postTitle, String body) {
+
+        log.info("[FCM TRY SEND] token={}, body={}", token, body);
         Message message = Message.builder()
                 .setToken(token)
                 .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", TTL_HEADER)
@@ -37,6 +39,13 @@ public class FCMSenderImpl implements FCMSender {
                     .sendAsync(message)
                     .get();
 
+            log.info(
+                    "[FCM SEND SUCCESS] messageId={}, token={}, title={}, body={}",
+                    messageId,
+                    token,
+                    postTitle,
+                    body
+            );
             metricHelper.success("firebase", "fcm.send").increment();
 
         } catch (ExecutionException e) {
@@ -47,9 +56,10 @@ public class FCMSenderImpl implements FCMSender {
                     "fcm.send",
                     cause.getClass().getSimpleName()
             ).increment();
-
+            log.error("[FCM SEND ERROR] ExecutionException: {}", cause.getMessage(), cause);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            log.error("[FCM SEND ERROR] InterruptedException: {}", e.getMessage(), e);
         } finally {
             sample.stop(
                     metricHelper.timer("firebase", "fcm.send")

@@ -5,7 +5,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-	apiKey: import.meta.env.FIREBASE_API_KEY_ID,
+	apiKey: 'AIzaSyBG5RwoTEVBS5JJAGsG7AOLYq7nEydYlgo',
 	authDomain: 'hospin-57573.firebaseapp.com',
 	projectId: 'hospin-57573',
 	storageBucket: 'hospin-57573.firebasestorage.app',

@@ -153,7 +153,7 @@
 		}
 
 		try {
-			const res = await au.api().POST('/api/member/sendAuthEmail', {
+			const res = await au.api().POST('/api/member/join/sendAuthEmail', {
 				params: { query: { email } }
 			});
 
@@ -179,7 +179,7 @@
 		try {
 			isVerifying = true;
 
-			const res = await au.api().PATCH('/api/member/verifyCode', {
+			const res = await au.api().PATCH('/api/member/join/verifyCode', {
 				params: {
 					query: {
 						email,

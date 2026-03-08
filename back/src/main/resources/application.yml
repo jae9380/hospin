@@ -41,4 +41,4 @@ management:
       percentiles:
         http.server.requests: 0.95, 0.5
 
-firebaseAdminSdkPath: hospin-57573-firebase-adminsdk-fbsvc-04558e3b9d.json
+firebaseAdminSdkPath: hospin-57573-firebase-adminsdk-fbsvc-0838118bdb.json

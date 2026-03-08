@@ -426,12 +426,6 @@
 				<p class="mb-2 text-sm text-gray-600">비밀번호 재설정</p>
 
 				<input
-					type="text"
-					placeholder="새로운 비밀번호"
-					bind:value={newPassword}
-					class="input-bordered input mb-3 w-full"
-				/>
-				<input
 					type={showPassword ? 'text' : 'password'}
 					bind:value={newPassword}
 					placeholder="8 ~ 20자"
@@ -449,12 +443,6 @@
 				</label>
 				<p>* 8자 이상, 공백/한글/이모지 불가능</p>
 				<p>* 또한, 일부 특수문자는 불가능</p>
-				<input
-					type="text"
-					placeholder="새로운 비밀번호 재입력"
-					bind:value={confirmNewPassword}
-					class="input-bordered input mb-3 w-full"
-				/>
 				<input
 					type={showConfirmPassword ? 'text' : 'password'}
 					bind:value={confirmNewPassword}
