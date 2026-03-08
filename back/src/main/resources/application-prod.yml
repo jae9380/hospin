@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/hospin
+    url: jdbc:mariadb://hospin-mariadb:3306/hospin
     username: user
     password: ${database.password}
     driver-class-name: org.mariadb.jdbc.Driver
@@ -15,6 +15,11 @@ spring:
       initialize-schema: always
     job:
       enabled: false
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 
   ai:
     openai:
