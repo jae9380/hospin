@@ -18,7 +18,17 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     }
 
     @Override
+    public Optional<RefreshToken> findByRefreshToken(String refreshToken) {
+        return refreshTokenJPARepository.findByRefreshToken(refreshToken);
+    }
+
+    @Override
     public void save(RefreshToken refreshToken) {
         refreshTokenJPARepository.save(refreshToken);
+    }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        refreshTokenJPARepository.deleteByUserId(userId);
     }
 }

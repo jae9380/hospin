@@ -1,12 +1,15 @@
 package com.hp.hospin.global.jwt;
 
 import com.hp.hospin.member.application.auth.CustomUserDetailsService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +22,8 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
+    private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
+
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -28,20 +33,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String accessToken = extractTokenFromCookies(request, "access_token");
 
-        if (accessToken != null && !jwtTokenProvider.isExpired(accessToken)) {
-            String username = jwtTokenProvider.getidentifier(accessToken);
+        if (accessToken != null) {
+            try {
+                if (!jwtTokenProvider.isExpired(accessToken)) {
+                    String username = jwtTokenProvider.getidentifier(accessToken);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-                if (userDetails != null) {
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                        if (userDetails != null) {
+                            UsernamePasswordAuthenticationToken authenticationToken =
+                                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        }
+                    }
                 }
+            } catch (ExpiredJwtException e) {
+                log.debug("Access Token이 만료되었습니다. 토큰 갱신이 필요합니다. uri: {}", request.getRequestURI());
+            } catch (Exception e) {
+                log.warn("유효하지 않은 JWT 토큰입니다. uri: {}", request.getRequestURI());
             }
-        } else {
-            // 토큰이 만료 or 유효하지 않은 경우의 처리 로직
         }
         filterChain.doFilter(request, response);
     }

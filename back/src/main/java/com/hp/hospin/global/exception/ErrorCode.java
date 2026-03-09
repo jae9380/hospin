@@ -28,6 +28,7 @@ public enum ErrorCode {
     INVALID_AUTH_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증코드 입니다."),
     AUTH_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "인증코드가 존재하지 않습니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Refresh Token입니다."),
 
     // Schedule
     SCHEDULE_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 스케줄은 존재하지 않습니다."),

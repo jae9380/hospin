@@ -5,6 +5,7 @@ import com.hp.hospin.global.common.MemberDetails;
 import com.hp.hospin.global.jwt.CookieUtil;
 import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.global.standard.base.Empty;
+import com.hp.hospin.member.application.dto.AuthTokenResult;
 import com.hp.hospin.member.persentation.dto.JoinRequest;
 import com.hp.hospin.member.persentation.dto.MemberResponse;
 import com.hp.hospin.member.persentation.dto.LoginRequest;
@@ -20,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -27,6 +30,12 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
+
+    private static final String REFRESH_TOKEN_COOKIE = "refresh_token";
+    private static final String ACCESS_TOKEN_COOKIE = "access_token";
+    private static final int REFRESH_TOKEN_MAX_AGE = (int) Duration.ofDays(1).toSeconds();
+    private static final int ACCESS_TOKEN_MAX_AGE = (int) Duration.ofHours(1).toSeconds();
+
     private final MemberService memberService;
     private final AuthenticationService authenticationService;
     private final MemberApiMapper mapper;
@@ -56,7 +65,7 @@ public class MemberController {
         return ApiResponse.created();
     }
 
-    @PostMapping ("/login")
+    @PostMapping("/login")
     @Monitored(
             domain = "member",
             layer = "presentation",
@@ -64,24 +73,27 @@ public class MemberController {
     )
     public ApiResponse<MemberResponse> login(@RequestBody @Valid LoginRequest loginRequest,
                                              HttpServletRequest request, HttpServletResponse response) {
-//        TODO: 구조변경 필요 (관련 메서드 전제 수정?...
         memberService.login(mapper.loginRequestToDto(loginRequest));
 
-        return ApiResponse.ok(
-                mapper.dtoToResponse(
-                        authenticationService.authenticateAndSetTokens(loginRequest.identifier(), request, response)
-                )
-        );
+        AuthTokenResult tokenResult = authenticationService.authenticateAndIssueTokens(loginRequest.identifier());
+        setTokenCookies(request, response, tokenResult.accessToken(), tokenResult.refreshToken());
+
+        return ApiResponse.ok(mapper.dtoToResponse(tokenResult.member()));
     }
 
-    @PostMapping ("/logout")
+    @PostMapping("/logout")
     @Monitored(
             domain = "member",
             layer = "presentation",
             api = "logout"
     )
-    public ApiResponse<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
-        Stream.of("refresh_token", "access_token", "JSESSIONID")
+    public ApiResponse<Map<String, String>> logout(@AuthenticationPrincipal MemberDetails memberDetails,
+                                                   HttpServletRequest request, HttpServletResponse response) {
+        if (memberDetails != null) {
+            authenticationService.deleteRefreshToken(memberDetails.getId());
+        }
+
+        Stream.of(REFRESH_TOKEN_COOKIE, ACCESS_TOKEN_COOKIE, "JSESSIONID")
                 .forEach(cookieName -> CookieUtil.deleteCookie(request, response, cookieName));
 
         HttpSession session = request.getSession(false);
@@ -92,6 +104,17 @@ public class MemberController {
         return ApiResponse.ok(memberService.logoutMsg());
     }
 
+    @PostMapping("/auth/refresh")
+    public ApiResponse<Empty> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = extractTokenFromCookies(request, REFRESH_TOKEN_COOKIE);
+        String newAccessToken = authenticationService.reissueAccessToken(refreshToken);
+
+        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_COOKIE);
+        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE, newAccessToken, ACCESS_TOKEN_MAX_AGE);
+
+        return ApiResponse.noContent();
+    }
+
     @GetMapping("/check-duplicate")
     @Monitored(
             domain = "member",
@@ -99,14 +122,12 @@ public class MemberController {
             api = "identfierDuplicationCheck"
     )
     public ApiResponse<String> identfierDuplicationCheck(@RequestParam String identifier) {
-
         Map.Entry<Boolean, String> entry =
                 memberService.checkDuplicateIdentifier(identifier).entrySet().iterator().next();
 
         return entry.getKey()
                 ? ApiResponse.ok(entry.getValue())
                 : ApiResponse.impossible(entry.getValue());
-
     }
 
     @GetMapping("/findId")
@@ -116,9 +137,7 @@ public class MemberController {
             api = "findId"
     )
     public ApiResponse<String> findId(@RequestParam String name, @RequestParam String email) {
-        return ApiResponse.ok(
-                memberService.findId(name, email)
-        );
+        return ApiResponse.ok(memberService.findId(name, email));
     }
 
     @PostMapping("/findPw")
@@ -128,9 +147,7 @@ public class MemberController {
             api = "findPw"
     )
     public ApiResponse<String> findPw(@RequestParam String name, @RequestParam String id, @RequestParam String email) {
-        return ApiResponse.ok(
-                memberService.verifyAndSendAuthCode(name, id, email)
-        );
+        return ApiResponse.ok(memberService.verifyAndSendAuthCode(name, id, email));
     }
 
     @PostMapping("/join/sendAuthEmail")
@@ -142,7 +159,6 @@ public class MemberController {
     public ApiResponse<Empty> sendAuthEmail(@RequestParam String email) {
         memberService.sendAuthEmail(email);
         return ApiResponse.noContent();
-
     }
 
     @PatchMapping("/join/verifyCode")
@@ -151,11 +167,9 @@ public class MemberController {
             layer = "presentation",
             api = "verifyCode"
     )
-    public ApiResponse<Empty> verifyCode(@RequestParam String email,
-                                         @RequestParam String code) {
+    public ApiResponse<Empty> verifyCode(@RequestParam String email, @RequestParam String code) {
         memberService.verifyCode(email, code);
         return ApiResponse.noContent();
-
     }
 
     @PutMapping("/resetPassword")
@@ -169,4 +183,22 @@ public class MemberController {
         return ApiResponse.noContent();
     }
 
+    private void setTokenCookies(HttpServletRequest request, HttpServletResponse response,
+                                 String accessToken, String refreshToken) {
+        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_COOKIE);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE);
+        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE);
+        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE);
+    }
+
+    private String extractTokenFromCookies(HttpServletRequest request, String cookieName) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> cookieName.equals(cookie.getName()))
+                .map(jakarta.servlet.http.Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+    }
 }

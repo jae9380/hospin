@@ -1,7 +1,7 @@
 import { writable, get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { browser } from '$app/environment';
-import createClient from 'openapi-fetch';
+import createClient, { type Middleware } from 'openapi-fetch';
 import type { paths, components } from '$lib/types/api/v1/schema';
 
 type GenderStr = 'MALE' | 'FEMALE' | 'UNDEFINED';
@@ -10,6 +10,64 @@ const toGenderString = (c: number): GenderStr =>
 const toGenderCode = (s: GenderStr): number => (s === 'MALE' ? 0 : s === 'FEMALE' ? 1 : 2);
 
 export class Au {
+	private _client = createClient<paths>({
+		baseUrl: import.meta.env.VITE_CORE_API_BASE_URL,
+		credentials: 'include',
+		headers: { 'Content-Type': 'application/json' }
+	});
+	private _isRefreshing = false;
+	private _refreshPromise: Promise<boolean> | null = null;
+
+	constructor() {
+		this._client.use(this._buildAuthMiddleware());
+	}
+
+	private _buildAuthMiddleware(): Middleware {
+		return {
+			onResponse: async ({ response, request }) => {
+				if (response.status !== 401) return response;
+
+				// refresh 엔드포인트 자체가 401이면 무한루프 방지
+				if (request.url.includes('/api/member/auth/refresh')) {
+					this.setLogout();
+					if (browser) goto('/login', { replaceState: true });
+					return response;
+				}
+
+				if (!this._isRefreshing) {
+					this._isRefreshing = true;
+					this._refreshPromise = this._tryRefresh().finally(() => {
+						this._isRefreshing = false;
+						this._refreshPromise = null;
+					});
+				}
+
+				const refreshed = await this._refreshPromise!;
+				if (!refreshed) {
+					this.setLogout();
+					if (browser) goto('/login', { replaceState: true });
+					return response;
+				}
+
+				// 갱신 성공 → 원본 요청 재시도
+				return await fetch(request.clone());
+			}
+		};
+	}
+
+	private async _tryRefresh(): Promise<boolean> {
+		try {
+			const res = await fetch(`${import.meta.env.VITE_CORE_API_BASE_URL}/api/member/auth/refresh`, {
+				method: 'POST',
+				credentials: 'include',
+				headers: { 'Content-Type': 'application/json' }
+			});
+			return res.ok;
+		} catch {
+			return false;
+		}
+	}
+
 	private _id = writable(0);
 	private _identifier = writable('');
 	private _name = writable('');
@@ -81,11 +139,7 @@ export class Au {
 	})();
 
 	private api() {
-		return createClient<paths>({
-			baseUrl: import.meta.env.VITE_CORE_API_BASE_URL,
-			credentials: 'include',
-			headers: { 'Content-Type': 'application/json' }
-		});
+		return this._client;
 	}
 
 	public async initAuth() {
@@ -149,22 +203,21 @@ export class Au {
 		if (browser) window.alert(msg);
 	}
 
-	public async logoutAndRedirect(url: string) {
+	public async logoutAndRedirect(redirectUrl: string = '/') {
 		try {
 			try {
-				await this.api().POST('/api/FCM/deregister', { credentials: 'include' });
+				await this.api().POST('/api/FCM/deregister', {});
 			} catch (e) {
 				console.log('FCM deregister failed (ignored)', e);
 			}
-			await this.api().POST('/api/member/logout', { credentials: 'include' });
-
+			await this.api().POST('/api/member/logout', {});
+		} catch (error) {
+			console.error('Server logout failed:', error);
+		} finally {
 			localStorage.clear();
 			sessionStorage.clear();
-
 			this.setLogout();
-			window.location.reload();
-		} catch (error) {
-			console.error('Logout failed:', error);
+			if (browser) window.location.href = redirectUrl;
 		}
 	}
 

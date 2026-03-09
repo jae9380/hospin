@@ -1,9 +1,12 @@
 package com.hp.hospin.member.application.port;
 
-import com.hp.hospin.member.infrastructure.entity.RefreshToken;
+import com.hp.hospin.member.domain.entity.Member;
 
-import java.util.Optional;
+import java.time.Duration;
 
 public interface TokenDomainService {
-    RefreshToken saveOrReplace(Optional<RefreshToken> refreshToken, Long userId, String newRefreshToken);
+    String issueRefreshToken(Member member, Duration duration);
+    String issueAccessToken(Member member, Duration duration);
+    Member validateRefreshTokenAndGetMember(String refreshToken);
+    void deleteRefreshToken(Long userId);
 }

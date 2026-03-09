@@ -31,6 +31,7 @@ public class MemberServiceImpl implements MemberService {
             layer = "application",
             api = "join"
     )
+    @Transactional
     public void join(MemberDTO request) {
         if (memberDomainService.existsById(request.getIdentifier())) throw new DuplicateIdentifierException();
 
@@ -115,6 +116,7 @@ public class MemberServiceImpl implements MemberService {
             layer = "application",
             api = "verifyAndSendAuthCode"
     )
+    @Transactional
     public String verifyAndSendAuthCode(String name, String id, String email) {
         memberDomainService.verifyMemberInfoByEmail(email, id, name);
         mailAuthDomainService.sendAuthCode(email);
@@ -127,6 +129,7 @@ public class MemberServiceImpl implements MemberService {
             layer = "application",
             api = "sendAuthEmail"
     )
+    @Transactional
     public void sendAuthEmail(String email) {
         memberDomainService.existsByEmail(email);
         mailAuthDomainService.sendAuthCode(email);
@@ -138,6 +141,7 @@ public class MemberServiceImpl implements MemberService {
             layer = "application",
             api = "verifyCode"
     )
+    @Transactional
     public void verifyCode(String email, String code) {
         mailAuthDomainService.verifyCode(email, code);
     }
