@@ -15,7 +15,7 @@ public class HospitalGradeWriter implements ItemWriter<JpaHospitalGradeEntity> {
     @Override
     public void write(Chunk<? extends JpaHospitalGradeEntity> chunk) throws Exception {
         for (JpaHospitalGradeEntity entity : chunk) {
-            entityManager.persist(entity);
+            entityManager.merge(entity);
         }
     }
 }

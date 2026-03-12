@@ -14,68 +14,67 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class GroupedHospitalDepartmentReader implements ItemReader<HospitalCodeWithDepartments>, ItemStream {
 
-    private FlatFileItemReader<HospitalDepartmentRow> delegate;
-    private HospitalDepartmentRow nextRow;
+    private Iterator<HospitalCodeWithDepartments> groupedIterator;
 
     @Override
     public void open(ExecutionContext executionContext) throws ItemStreamException {
-        this.delegate = new FlatFileItemReaderBuilder<HospitalDepartmentRow>()
+        FlatFileItemReader<HospitalDepartmentRow> csvReader = new FlatFileItemReaderBuilder<HospitalDepartmentRow>()
                 .name("groupedHospitalDepartmentReader")
                 .resource(new ClassPathResource("/csv/hospital_department.csv"))
-                .linesToSkip(1) // 테스트 시엔 3815507, 실제 구동 시엔 1
-//                .linesToSkip(3815507)
+                .linesToSkip(1)
                 .delimited().delimiter(",")
                 .names("hospitalCode", "hospitalName", "departmentCode", "departmentName", "specialistCount", "optionalDoctorCount")
                 .fieldSetMapper(new HospitalDepartmentFieldSetMapper())
                 .build();
 
-        this.delegate.open(executionContext);
-        this.nextRow = null;
+        csvReader.open(executionContext);
+
+        // LinkedHashMap으로 전체 CSV를 읽어 hospitalCode 기준 그룹핑
+        // 기존 방식(연속 행만 그룹핑)은 CSV 미정렬 시 동일 코드가 여러 그룹으로 분리되어 유실 발생
+        Map<String, HospitalCodeWithDepartments> grouped = new LinkedHashMap<>();
+        try {
+            HospitalDepartmentRow row;
+            while ((row = csvReader.read()) != null) {
+                String code = row.getHospitalCode();
+                String name = row.getHospitalName();
+                String deptCode = row.getDepartmentCode();
+                grouped.computeIfAbsent(code,
+                        k -> new HospitalCodeWithDepartments(k, name, new ArrayList<>()))
+                        .getDepartmentCodes().add(deptCode);
+            }
+        } catch (Exception e) {
+            throw new ItemStreamException("hospital_department.csv 읽기 중 오류 발생", e);
+        } finally {
+            csvReader.close();
+        }
+
+        this.groupedIterator = grouped.values().iterator();
+        log.info("진료과 데이터 그룹핑 완료: {}개 병원", grouped.size());
     }
 
     @Override
     public void update(ExecutionContext executionContext) throws ItemStreamException {
-        this.delegate.update(executionContext);
+        // 인메모리 이터레이터 기반이므로 상태 저장 불필요
     }
 
     @Override
     public void close() throws ItemStreamException {
-        if (this.delegate != null) {
-            this.delegate.close();
-        }
+        this.groupedIterator = null;
     }
 
     @Override
     public HospitalCodeWithDepartments read() throws Exception {
-        if (nextRow == null) {
-            nextRow = delegate.read();
-            if (nextRow == null) return null;
+        if (groupedIterator != null && groupedIterator.hasNext()) {
+            return groupedIterator.next();
         }
-
-        String currentCode = nextRow.getHospitalCode();
-        String currentName = nextRow.getHospitalName();
-        List<String> deptList = new ArrayList<>();
-        deptList.add(nextRow.getDepartmentCode());
-
-        while (true) {
-            HospitalDepartmentRow row = delegate.read();
-            if (row == null) {
-                nextRow = null;
-                break;
-            }
-            if (!row.getHospitalCode().equals(currentCode)) {
-                nextRow = row;
-                break;
-            }
-            deptList.add(row.getDepartmentCode());
-        }
-
-        return new HospitalCodeWithDepartments(currentCode, currentName, deptList);
+        return null;
     }
 }

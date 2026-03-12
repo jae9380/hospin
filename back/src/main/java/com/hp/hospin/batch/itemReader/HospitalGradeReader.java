@@ -35,8 +35,8 @@ public class HospitalGradeReader{
         try {
             xml = fetchFromAPI(); // OpenAPI에서 XML 문자열 가져오기
         } catch (Exception e) {
-            log.info("Open API 데이터 불러오는 중 문제 발생");
-            xml = null;
+            log.error("Open API 데이터 불러오는 중 문제 발생: {}", e.getMessage());
+            throw new IllegalStateException("병원 등급 API 호출 실패 — 배치를 중단합니다.", e);
         }
 
         Resource resource = new ByteArrayResource(xml.getBytes(StandardCharsets.UTF_8));
@@ -73,9 +73,8 @@ public class HospitalGradeReader{
 
     private String fetchFromAPI() throws Exception {
         String serviceKey = env.getProperty("openapi.key.encoding");
-//        TODO: 배포 전 모든 데이터를 읽어 오기 위해 수정 해야 함
-        Long numOfRows = 35962L;  // API를 통해 얻을 수 있는 데이터 수
-//        Long numOfRows = 10000L;  //
+        // 전체 데이터(36,935건)를 한 번에 가져오기 위해 실제 데이터 수보다 여유있는 값 설정
+        Long numOfRows = 40000L;
 
         StringBuilder urlBuilder = new StringBuilder("https://apis.data.go.kr/B551182/hospAsmInfoService1/getHospAsmInfo1");
         urlBuilder.append("?serviceKey=").append(serviceKey);
@@ -87,13 +86,13 @@ public class HospitalGradeReader{
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
 
-        BufferedReader rd;
-        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        int responseCode = conn.getResponseCode();
+        if (responseCode < 200 || responseCode > 300) {
+            conn.disconnect();
+            throw new IllegalStateException("API 응답 오류: HTTP " + responseCode);
         }
 
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String line;
         while ((line = rd.readLine()) != null) {
@@ -103,7 +102,7 @@ public class HospitalGradeReader{
         conn.disconnect();
 
         String xml = sb.toString();
-        System.out.println("[API 응답]: " + xml);
+        log.info("[API 응답 수신 완료] 길이: {}자", xml.length());
 
         return xml;
     }

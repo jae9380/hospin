@@ -24,7 +24,8 @@ public class HospitalDetailWriter implements ItemWriter<JpaHospitalDetailEntity>
     @Override
     public void write(Chunk<? extends JpaHospitalDetailEntity> chunk) throws Exception {
         for (JpaHospitalDetailEntity entity : chunk) {
-            entityManager.merge(entity);           // DB 저장 (진료과 정보 없는 병원도 저장됨)
+            entity.setDepartmentCodes(null);       // hospital_detail.csv는 진료과 출처가 아님을 명시
+            entityManager.merge(entity);           // DB 저장
             cache.put(mapper.toDomain(entity));    // Step 2에서 진료과 정보 업데이트용 캐시
         }
     }
