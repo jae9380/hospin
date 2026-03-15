@@ -48,7 +48,7 @@ public class SecurityConfig {
                             .requestMatchers("/actuator/health").permitAll()
                             .requestMatchers("/api/member/join","/api/member/join/**", "/api/member/login","/api/member/findId","/api/member/findPw","/api/member/resetPassword","/api/member/auth/refresh","/api/batch/**","/api/symptomcheck", "/api/FCM/**").permitAll()
                             .requestMatchers(HttpMethod.GET,
-                                    "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
+                                    "/api/hospital","/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
                                     "/api/member/check-duplicate"
                                 ).permitAll()
                             .anyRequest()
