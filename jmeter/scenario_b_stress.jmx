@@ -19,9 +19,7 @@ CLI: jmeter -n -t scenario_b_stress.jmx -JTS=$(date +%Y%m%d-%H%M%S) -l /dev/null
       <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
     </TestPlan>
     <hashTree>
-
-      <!-- ===== setUp: TS 타임스탬프 초기화 ===== -->
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group">
         <stringProp name="TestPlan.comments">TS 타임스탬프 초기화. CLI 미전달 시 현재 시각으로 자동 설정</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
@@ -33,17 +31,18 @@ CLI: jmeter -n -t scenario_b_stress.jmx -JTS=$(date +%Y%m%d-%H%M%S) -l /dev/null
         </elementProp>
       </SetupThreadGroup>
       <hashTree>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)" enabled="true">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)">
           <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="script">if (!props.get("TS") || props.get("TS") == "1") {
-    props.put("TS", new Date().format("yyyyMMdd-HHmmss"))
+          <stringProp name="script">if (!props.get(&quot;TS&quot;) || props.get(&quot;TS&quot;) == &quot;1&quot;) {
+    props.put(&quot;TS&quot;, new Date().format(&quot;yyyyMMdd-HHmmss&quot;))
 }
-log.info("TS = " + props.get("TS"))</stringProp>
+log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">false</stringProp>
         </JSR223Sampler>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-1: 10 Users ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-1] 10 Users 단계별 부하" enabled="true">
         <stringProp name="TestPlan.comments">Knee Point 탐지 1단계. 기준 부하.
 결과: b1_10u_${__P(TS)}.jtl</stringProp>
@@ -88,10 +87,10 @@ log.info("TS = " + props.get("TS"))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -116,7 +115,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_10u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_10u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -150,7 +149,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b1_10u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b1_10u${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -389,8 +388,6 @@ log.info("TS = " + props.get("TS"))</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-1: 30 Users ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-1] 30 Users 단계별 부하" enabled="true">
         <stringProp name="TestPlan.comments">Knee Point 탐지 2단계.
 결과: b1_30u_${__P(TS)}.jtl</stringProp>
@@ -435,10 +432,10 @@ log.info("TS = " + props.get("TS"))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -463,7 +460,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_30u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_30u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -497,7 +494,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b1_30u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b1_30u${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -736,8 +733,6 @@ log.info("TS = " + props.get("TS"))</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-1: 50 Users ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-1] 50 Users 단계별 부하" enabled="true">
         <stringProp name="TestPlan.comments">Knee Point 탐지 3단계. HikariCP pool=10 대비 5배 동시 접속.
 결과: b1_50u_${__P(TS)}.jtl</stringProp>
@@ -782,10 +777,10 @@ log.info("TS = " + props.get("TS"))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -810,7 +805,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_50u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_50u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -844,7 +839,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b1_50u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b1_50u${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -1083,8 +1078,6 @@ log.info("TS = " + props.get("TS"))</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-1: 70 Users ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-1] 70 Users 단계별 부하" enabled="true">
         <stringProp name="TestPlan.comments">Knee Point 탐지 4단계. Knee Point 예상 구간.
 결과: b1_70u_${__P(TS)}.jtl</stringProp>
@@ -1101,7 +1094,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
           <collectionProp name="Arguments.arguments">
             <elementProp name="hospitalCode" elementType="Argument">
               <stringProp name="Argument.name">hospitalCode</stringProp>
@@ -1129,10 +1122,10 @@ log.info("TS = " + props.get("TS"))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -1157,7 +1150,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_70u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_70u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1191,7 +1184,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b1_70u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b1_70u${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -1430,8 +1423,6 @@ log.info("TS = " + props.get("TS"))</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-1: 100 Users ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-1] 100 Users 단계별 부하" enabled="true">
         <stringProp name="TestPlan.comments">Knee Point 탐지 5단계. 최대 부하.
 결과: b1_100u_${__P(TS)}.jtl</stringProp>
@@ -1476,10 +1467,10 @@ log.info("TS = " + props.get("TS"))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -1504,7 +1495,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_100u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b1_100u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1538,7 +1529,7 @@ log.info("TS = " + props.get("TS"))</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b1_100u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b1_100u${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -1777,8 +1768,6 @@ log.info("TS = " + props.get("TS"))</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-2: 50 Users 레이어 분석 ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-2] 50 Users 레이어 분석" enabled="true">
         <stringProp name="TestPlan.comments">B-1과 동일한 혼합 부하, 600s 단독 실행.
 Grafana Layer 섹션: Presentation / Application / Infrastructure 응답 시간 관찰.
@@ -1824,10 +1813,10 @@ Grafana Layer 섹션: Presentation / Application / Infrastructure 응답 시간 
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -1852,7 +1841,7 @@ Grafana Layer 섹션: Presentation / Application / Infrastructure 응답 시간 
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b2_50u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b2_50u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1886,7 +1875,7 @@ Grafana Layer 섹션: Presentation / Application / Infrastructure 응답 시간 
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b2_50u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b2_50u${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -2125,7 +2114,6 @@ Grafana Layer 섹션: Presentation / Application / Infrastructure 응답 시간 
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-
     </hashTree>
   </hashTree>
 </jmeterTestPlan>

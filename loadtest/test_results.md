@@ -13,6 +13,7 @@
 >
 > ```
 > jmeter -g /Users/jae/results/폴더명/파일명.jtl -o /Users/jae/results/폴더명/html_report
+> jmeter -g D:\Jmeter\hospin\results\b_20260319-213749\scenario_a_20260319-212333.jtl -o D:\Jmeter\hospin\results\a_20260319-212333\html_report
 > ```
 
 ---
@@ -67,11 +68,12 @@
 
 | 동시 사용자 | p50 (ms) | p95 (ms) | p95-p50 (ms) | RPS | 에러율 (%) | Knee Point |
 | :---------: | :------: | :------: | :----------: | :-: | :--------: | :--------: |
-|  10 Users   |          |          |              |     |            |            |
-|  30 Users   |          |          |              |     |            |            |
-|  50 Users   |          |          |              |     |            |            |
-|  70 Users   |          |          |              |     |            |            |
-|  100 Users  |          |          |              |     |            |            |
+|  10 Users   | 48.00 | 132.00 | 84.00 | 177.41 | 0.00 |            |
+|  30 Users   | 157.00 | 257.00 | 100.00 | 181.59 | 0.00 |            |
+|  50 Users   | 263.00 | 398.95 | 135.95 | 187.27 | 0.00 |            |
+|  70 Users   | 384.00 | 636.00 | 252.00 | 177.05 | 0.06 |            |
+|  100 Users  | 832.00 | 2029.00 | 1197.00 |122.80 | 0.16 | O |
+
 
 > Knee Point: 이전 단계 p95 대비 2배 이상 급증하는 지점에 O 표시
 
@@ -79,19 +81,19 @@
 
 | 동시 사용자 | CPU % 피크 | Heap 피크 (MB) | Live Threads 피크 |
 | :---------: | :--------: | :------------: | :---------------: |
-|  10 Users   |            |                |                   |
-|  30 Users   |            |                |                   |
-|  50 Users   |            |                |                   |
-|  70 Users   |            |                |                   |
-|  100 Users  |            |                |                   |
+|  10 Users   | 36.1 | 209.642 | 46 |
+|  30 Users   | 36.5 | 217.107 | 67 |
+|  50 Users   | 36.7 | 162.206 | 86 |
+|  70 Users   | 36.2 | 228.646 | 106 |
+|  100 Users  | 33.5 | 173.925 | 136 |
 
 ### B-1-3. 도메인별 RPS 비율 (Grafana — Domain 섹션, 50 Users 구간 기준)
 
 | 도메인   | RPS | 비율 (%) | Grafana 패널           |
 | -------- | :-: | :------: | ---------------------- |
-| hospital |     |          | 도메인별 요청 수 (RPS) |
-| schedule |     |          | 도메인별 요청 수 (RPS) |
-| member   |     |          | 도메인별 요청 수 (RPS) |
+| hospital | 151 | 27.9 | 도메인별 요청 수 (RPS) |
+| schedule | 53 | 65.6 | 도메인별 요청 수 (RPS) |
+| member   | 543 | 65.6 | 도메인별 요청 수 (RPS) |
 
 ---
 
@@ -101,19 +103,19 @@
 > 엔드포인트: B-1과 동일한 혼합 부하, 단독 실행 (50 Users, 600s)
 > 출처: Grafana Layer 섹션
 
-### B-2-1. 레이어별 응답 시간
+### B-2-1. 도메인별 레이어 응답 시간
 
-| 엔드포인트               | Presentation p95 (ms) | Application 평균 (ms) | Infrastructure 평균 (ms) | 병목 레이어 |
-| ------------------------ | :-------------------: | :-------------------: | :----------------------: | :---------: |
-| GET /api/hospital/search |                       |                       |                          |             |
-| GET /api/hospital/nearby |                       |                       |                          |             |
-| GET /api/hospital/{code} |                       |                       |                          |             |
+| 도메인   | Presentation p95 (ms) | Application 평균 (ms) | Infrastructure 평균 (ms) | 병목 레이어 |
+| :------: | :-------------------: | :-------------------: | :----------------------: | :---------: |
+| hospital | 1810 | 176 | 176 | O |
+| schedule | 1490 | 148 | 19.9 | O |
+| member   | 1990 | 106 | 15.3 | O |
 
-> Grafana 패널 매핑
+> Grafana 패널 매핑 (Layer 섹션 → 도메인별 stat 패널)
 >
-> - Presentation p95: Layer → Presentation p95 응답 시간
-> - Application 평균: Layer → Application 평균 비즈니스 처리 시간
-> - Infrastructure 평균: Layer → Infrastructure 외부 의존성 평균 응답 시간
+> - hospital: [Hospital] Presentation p95 (ms) / [Hospital] Application 평균 (ms) / [Hospital] Infrastructure 평균 (ms)
+> - schedule: [Schedule] Presentation p95 (ms) / [Schedule] Application 평균 (ms) / [Schedule] Infrastructure 평균 (ms)
+> - member: [Member] Presentation p95 (ms) / [Member] Application 평균 (ms) / [Member] Infrastructure 평균 (ms)
 
 > 병목 판단 기준
 >
@@ -121,12 +123,19 @@
 > - Application > 50ms → 비즈니스 로직 병목 (알고리즘 개선, /nearby Haversine 계산 예상)
 > - Presentation > Application + Infrastructure 합 → AOP / JSON 직렬화 / Security Filter 체인
 
-### B-2-2. Presentation 실패율 (Grafana — Layer 섹션)
+### B-2-2. 도메인별 레이어 요청 수 (Grafana — Layer 섹션)
 
-| 항목                      | 측정값 | Grafana 패널                     |
-| ------------------------- | :----: | -------------------------------- |
-| Presentation 실패율 (%)   |        | Presentation 실패율 (stat)       |
-| Hospital 레이어 요청 비율 |        | Hospital 도메인 레이어별 요청 수 |
+| 도메인   | presentation RPS | application RPS | infrastructure RPS | Grafana 패널                     |
+| :------: | :--------------: | :-------------: | :----------------: | -------------------------------- |
+| hospital |                  |                 |                    | Hospital 도메인 레이어별 요청 수 |
+| schedule |                  |                 |                    | Schedule 도메인 레이어별 요청 수 |
+| member   |                  |                 |                    | Member 도메인 레이어별 요청 수   |
+
+### B-2-3. Presentation 실패율 (Grafana — Layer 섹션)
+
+| 항목                    | 측정값 | Grafana 패널               |
+| ----------------------- | :----: | -------------------------- |
+| Presentation 실패율 (%) |        | Presentation 실패율 (stat) |
 
 ---
 
