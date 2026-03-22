@@ -984,7 +984,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "max"
           ],
           "fields": "",
           "values": false
@@ -1372,12 +1372,207 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "description": "CodeCache GC Threshold = JVM 내부 코드 캐시 관련 GC\nG1 Evacuation Pause = Young GC\n값\t의미\n0\tGC 없음\n6\t1분에 6번\n\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 76
+      },
+      "id": 65,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "rate(jvm_gc_pause_seconds_count[1m]) * 60",
+          "legendFormat": "{{cause}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "분당 GC 발생 횟수",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 76
+      },
+      "id": 66,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(increase(jvm_gc_pause_seconds_count[$__range])) by (cause)",
+          "legendFormat": "{{cause}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "GC 발생 횟수",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 84
+      },
+      "id": 67,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(increase(jvm_gc_pause_seconds_count[$__range]))",
+          "legendFormat": "{{cause}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "전체 GC 발생 횟수",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 76
+        "y": 92
       },
       "id": 16,
       "panels": [],
@@ -1450,7 +1645,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 77
+        "y": 93
       },
       "id": 15,
       "options": {
@@ -1513,7 +1708,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 86
+        "y": 102
       },
       "id": 47,
       "options": {
@@ -1572,7 +1767,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 86
+        "y": 102
       },
       "id": 46,
       "options": {
@@ -1723,7 +1918,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 94
+        "y": 110
       },
       "id": 14,
       "options": {
@@ -1758,7 +1953,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 102
+        "y": 118
       },
       "id": 19,
       "panels": [],
@@ -1833,7 +2028,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 103
+        "y": 119
       },
       "id": 20,
       "options": {
@@ -1959,7 +2154,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 112
+        "y": 128
       },
       "id": 17,
       "options": {
@@ -2026,7 +2221,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 112
+        "y": 128
       },
       "id": 18,
       "options": {
@@ -2126,7 +2321,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 120
+        "y": 136
       },
       "id": 21,
       "options": {
@@ -2188,7 +2383,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 120
+        "y": 136
       },
       "id": 49,
       "options": {
@@ -2288,7 +2483,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 128
+        "y": 144
       },
       "id": 23,
       "options": {
@@ -2384,7 +2579,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 137
+        "y": 153
       },
       "id": 22,
       "options": {
@@ -2480,7 +2675,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 137
+        "y": 153
       },
       "id": 24,
       "options": {
@@ -2542,7 +2737,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 145
+        "y": 161
       },
       "id": 48,
       "options": {
@@ -2585,6 +2780,74 @@
         }
       ],
       "title": "RATE-Application 평균 비즈니스 처리 시간 평균",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "description": "Infrastructure 레이어 전체 평균 응답 시간 (ms)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 300
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 20,
+        "y": 161
+      },
+      "id": 50,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"infrastructure\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"infrastructure\"}[1m]))) * 1000",
+          "legendFormat": "Infrastructure 평균",
+          "refId": "A"
+        }
+      ],
+      "title": "Infrastructure 외부 의존성 평균 응답 시간 (ms)",
       "type": "stat"
     },
     {
@@ -2653,7 +2916,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 153
+        "y": 169
       },
       "id": 1,
       "options": {
@@ -2690,24 +2953,51 @@
       "type": "timeseries"
     },
     {
-      "id": 50,
-      "title": "Infrastructure 외부 의존성 평균 응답 시간 (ms)",
-      "type": "stat",
-      "description": "Infrastructure 레이어 전체 평균 응답 시간 (ms)",
       "datasource": {
         "type": "prometheus",
         "uid": "dffap3tz7bu2od"
       },
-      "targets": [
-        {
-          "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"infrastructure\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"infrastructure\"}[1m]))) * 1000",
-          "legendFormat": "Infrastructure 평균",
-          "refId": "A"
-        }
-      ],
+      "description": "Schedule 도메인의 Presentation / Application / Infrastructure 레이어별 요청 수",
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -2716,48 +3006,35 @@
                 "value": 0
               },
               {
-                "color": "yellow",
-                "value": 100
-              },
-              {
                 "color": "red",
-                "value": 300
+                "value": 80
               }
             ]
-          },
-          "color": {
-            "mode": "thresholds"
           }
         },
         "overrides": []
       },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
-      },
       "gridPos": {
         "h": 8,
-        "w": 4,
-        "x": 20,
-        "y": 145
-      }
-    },
-    {
-      "id": 51,
-      "title": "Schedule 도메인 레이어별 요청 수",
-      "type": "timeseries",
-      "description": "Schedule 도메인의 Presentation / Application / Infrastructure 레이어별 요청 수",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "w": 8,
+        "x": 8,
+        "y": 169
       },
+      "id": 51,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "sum(domain_requests_total{domain=\"schedule\"}) by (layer)",
@@ -2765,17 +3042,53 @@
           "refId": "A"
         }
       ],
+      "title": "Schedule 도메인 레이어별 요청 수",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "description": "Member 도메인의 Presentation / Application / Infrastructure 레이어별 요청 수",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "lineWidth": 1,
             "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
             "showPoints": "auto",
-            "lineInterpolation": "linear"
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -2794,33 +3107,27 @@
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 169
+      },
+      "id": 52,
       "options": {
         "legend": {
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 153
-      }
-    },
-    {
-      "id": 52,
-      "title": "Member 도메인 레이어별 요청 수",
-      "type": "timeseries",
-      "description": "Member 도메인의 Presentation / Application / Infrastructure 레이어별 요청 수",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
-      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "sum(domain_requests_total{domain=\"member\"}) by (layer)",
@@ -2828,17 +3135,18 @@
           "refId": "A"
         }
       ],
+      "title": "Member 도메인 레이어별 요청 수",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "drawStyle": "line",
-            "lineWidth": 1,
-            "fillOpacity": 0,
-            "showPoints": "auto",
-            "lineInterpolation": "linear"
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
@@ -2849,41 +3157,44 @@
                 "value": 0
               },
               {
+                "color": "yellow",
+                "value": 100
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 500
               }
             ]
-          }
+          },
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 16,
-        "y": 153
-      }
-    },
-    {
-      "id": 53,
-      "title": "[Hospital] Presentation p95 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 0,
+        "y": 177
       },
+      "id": 53,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(domain_request_duration_seconds_bucket{layer=\"presentation\", domain=\"hospital\"}[5m])) by (le)) * 1000",
@@ -2891,9 +3202,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Hospital] Presentation p95 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -2911,39 +3233,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 0,
-        "y": 161
-      }
-    },
-    {
-      "id": 54,
-      "title": "[Hospital] Application 평균 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 8,
+        "y": 177
       },
+      "id": 54,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"application\", domain=\"hospital\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"application\", domain=\"hospital\"}[1m]))) * 1000",
@@ -2951,9 +3269,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Hospital] Application 평균 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -2971,39 +3300,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 8,
-        "y": 161
-      }
-    },
-    {
-      "id": 55,
-      "title": "[Hospital] Infrastructure 평균 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 16,
+        "y": 177
       },
+      "id": 55,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"infrastructure\", domain=\"hospital\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"infrastructure\", domain=\"hospital\"}[1m]))) * 1000",
@@ -3011,9 +3336,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Hospital] Infrastructure 평균 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -3031,39 +3367,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 16,
-        "y": 161
-      }
-    },
-    {
-      "id": 56,
-      "title": "[Schedule] Presentation p95 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 0,
+        "y": 185
       },
+      "id": 56,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(domain_request_duration_seconds_bucket{layer=\"presentation\", domain=\"schedule\"}[5m])) by (le)) * 1000",
@@ -3071,9 +3403,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Schedule] Presentation p95 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -3091,39 +3434,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 0,
-        "y": 169
-      }
-    },
-    {
-      "id": 57,
-      "title": "[Schedule] Application 평균 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 8,
+        "y": 185
       },
+      "id": 57,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"application\", domain=\"schedule\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"application\", domain=\"schedule\"}[1m]))) * 1000",
@@ -3131,9 +3470,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Schedule] Application 평균 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -3151,39 +3501,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 8,
-        "y": 169
-      }
-    },
-    {
-      "id": 58,
-      "title": "[Schedule] Infrastructure 평균 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 16,
+        "y": 185
       },
+      "id": 58,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"infrastructure\", domain=\"schedule\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"infrastructure\", domain=\"schedule\"}[1m]))) * 1000",
@@ -3191,9 +3537,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Schedule] Infrastructure 평균 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -3211,39 +3568,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 16,
-        "y": 169
-      }
-    },
-    {
-      "id": 59,
-      "title": "[Member] Presentation p95 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 0,
+        "y": 193
       },
+      "id": 59,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(domain_request_duration_seconds_bucket{layer=\"presentation\", domain=\"member\"}[5m])) by (le)) * 1000",
@@ -3251,9 +3604,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Member] Presentation p95 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -3271,39 +3635,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 0,
-        "y": 177
-      }
-    },
-    {
-      "id": 60,
-      "title": "[Member] Application 평균 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 8,
+        "y": 193
       },
+      "id": 60,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"application\", domain=\"member\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"application\", domain=\"member\"}[1m]))) * 1000",
@@ -3311,9 +3671,20 @@
           "refId": "A"
         }
       ],
+      "title": "[Member] Application 평균 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -3331,39 +3702,35 @@
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "ms"
         },
         "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none"
       },
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 8,
-        "y": 177
-      }
-    },
-    {
-      "id": 61,
-      "title": "[Member] Infrastructure 평균 (ms)",
-      "type": "stat",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "dffap3tz7bu2od"
+        "x": 16,
+        "y": 193
       },
+      "id": 61,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "expr": "(sum(rate(domain_request_duration_seconds_sum{layer=\"infrastructure\", domain=\"member\"}[1m])) / sum(rate(domain_request_duration_seconds_count{layer=\"infrastructure\", domain=\"member\"}[1m]))) * 1000",
@@ -3371,49 +3738,188 @@
           "refId": "A"
         }
       ],
+      "title": "[Member] Infrastructure 평균 (ms)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
       "fieldConfig": {
         "defaults": {
-          "unit": "ms",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 2,
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "yellow",
-                "value": 100
-              },
-              {
-                "color": "red",
-                "value": 500
               }
             ]
           },
-          "color": {
-            "mode": "thresholds"
-          }
+          "unit": "reqps"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 201
+      },
+      "id": 62,
       "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
-          ]
+            "mean"
+          ],
+          "fields": "",
+          "values": false
         },
-        "orientation": "auto",
+        "showPercentChange": false,
         "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum(rate(domain_requests_total{domain=\"hospital\"}[1m])) by (layer)",
+          "legendFormat": "{{layer}}",
+          "refId": "A"
+        }
+      ],
+      "title": "[B-2-2] Hospital 레이어별 RPS",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 201
+      },
+      "id": 63,
+      "options": {
         "colorMode": "background",
-        "graphMode": "none"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum(rate(domain_requests_total{domain=\"schedule\"}[1m])) by (layer)",
+          "legendFormat": "{{layer}}",
+          "refId": "A"
+        }
+      ],
+      "title": "[B-2-2] Schedule 레이어별 RPS",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dffap3tz7bu2od"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 177
-      }
+        "y": 201
+      },
+      "id": 64,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum(rate(domain_requests_total{domain=\"member\"}[1m])) by (layer)",
+          "legendFormat": "{{layer}}",
+          "refId": "A"
+        }
+      ],
+      "title": "[B-2-2] Member 레이어별 RPS",
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -3421,7 +3927,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 185
+        "y": 209
       },
       "id": 26,
       "panels": [],
@@ -3494,7 +4000,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 186
+        "y": 210
       },
       "id": 36,
       "options": {
@@ -3623,7 +4129,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 186
+        "y": 210
       },
       "id": 35,
       "options": {
@@ -3720,7 +4226,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 194
+        "y": 218
       },
       "id": 25,
       "options": {
@@ -3824,7 +4330,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 194
+        "y": 218
       },
       "id": 27,
       "options": {
@@ -3889,7 +4395,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 202
+        "y": 226
       },
       "id": 37,
       "options": {
@@ -3955,7 +4461,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 202
+        "y": 226
       },
       "id": 38,
       "options": {
@@ -4058,7 +4564,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 210
+        "y": 234
       },
       "id": 39,
       "options": {
@@ -4093,7 +4599,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 218
+        "y": 242
       },
       "id": 34,
       "panels": [],
@@ -4167,7 +4673,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 219
+        "y": 243
       },
       "id": 32,
       "options": {
@@ -4263,7 +4769,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 219
+        "y": 243
       },
       "id": 33,
       "options": {
@@ -4360,7 +4866,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 227
+        "y": 251
       },
       "id": 30,
       "options": {
@@ -4456,7 +4962,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 227
+        "y": 251
       },
       "id": 31,
       "options": {
@@ -4553,7 +5059,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 235
+        "y": 259
       },
       "id": 28,
       "options": {
@@ -4649,7 +5155,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 235
+        "y": 259
       },
       "id": 29,
       "options": {
@@ -4738,13 +5244,13 @@
     ]
   },
   "time": {
-    "from": "2026-03-19T13:05:00.000Z",
-    "to": "2026-03-19T13:12:59.000Z"
+    "from": "2026-03-22T11:25:00.000Z",
+    "to": "2026-03-22T11:30:59.000Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Hospin",
   "uid": "admmqgb",
-  "version": 4,
+  "version": 2,
   "weekStart": ""
 }

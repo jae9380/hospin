@@ -27,7 +27,7 @@
         </elementProp>
       </SetupThreadGroup>
       <hashTree>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Set TS Property" enabled="true">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Set TS Property">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -67,10 +67,10 @@ ramp-up 4s</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -129,7 +129,7 @@ ramp-up 4s</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/c_${__P(TS)}/scenario_c_10u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/c_${__time(YMDHMS)}/scenario_c_10u_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -194,7 +194,7 @@ Cookie 헤더를 통해 access_token 전달 (JwtFilter가 쿠키에서 읽음)</
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[Scenario C] 인증 집중 - 30 Users" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[Scenario C] 인증 집중 - 30 Users">
         <stringProp name="TestPlan.comments">30 users — HikariCP pool(10) 3배 초과
 커넥션 대기(pending) 발생 여부 확인 구간
 ramp-up 12s</stringProp>
@@ -224,10 +224,10 @@ ramp-up 12s</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -242,7 +242,7 @@ ramp-up 12s</stringProp>
           <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
         </CookieManager>
         <hashTree/>
-        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
@@ -252,7 +252,7 @@ ramp-up 12s</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - 30u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - 30u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -286,7 +286,7 @@ ramp-up 12s</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/c_${__P(TS)}/scenario_c_30u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/c_${__time(YMDHMS)}/scenario_c_30u_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -351,7 +351,7 @@ Cookie 헤더를 통해 access_token 전달 (JwtFilter가 쿠키에서 읽음)</
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[Scenario C] 인증 집중 - 50 Users" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[Scenario C] 인증 집중 - 50 Users">
         <stringProp name="TestPlan.comments">동시 로그인 폭증 시 DB 커넥션 경쟁 측정
 HikariCP 기본값(maximum-pool-size: 10) 초과 시 커넥션 대기 발생 여부 확인
 Gaussian Timer로 실제 사용자 패턴 (로그인 후 잠시 대기) 재현
@@ -382,10 +382,10 @@ ramp-up 20s</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -410,7 +410,7 @@ ramp-up 20s</stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - 50u" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - 50u">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -444,10 +444,10 @@ ramp-up 20s</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/c_${__P(TS)}/scenario_c_50u_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/c_${__time(YMDHMS)}/scenario_c_50u_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login">
           <stringProp name="TestPlan.comments">DB 조회(회원 정보) + 비밀번호 해시 검증 + JWT 발급
 50 users 동시 로그인 시 HikariCP 커넥션 경쟁 발생 가능</stringProp>
           <stringProp name="HTTPSampler.path">/api/member/login</stringProp>

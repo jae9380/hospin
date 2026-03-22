@@ -28,7 +28,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -37,13 +37,13 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config - symptoms" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config - symptoms">
           <stringProp name="TestPlan.comments">증상 텍스트 목록. symptoms.csv 파일 사용
 형식: symptom (헤더 1행 skip)
 5개 증상 × 3 users × 5 loops = 총 15회 호출</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/symptoms.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/symptoms.sample.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -52,7 +52,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
           <stringProp name="variableNames">symptom</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
@@ -62,7 +62,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="true">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -96,7 +96,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/d_${__P(TS)}/scenario_d_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/d_${__time(YMDHMS)}/scenario_d_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="symptomcheck" enabled="true">
@@ -125,7 +125,7 @@ Connect Timeout: 5000ms / Response Timeout: 30000ms
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert HTTP 200" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert HTTP 200">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -135,7 +135,7 @@ Connect Timeout: 5000ms / Response Timeout: 30000ms
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert NOT data:null (실질적 실패 감지)" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert NOT data:null (실질적 실패 감지)">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1146313813">&quot;data&quot;:null</stringProp>
             </collectionProp>
