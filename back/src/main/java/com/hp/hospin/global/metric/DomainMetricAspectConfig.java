@@ -4,10 +4,13 @@ import com.hp.hospin.global.standard.annotations.Monitored;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -35,7 +38,9 @@ public class DomainMetricAspectConfig {
             return result;
 
         } catch (Exception e) {
-
+            log.warn("[Metric] {}.{}.{} 실패 — 예외: {}",
+                    monitored.domain(), monitored.layer(), monitored.api(),
+                    e.getClass().getSimpleName());
             metricHelper.fail(
                     monitored.domain(),
                     monitored.layer(),
