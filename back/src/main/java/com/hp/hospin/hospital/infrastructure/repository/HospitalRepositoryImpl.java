@@ -54,8 +54,8 @@ public class HospitalRepositoryImpl implements HospitalRepository {
             layer = "infrastructure",
             api = "findHospitalsByBoundingBox"
     )
-    public List<Hospital> findHospitalsByBoundingBox(Double minLat,  Double maxLat, Double minLng, Double maxLng) {
-        return hospitalJPARepository.findHospitalsByBoundingBox(minLat, maxLat, minLng, maxLng)
+    public List<Hospital> findHospitalsNearby(Double minLat, Double maxLat, Double minLng, Double maxLng, Double userLat, Double userLng) {
+        return hospitalJPARepository.findHospitalsNearby(minLat, maxLat, minLng, maxLng, userLat, userLng)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

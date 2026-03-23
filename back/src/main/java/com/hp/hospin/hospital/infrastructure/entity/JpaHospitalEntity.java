@@ -1,9 +1,6 @@
 package com.hp.hospin.hospital.infrastructure.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name="hospital")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Table(name = "hospitals")
+@Table(name = "hospitals",
+        indexes = {
+                @Index(
+                        name = "idx_hospital_location",
+                        columnList = "latitude, longitude"
+                )
+        })
 public class JpaHospitalEntity {
     @Id
     @Column(name = "hospital_code")
