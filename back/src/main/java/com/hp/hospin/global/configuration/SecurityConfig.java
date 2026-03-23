@@ -4,6 +4,7 @@ import com.hp.hospin.member.application.auth.CustomUserDetailsService;
 import com.hp.hospin.global.jwt.JwtTokenProvider;
 import com.hp.hospin.global.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,9 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
 
+    @Value("${cors.allowed-origin}")
+    private String allowedOrigin;
+
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
@@ -46,7 +50,7 @@ public class SecurityConfig {
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers("/actuator/prometheus").permitAll()
                             .requestMatchers("/actuator/health").permitAll()
-                            .requestMatchers("/api/member/join","/api/member/join/**", "/api/member/login","/api/member/findId","/api/member/findPw","/api/member/resetPassword","/api/member/auth/refresh","/api/batch/**","/api/symptomcheck", "/api/FCM/**").permitAll()
+                            .requestMatchers("/api/member/join","/api/member/join/**", "/api/member/login","/api/member/findId","/api/member/findPw","/api/member/resetPassword","/api/member/auth/refresh","/api/symptomcheck", "/api/FCM/**").permitAll()
                             .requestMatchers(HttpMethod.GET,
                                     "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
                                     "/api/member/check-duplicate"
@@ -73,7 +77,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173"); // 프론트 서버 주소
+        configuration.addAllowedOrigin(allowedOrigin); // 프론트 서버 주소
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE 등 모두 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키, 인증 정보 허용
