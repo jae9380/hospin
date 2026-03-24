@@ -22,6 +22,16 @@ export class Au {
 		this._client.use(this._buildAuthMiddleware());
 	}
 
+	// 비로그인 사용자도 접근 가능한 공개 페이지 목록
+	private readonly _publicPaths = ['/'];
+
+	// 회원 전용 페이지: /schedule (비로그인 접근 시 /login으로 리다이렉트)
+
+	private _isPublicPage(): boolean {
+		if (!browser) return false;
+		return this._publicPaths.includes(window.location.pathname);
+	}
+
 	private _buildAuthMiddleware(): Middleware {
 		return {
 			onResponse: async ({ response, request }) => {
@@ -30,7 +40,7 @@ export class Au {
 				// refresh 엔드포인트 자체가 401이면 무한루프 방지
 				if (request.url.includes('/api/member/auth/refresh')) {
 					this.setLogout();
-					if (browser) goto('/login', { replaceState: true });
+					if (browser && !this._isPublicPage()) goto('/login', { replaceState: true });
 					return response;
 				}
 
@@ -45,7 +55,8 @@ export class Au {
 				const refreshed = await this._refreshPromise!;
 				if (!refreshed) {
 					this.setLogout();
-					if (browser) goto('/login', { replaceState: true });
+					// 공개 페이지에서는 401이 발생해도 로그인 페이지로 강제 이동하지 않음
+					if (browser && !this._isPublicPage()) goto('/login', { replaceState: true });
 					return response;
 				}
 
@@ -221,10 +232,6 @@ export class Au {
 		}
 	}
 
-	public getGoogleLoginUrl() {
-		const redirect = `${import.meta.env.VITE_CORE_FRONT_BASE_URL}/member/socialLoginCallback?providerTypeCode=google`;
-		return `${import.meta.env.VITE_CORE_API_BASE_URL}/member/socialLogin/google?redirectUrl=${encodeURIComponent(redirect)}`;
-	}
 
 	public async initAuthAndRedirectOk(url: string) {
 		await this.initAuth();

@@ -20,17 +20,12 @@
 
 			// 2️⃣ 로그인으로 전환되는 순간 FCM 등록
 			if (v) {
-				console.log('Yes');
-				console.log(isLoggedIn);
 				const token = await requestPermissionAndGetToken();
 				if (token) {
-					console.log('FCM 토큰:', token);
 					// 👉 서버로 전송
 					au.api().POST('/api/FCM/register', {
 						body: { token: token }
 					});
-				} else {
-					console.log("don't have token");
 				}
 			}
 		});

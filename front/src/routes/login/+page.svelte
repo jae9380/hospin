@@ -57,8 +57,6 @@
 
 		try {
 			const response = await au.api().POST('/api/member/login', { body: { identifier, password } });
-			console.log(response.data);
-			console.log(response.data.data);
 
 			if (response.data.statusCode > 399) {
 				toasterError(response.data.message || '로그인에 실패했습니다.');
