@@ -33,8 +33,6 @@
 	// (임시 데이터) 서버에서 받아올 일정 목록
 
 	onMount(async () => {
-		await au.initAuth();
-
 		if (!au?.isLogin()) {
 			toast.error('회원 유저에게 제공되는 서비스 입니다.');
 			isLogined = false;
@@ -253,7 +251,7 @@
 		<div class="mt-4">
 			<button
 				class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-				on:click={() => (window.location.href = '/login')}
+				on:click={() => au?.goTo('/login')}
 			>
 				로그인 후 일정 관리 이용하기
 			</button>

@@ -3,9 +3,7 @@
 	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { genderMap } from '$lib/constants/gender';
-	import { goto } from '$app/navigation';
 	import { au } from '$lib/au/au';
-	import Page from '../+page.svelte';
 
 	let identifier = '';
 	let password = '';
@@ -121,7 +119,7 @@
 			}
 
 			toast.success('회원가입 성공 🎉');
-			goto('/login');
+			au?.goTo('/login');
 		} catch (err: any) {
 			console.error('회원가입 에러:', err);
 			toast.error('서버 오류 발생 ❌');

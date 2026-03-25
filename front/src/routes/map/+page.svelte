@@ -96,9 +96,7 @@
 		page = nextPage;
 	}
 
-	const handleClick = (url: string) => {
-		au?.goTo(url);
-	};
+
 </script>
 
 <svelte:head>
@@ -145,7 +143,7 @@
 				{#each pagedHospitals as h}
 					<div
 						class="flex h-[96px] flex-col justify-between rounded-lg border bg-white p-4 shadow-sm"
-						on:click={() => handleClick(`/hospital/${h.hospital_code}`)}
+						on:click={() => au?.goTo(`/hospital/${h.hospital_code}`)}
 					>
 						<div class="line-clamp-1 text-lg font-bold">
 							{h.name}

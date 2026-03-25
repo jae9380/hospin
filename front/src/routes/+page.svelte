@@ -60,7 +60,7 @@
 			toast.error('데이터 로드 실패 ❌');
 		}
 
-		if (au?.isLogin) {
+		if (au?.isLogin()) {
 			try {
 				const res = await au.api().GET('/api/schedule/getClosestSchedule');
 
@@ -86,9 +86,7 @@
 		}
 	});
 
-	const handleClick = (url: string) => {
-		au?.goTo(url);
-	};
+
 </script>
 
 <svelte:head>
@@ -126,28 +124,28 @@
 	<div class="grid w-full max-w-3xl grid-cols-2 gap-4">
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/search')}
+			on:click={() => au?.goTo('/search')}
 		>
 			병원 상세 검색
 		</div>
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/map')}
+			on:click={() => au?.goTo('/map')}
 		>
 			근처 병원 찾기
 		</div>
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/schedule')}
+			on:click={() => au?.goTo('/schedule')}
 		>
 			일정 관리
 		</div>
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/symptomCheck')}
+			on:click={() => au?.goTo('/symptomCheck')}
 		>
 			증상 기반 진료과 안내
 		</div>
@@ -164,7 +162,7 @@
 				{#each hospitals as hospital}
 					<div
 						class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
-						on:click={() => handleClick(`/hospital/${hospital.hospital_code}`)}
+						on:click={() => au?.goTo(`/hospital/${hospital.hospital_code}`)}
 					>
 						<p class="font-medium text-gray-800">{hospital.name}</p>
 						<p class="text-xs text-gray-500">{hospital.address}</p>
@@ -183,7 +181,7 @@
 					{#each nearSchedules as schedule}
 						<div
 							class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
-							on:click={() => handleClick('/schedule')}
+							on:click={() => au?.goTo('/schedule')}
 						>
 							<p class="font-medium text-gray-800">{schedule.title}</p>
 							<p class="text-xs text-gray-500">{schedule.startTime}</p>
