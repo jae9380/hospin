@@ -28,7 +28,7 @@
 	let selectedEvent: any = null;
 	let isEditMode = false;
 	let calendar;
-	let isLogined = true;
+	let isLogined = false;
 
 	// (임시 데이터) 서버에서 받아올 일정 목록
 
@@ -36,10 +36,12 @@
 		await au.initAuth();
 
 		if (!au?.isLogin()) {
-			console.log(au.isLogin());
 			toast.error('회원 유저에게 제공되는 서비스 입니다.');
 			isLogined = false;
+			return;
 		}
+
+		isLogined = true;
 		try {
 			const { data, error } = await au.api().GET('/api/schedule');
 
@@ -52,8 +54,6 @@
 			const schedules = data?.data || []; // 백엔드가 ApiResponse 형식으로 응답한다고 가정
 
 			const headerButtons = isLogined ? 'addEventButton' : '';
-
-			console.log(headerButtons);
 			const events = schedules.map((s: any) => ({
 				id: s.id.toString(),
 				title: s.title,
@@ -86,7 +86,6 @@
 					}
 				},
 				eventClick: (info) => {
-					console.log(info.event);
 					selectedEvent = {
 						id: info.event.id,
 						title: info.event.title,
@@ -109,7 +108,6 @@
 				buttonText: {
 					today: '현재 날짜'
 				},
-				events: events
 			});
 
 			calendar.render();
@@ -136,7 +134,7 @@
 			endDatetime: newEvent.endDatetime
 		};
 
-		const { data, error } = await au.api().POST('/api/schedule', { body });
+		const { error } = await au.api().POST('/api/schedule', { body });
 		if (error) {
 			toasterError('🚨 등록에 실패했습니다.');
 			return;

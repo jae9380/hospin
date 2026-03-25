@@ -23,9 +23,13 @@
 				const token = await requestPermissionAndGetToken();
 				if (token) {
 					// 👉 서버로 전송
-					au.api().POST('/api/FCM/register', {
-						body: { token: token }
-					});
+					try {
+						await au.api().POST('/api/FCM/register', {
+							body: { token: token }
+						});
+					} catch (e) {
+						console.error('FCM 등록 실패:', e);
+					}
 				}
 			}
 		});
