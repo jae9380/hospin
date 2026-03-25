@@ -1,6 +1,7 @@
 <script lang="ts">
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { au } from '$lib/au/au';
+	import { validatePasswordRule } from '$lib/utils/validation';
 
 	// 상태 변수
 	let identifierError = false;
@@ -223,12 +224,6 @@
 		} catch (e: any) {
 			toasterError(e.message || '서버 오류가 발생했습니다.');
 		}
-	}
-
-	function validatePasswordRule(value: string) {
-		// 8~20자, 공백 불가, 허용문자: 영문/숫자/특수문자
-		const regex = /^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,20}$/;
-		return regex.test(value);
 	}
 
 	function handleFindId() {

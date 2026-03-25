@@ -6,6 +6,7 @@
 	import { categoryOptions } from '$lib/constants/categories';
 	import type { PageResult, HospitalListItemRaw, HospitalListItem } from '$lib/types/hospital/list';
 	import { allDistrictOptions, getDistrictsByRegion } from '$lib/constants/districts';
+	import type { DistrictOption } from '$lib/types/geo';
 	import { browser } from '$app/environment';
 
 	let name = '';
@@ -22,7 +23,7 @@
 	let hasSearched = false;
 	let errorMsg = '';
 
-	let districtOptions: { code: string; parent: string; label: string }[] = [];
+	let districtOptions: DistrictOption[] = [];
 	$: districtOptions = selectedRegion ? getDistrictsByRegion(selectedRegion) : [];
 
 	onMount(() => {

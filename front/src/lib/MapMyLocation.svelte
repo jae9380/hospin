@@ -1,18 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { loadNaverMapScript } from '$lib/naverMapLoader';
+	import type { HospitalListResponse } from '$lib/types/hospital/list';
 
 	export let lat: number;
 	export let lng: number;
 	export let minZoom: number = 10;
 	export let maxZoom: number = 17;
-	export let hospitals: {
-		hospital_code: string;
-		name: string;
-		address: string;
-		latitude: number;
-		longitude: number;
-	}[];
+	export let hospitals: HospitalListResponse[];
 
 	const zoomPresets = [
 		{ level: 13, label: '약 3km 보기', radius: 3000 },

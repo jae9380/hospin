@@ -3,20 +3,13 @@
 	import { au } from '$lib/au/au';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import MapMyLocation from '$lib/MapMyLocation.svelte';
+	import type { HospitalListResponse } from '$lib/types/hospital/list';
 
 	let viewMode: 'map' | 'list' = 'map';
 
 	let lat: number | null = null;
 	let lng: number | null = null;
 	let error: string | null = null;
-
-	type HospitalListResponse = {
-		hospital_code: string;
-		name: string;
-		address: string;
-		latitude: number;
-		longitude: number;
-	};
 
 	let hospitals: HospitalListResponse[] = [];
 

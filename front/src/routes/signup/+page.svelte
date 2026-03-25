@@ -4,6 +4,7 @@
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { genderMap } from '$lib/constants/gender';
 	import { au } from '$lib/au/au';
+	import { validatePasswordRule } from '$lib/utils/validation';
 
 	let identifier = '';
 	let password = '';
@@ -124,12 +125,6 @@
 			console.error('회원가입 에러:', err);
 			toast.error('서버 오류 발생 ❌');
 		}
-	}
-
-	function validatePasswordRule(value: string) {
-		// 8자 이상, 공백 제외, 허용문자: 영문/숫자/특수문자
-		const regex = /^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}$/;
-		return regex.test(value);
 	}
 
 	// 이메일 정규식 검증 함수
