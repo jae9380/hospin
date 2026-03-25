@@ -68,7 +68,7 @@ public class ScheduleController {
     @DeleteMapping("/{scheduleId}")
     @Monitored(
             domain = "schedule",
-            layer = "application",
+            layer = "presentation",
             api = "deleteSchedule"
     )
     public ApiResponse<Empty> deleteSchedule(@AuthenticationPrincipal MemberDetails memberDetails,

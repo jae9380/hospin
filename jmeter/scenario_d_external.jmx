@@ -28,7 +28,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -37,7 +37,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config - symptoms">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config - symptoms" enabled="true">
           <stringProp name="TestPlan.comments">증상 텍스트 목록. symptoms.csv 파일 사용
 형식: symptom (헤더 1행 skip)
 5개 증상 × 3 users × 5 loops = 총 15회 호출</stringProp>
@@ -52,7 +52,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
           <stringProp name="variableNames">symptom</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
@@ -62,7 +62,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -125,7 +125,7 @@ Connect Timeout: 5000ms / Response Timeout: 30000ms
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert HTTP 200">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert HTTP 200" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -135,7 +135,7 @@ Connect Timeout: 5000ms / Response Timeout: 30000ms
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert NOT data:null (실질적 실패 감지)">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert NOT data:null (실질적 실패 감지)" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1146313813">&quot;data&quot;:null</stringProp>
             </collectionProp>
@@ -146,7 +146,7 @@ Connect Timeout: 5000ms / Response Timeout: 30000ms
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>

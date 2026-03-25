@@ -27,7 +27,7 @@ CLI: jmeter -n -t scenario_b_concentrated.jmx -JTS=$(date +%Y%m%d-%H%M%S) -l /de
         </elementProp>
       </SetupThreadGroup>
       <hashTree>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="script">if (!props.get(&quot;TS&quot;) || props.get(&quot;TS&quot;) == &quot;1&quot;) {
     props.put(&quot;TS&quot;, new Date().format(&quot;yyyyMMdd-HHmmss&quot;))
@@ -57,7 +57,7 @@ GET /api/hospital/nearby: Haversine CPU 부하 관찰
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -76,7 +76,7 @@ GET /api/hospital/nearby: Haversine CPU 부하 관찰
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b3_hospital">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b3_hospital" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -113,7 +113,7 @@ GET /api/hospital/nearby: Haversine CPU 부하 관찰
           <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b_concentrated_3_1_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="hospital_search_all">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="hospital_search_all" enabled="true">
           <stringProp name="TestPlan.comments">파라미터 없는 전체 병원 검색. 페이지네이션 없는 Full Scan → Heap 증가 관찰
 응답 크기: JTL bytes 컬럼으로 확인</stringProp>
           <stringProp name="HTTPSampler.path">/api/hospital/search</stringProp>
@@ -126,7 +126,7 @@ GET /api/hospital/nearby: Haversine CPU 부하 관찰
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer (800~1200ms)">
+          <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer (800~1200ms)" enabled="true">
             <stringProp name="ConstantTimer.delay">1000</stringProp>
             <stringProp name="RandomTimer.range">200.0</stringProp>
           </GaussianRandomTimer>
@@ -203,7 +203,7 @@ DB 슬로우 쿼리 및 Infrastructure 레이어 응답 시간 측정
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b3_search">
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer - b3_search" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>

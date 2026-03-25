@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface MemberService {
     void join(MemberDTO request);
-    void login(MemberDTO request);
+    MemberDTO login(MemberDTO request);
     Map<Boolean, String> checkDuplicateIdentifier(String identifier);
     MemberDTO findByIdentifier(String name);
     Map<String, String> logoutMsg();

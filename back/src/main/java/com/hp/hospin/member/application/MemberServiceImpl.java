@@ -44,8 +44,8 @@ public class MemberServiceImpl implements MemberService {
             layer = "application",
             api = "login"
     )
-    public void login(MemberDTO request) {
-        memberDomainService.login(mapper.dtoToLoginForm(request));
+    public MemberDTO login(MemberDTO request) {
+        return mapper.domainToDto(memberDomainService.login(mapper.dtoToLoginForm(request)));
     }
 
     @Override

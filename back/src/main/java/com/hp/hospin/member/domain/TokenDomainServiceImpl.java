@@ -7,7 +7,6 @@ import com.hp.hospin.member.domain.entity.Member;
 import com.hp.hospin.member.domain.port.JwtProvider;
 import com.hp.hospin.member.domain.port.MemberRepository;
 import com.hp.hospin.member.domain.port.RefreshTokenRepository;
-import com.hp.hospin.member.infrastructure.entity.RefreshToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,13 +28,7 @@ public class TokenDomainServiceImpl implements TokenDomainService {
     @Transactional
     public String issueRefreshToken(Member member, Duration duration) {
         String newRefreshToken = jwtProvider.generateToken(member, duration);
-
-        refreshTokenRepository.findByUserId(member.getId())
-                .ifPresentOrElse(
-                        existing -> existing.update(newRefreshToken),
-                        () -> refreshTokenRepository.save(new RefreshToken(member.getId(), newRefreshToken))
-                );
-
+        refreshTokenRepository.upsertByUserId(member.getId(), newRefreshToken);
         return newRefreshToken;
     }
 
