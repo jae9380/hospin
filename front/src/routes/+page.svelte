@@ -4,9 +4,10 @@
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 
-	import type { HospitalListResponse } from '$lib/types/hospital/list';
-	import type { ScheduleList } from '$lib/types/schedule/scheduleList';
-	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
+	import { getCurrentPosition } from '$lib/shared/geolocation';
+	import type { HospitalListResponse } from '$lib/shared/types/hospital';
+	import type { ScheduleList } from '$lib/shared/types/schedule';
+	import type { ApiResponse } from '$lib/shared/types/apiResponse';
 
 	let nearSchedules: ScheduleList[] = [];
 	let hospitals: HospitalListResponse[] = [];
@@ -17,29 +18,18 @@
 	let hospitalName = '';
 
 	onMount(async () => {
-		if (!navigator.geolocation) {
-			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+		const geo = await getCurrentPosition();
+		if (!geo.position) {
+			error = geo.errorMessage;
 			return;
 		}
-
-		await new Promise<void>((resolve) => {
-			navigator.geolocation.getCurrentPosition(
-				(pos) => {
-					lat = pos.coords.latitude;
-					lng = pos.coords.longitude;
-					resolve();
-				},
-				(err) => {
-					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
-					resolve();
-				}
-			);
-		});
+		lat = geo.position.lat;
+		lng = geo.position.lng;
 
 		if (!lat || !lng) return;
 
 		try {
-			const res = await au.api().GET('/api/hospital/6nearby', {
+			const res = await au!.api().GET('/api/hospital/6nearby', {
 				params: {
 					query: {
 						latitude: String(lat),
@@ -62,7 +52,7 @@
 
 		if (au?.isLogin()) {
 			try {
-				const res = await au.api().GET('/api/schedule/getClosestSchedule');
+				const res = await au!.api().GET('/api/schedule/getClosestSchedule');
 
 				const apiResponse = res.data as ApiResponse<any[]>;
 

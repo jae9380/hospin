@@ -23,7 +23,7 @@ export class Au {
 	}
 
 	// 비로그인 사용자도 접근 가능한 공개 페이지 목록
-	private readonly _publicPaths = ['/', '/hospital', '/search', '/map', '/login', '/signup', '/find-pw'];
+	private readonly _publicPaths = ['/', '/hospital', '/search', '/map', '/login', '/signup'];
 
 	// 회원 전용 페이지: /schedule (비로그인 접근 시 /login으로 리다이렉트)
 
@@ -152,7 +152,7 @@ export class Au {
 		};
 	})();
 
-	private api() {
+	public api() {
 		return this._client;
 	}
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
-	import FixedMap from '$lib/FixedMap.svelte';
-	import type { HospitalInfoResponse } from '$lib/types/hospital/info';
-	import { asmGrdMap } from '$lib/constants/asmGradeMap';
-	import { deptCodeMap } from '$lib/constants/deptCodeMap';
+	import FixedMap from '$lib/components/FixedMap.svelte';
+	import type { HospitalInfoResponse } from '$lib/shared/types/hospital';
+	import { asmGrdMap } from '$lib/shared/constants/asmGradeMap';
+	import { deptCodeMap } from '$lib/shared/constants/deptCodeMap';
 	import { au } from '$lib/au/au';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 
@@ -43,7 +43,7 @@
 	onMount(async () => {
 		id = $page.params.id;
 		try {
-			const { data, error } = await au.api().GET('/api/hospital/{id}', {
+			const { data, error } = await au!.api().GET('/api/hospital/{id}', {
 				params: { path: { id } }
 			});
 

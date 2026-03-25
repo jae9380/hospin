@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { loadNaverMapScript } from '$lib/naverMapLoader';
-	import type { HospitalListResponse } from '$lib/types/hospital/list';
+	import { loadNaverMapScript } from '$lib/shared/naverMapLoader';
+	import type { HospitalListResponse } from '$lib/shared/types/hospital';
 
 	export let lat: number;
 	export let lng: number;

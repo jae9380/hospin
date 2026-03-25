@@ -2,8 +2,10 @@
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { au } from '$lib/au/au';
-	import type { RecommendedSpecialty } from '$lib/types/symptomcheck/recommendedSpecialty';
-	import { lastResult, lastSpecialties } from '$lib/stores/stores';
+	import { getCurrentPosition } from '$lib/shared/geolocation';
+	import { isApiSuccess } from '$lib/shared/types/apiResponse';
+	import type { RecommendedSpecialty } from '$lib/shared/types/symptomcheck';
+	import { lastResult, lastSpecialties } from '$lib/shared/stores/stores';
 
 	let lat: number | null = null;
 	let lng: number | null = null;
@@ -19,25 +21,13 @@
 	lastSpecialties.subscribe((value) => (specialties = value)); // 추가 작성
 
 	onMount(async () => {
-		if (!navigator.geolocation) {
-			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+		const geo = await getCurrentPosition();
+		if (!geo.position) {
+			error = geo.errorMessage;
 			return;
 		}
-
-		await new Promise<void>((resolve) => {
-			navigator.geolocation.getCurrentPosition(
-				(pos) => {
-					lat = pos.coords.latitude;
-					lng = pos.coords.longitude;
-					console.log(lat, lng); // temp
-					resolve();
-				},
-				(err) => {
-					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
-					resolve();
-				}
-			);
-		});
+		lat = geo.position.lat;
+		lng = geo.position.lng;
 	});
 
 	const submit = async () => {
@@ -62,7 +52,7 @@
 		};
 
 		try {
-			const res = await au.api().POST('/api/symptomcheck', {
+			const res = await au!.api().POST('/api/symptomcheck', {
 				headers: { 'Content-Type': 'application/json' },
 				body: payload
 			});
@@ -70,7 +60,7 @@
 			const data = await res.data;
 			console.log('response:', data);
 
-			if (data.resultType === 'SUCCESS') {
+			if (isApiSuccess(data)) {
 				result = data.data;
 				specialties = result.recommended_specialties;
 
@@ -89,7 +79,7 @@
 	};
 
 	const gotoHospital = (hospitalCode: string) => {
-		au.goTo(`/hospital/${hospitalCode}`);
+		au?.goTo(`/hospital/${hospitalCode}`);
 	};
 
 	const scrollToTop = () => {

@@ -3,7 +3,7 @@
 	import { au } from '$lib/au/au';
 	import { onMount, onDestroy } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
-	// import { authStore } from '$lib/stores/authStore';
+	// import { authStore } from '$lib/shared/stores/authStore';
 	import { requestPermissionAndGetToken } from '$lib/fcm/messaging';
 	// import { listenForegroundMessages } from '$lib/firebase-messaging';
 
@@ -24,7 +24,7 @@
 				if (token) {
 					// 👉 서버로 전송
 					try {
-						await au.api().POST('/api/FCM/register', {
+						await au!.api().POST('/api/FCM/register', {
 							body: { token: token }
 						});
 					} catch (e) {

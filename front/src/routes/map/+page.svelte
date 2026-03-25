@@ -2,8 +2,9 @@
 	import { onMount } from 'svelte';
 	import { au } from '$lib/au/au';
 	import toast, { Toaster } from 'svelte-5-french-toast';
-	import MapMyLocation from '$lib/MapMyLocation.svelte';
-	import type { HospitalListResponse } from '$lib/types/hospital/list';
+	import MapMyLocation from '$lib/components/MapMyLocation.svelte';
+	import { getCurrentPosition } from '$lib/shared/geolocation';
+	import type { HospitalListResponse } from '$lib/shared/types/hospital';
 
 	let viewMode: 'map' | 'list' = 'map';
 
@@ -21,27 +22,16 @@
 	let sortType: 'name' = 'name';
 
 	onMount(async () => {
-		if (!navigator.geolocation) {
-			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+		const geo = await getCurrentPosition();
+		if (!geo.position) {
+			error = geo.errorMessage;
 			return;
 		}
-
-		await new Promise<void>((resolve) => {
-			navigator.geolocation.getCurrentPosition(
-				(pos) => {
-					lat = pos.coords.latitude;
-					lng = pos.coords.longitude;
-					resolve();
-				},
-				(err) => {
-					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
-					resolve();
-				}
-			);
-		});
+		lat = geo.position.lat;
+		lng = geo.position.lng;
 
 		try {
-			const { data } = await au.api().GET('/api/hospital/nearby', {
+			const { data } = await au!.api().GET('/api/hospital/nearby', {
 				params: {
 					query: {
 						latitude: String(lat),
