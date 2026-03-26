@@ -1,4 +1,4 @@
-import type { RegionOption } from '$lib/types/geo';
+import type { RegionOption } from '$lib/shared/types/geo';
 
 export const regionOptions: RegionOption[] = [
   { code: '110000', label: '서울' },

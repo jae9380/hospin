@@ -28,3 +28,6 @@ spring:
   ai:
     openai:
       api-key: ${openai.api-key}
+
+cors:
+  allowed-origin: http://localhost:5173

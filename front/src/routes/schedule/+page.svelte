@@ -12,7 +12,7 @@
 	import timeGridPlugin from '@fullcalendar/timegrid';
 	import interactionPlugin from '@fullcalendar/interaction';
 	import { au } from '$lib/au/au';
-	import { scheduleCategoryMap } from '$lib/constants/schedule/scheduleCategoryMap';
+	import { scheduleCategoryMap } from '$lib/shared/constants/scheduleCategoryMap';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 
 	let calendarEl;
@@ -28,20 +28,20 @@
 	let selectedEvent: any = null;
 	let isEditMode = false;
 	let calendar;
-	let isLogined = true;
+	let isLogined = false;
 
 	// (임시 데이터) 서버에서 받아올 일정 목록
 
 	onMount(async () => {
-		await au.initAuth();
-
 		if (!au?.isLogin()) {
-			console.log(au.isLogin());
 			toast.error('회원 유저에게 제공되는 서비스 입니다.');
 			isLogined = false;
+			return;
 		}
+
+		isLogined = true;
 		try {
-			const { data, error } = await au.api().GET('/api/schedule');
+			const { data, error } = await au!.api().GET('/api/schedule');
 
 			if (error) {
 				console.error('❌ 일정 데이터를 불러오지 못했습니다:', error);
@@ -52,8 +52,6 @@
 			const schedules = data?.data || []; // 백엔드가 ApiResponse 형식으로 응답한다고 가정
 
 			const headerButtons = isLogined ? 'addEventButton' : '';
-
-			console.log(headerButtons);
 			const events = schedules.map((s: any) => ({
 				id: s.id.toString(),
 				title: s.title,
@@ -86,7 +84,6 @@
 					}
 				},
 				eventClick: (info) => {
-					console.log(info.event);
 					selectedEvent = {
 						id: info.event.id,
 						title: info.event.title,
@@ -109,7 +106,6 @@
 				buttonText: {
 					today: '현재 날짜'
 				},
-				events: events
 			});
 
 			calendar.render();
@@ -120,11 +116,11 @@
 
 	async function createEvent() {
 		if (!newEvent.title.trim()) {
-			toasterError('📢 제목은 필수 입력 항목입니다.');
+			toast.error('📢 제목은 필수 입력 항목입니다.');
 			return;
 		}
 		if (!newEvent.startDatetime || !newEvent.endDatetime) {
-			toasterError('📢 시작 및 종료 일시는 필수 입력 항목입니다.');
+			toast.error('📢 시작 및 종료 일시는 필수 입력 항목입니다.');
 			return;
 		}
 
@@ -136,9 +132,9 @@
 			endDatetime: newEvent.endDatetime
 		};
 
-		const { data, error } = await au.api().POST('/api/schedule', { body });
+		const { error } = await au!.api().POST('/api/schedule', { body });
 		if (error) {
-			toasterError('🚨 등록에 실패했습니다.');
+			toast.error('🚨 등록에 실패했습니다.');
 			return;
 		}
 
@@ -156,11 +152,11 @@
 		if (!selectedEvent) return;
 
 		if (!selectedEvent.title.trim()) {
-			toasterError('📢 제목은 필수 입력 항목입니다.');
+			toast.error('📢 제목은 필수 입력 항목입니다.');
 			return;
 		}
 		if (!selectedEvent.start || !selectedEvent.end) {
-			toasterError('📢 시작 및 종료 일시는 필수 입력 항목입니다.');
+			toast.error('📢 시작 및 종료 일시는 필수 입력 항목입니다.');
 			return;
 		}
 
@@ -172,9 +168,9 @@
 			endDatetime: selectedEvent.end
 		};
 
-		const { error } = await au.api().PUT(`/api/schedule/${selectedEvent.id}`, { body });
+		const { error } = await au!.api().PUT(`/api/schedule/${selectedEvent.id}`, { body });
 		if (error) {
-			toasterError('⛔️ 일정 수정 과정에서 문제가 발생 했습니다.');
+			toast.error('⛔️ 일정 수정 과정에서 문제가 발생 했습니다.');
 			return;
 		}
 
@@ -189,7 +185,7 @@
 		}
 
 		showDetailModal = false;
-		toasterSuccess('✅ 일정 수정에 성공 하였습니다.');
+		toast.success('✅ 일정 수정에 성공 하였습니다.');
 	}
 
 	async function deleteEvent() {
@@ -198,9 +194,9 @@
 		const confirmDelete = confirm('정말 이 일정을 삭제하시겠습니까?');
 		if (!confirmDelete) return;
 
-		const { error } = await au.api().DELETE(`/api/schedule/${selectedEvent.id}`);
+		const { error } = await au!.api().DELETE(`/api/schedule/${selectedEvent.id}`);
 		if (error) {
-			toasterError('⛔️ 삭제 과정에서 문제가 발생 했습니다.');
+			toast.error('⛔️ 삭제 과정에서 문제가 발생 했습니다.');
 			return;
 		}
 
@@ -209,7 +205,7 @@
 		if (event) event.remove();
 
 		showDetailModal = false;
-		toasterSuccess('🙂 성공적으로 삭제 하였습니다.');
+		toast.success('🙂 성공적으로 삭제 하였습니다.');
 	}
 
 	function resetForm() {
@@ -233,13 +229,6 @@
 		return `${y}.${m}.${d} ${hh}:${mm}`;
 	}
 
-	function toasterSuccess(message: string) {
-		toast.success(message);
-	}
-
-	function toasterError(message: string) {
-		toast.error(message);
-	}
 </script>
 
 <svelte:head>
@@ -255,7 +244,7 @@
 		<div class="mt-4">
 			<button
 				class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-				on:click={() => (window.location.href = '/login')}
+				on:click={() => au?.goTo('/login')}
 			>
 				로그인 후 일정 관리 이용하기
 			</button>

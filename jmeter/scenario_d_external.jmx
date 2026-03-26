@@ -43,7 +43,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
 5개 증상 × 3 users × 5 loops = 총 15회 호출</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/symptoms.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/symptoms.sample.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -96,7 +96,7 @@ HTTP 200이지만 data:null 응답 = 실질적 실패 → Response Assertion으�
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/d_${__P(TS)}/scenario_d_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/d_${__time(YMDHMS)}/scenario_d_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="symptomcheck" enabled="true">
@@ -146,7 +146,7 @@ Connect Timeout: 5000ms / Response Timeout: 30000ms
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>

@@ -8,7 +8,7 @@ import com.hp.hospin.member.domain.entity.Member;
 public interface MemberDomainService {
     boolean existsById(String id);
     void createNewMember (JoinForm form);
-    void login (LoginForm form);
+    Member login (LoginForm form);
     Member getByIdentifier (String identifier);
     void validatePolicy(String identifier);
     String findIdentifierByEmail(String name, String email);

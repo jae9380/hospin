@@ -36,10 +36,10 @@ public class MemberDomainServiceImpl implements MemberDomainService {
     }
 
     @Override
-    public void login(LoginForm form) throws InvalidPasswordException {
+    public Member login(LoginForm form) throws InvalidPasswordException {
         Member target = requireByIdentifier(form.getIdentifier());
-
         verificationPassword(target.getPassword(), form.getPassword());
+        return target;
     }
 
     @Override

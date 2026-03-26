@@ -1,4 +1,4 @@
-import type { CategoryOption } from '$lib/types/geo';
+import type { CategoryOption } from '$lib/shared/types/geo';
 
 export const categoryOptions: CategoryOption[] = [
   { code: '01', label: '상급종합병원' },

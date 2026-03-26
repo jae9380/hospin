@@ -1,4 +1,4 @@
-import type { DistrictOption } from '$lib/types/geo';
+import type { DistrictOption } from '$lib/shared/types/geo';
 
 export const allDistrictOptions: DistrictOption[] = [
       // --- 서울(110000) ---

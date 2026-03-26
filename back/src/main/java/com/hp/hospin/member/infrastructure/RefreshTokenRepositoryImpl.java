@@ -28,6 +28,11 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     }
 
     @Override
+    public void upsertByUserId(Long userId, String refreshToken) {
+        refreshTokenJPARepository.upsertByUserId(userId, refreshToken);
+    }
+
+    @Override
     public void deleteByUserId(Long userId) {
         refreshTokenJPARepository.deleteByUserId(userId);
     }

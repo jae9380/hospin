@@ -11,6 +11,12 @@ spring:
   config:
     import: optional:application-secret.yml
 
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: HospinHikariCP
+
   jpa:
     properties:
       hibernate:

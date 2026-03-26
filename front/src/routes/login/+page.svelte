@@ -1,6 +1,8 @@
 <script lang="ts">
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { au } from '$lib/au/au';
+	import { validatePasswordRule } from '$lib/shared/validation';
+	import { isApiSuccess } from '$lib/shared/types/apiResponse';
 
 	// 상태 변수
 	let identifierError = false;
@@ -41,7 +43,7 @@
 		if (identifier.length < 4 || identifier.length > 20) {
 			identifierError = true;
 			errorMsg = '아이디는 4자 이상 20자 이하이어야 합니다.';
-			toasterError('✋ 아이디는 4자 이상 20자 이하로 입력해주세요.');
+			toast.error('✋ 아이디는 4자 이상 20자 이하로 입력해주세요.');
 			identifierInput.focus(); // 문제 있는 input으로 포커스 이동
 			return;
 		}
@@ -50,18 +52,16 @@
 		if (password.length < 8 || password.length > 20) {
 			passwordError = true;
 			errorMsg = '비밀번호는 8자 이상 20자 이하이어야 합니다.';
-			toasterError('✋ 비밀번호는 8자 이상 20자 이하로 입력해주세요.');
+			toast.error('✋ 비밀번호는 8자 이상 20자 이하로 입력해주세요.');
 			passwordInput.focus(); // 문제 있는 input으로 포커스 이동
 			return;
 		}
 
 		try {
-			const response = await au.api().POST('/api/member/login', { body: { identifier, password } });
-			console.log(response.data);
-			console.log(response.data.data);
+			const response = await au!.api().POST('/api/member/login', { body: { identifier, password } });
 
-			if (response.data.statusCode > 399) {
-				toasterError(response.data.message || '로그인에 실패했습니다.');
+			if (!isApiSuccess(response.data)) {
+				toast.error(response.data.message || '로그인에 실패했습니다.');
 
 				// 예시: 서버에서 MEMBER_NOT_FOUND 에러면 아이디로 포커스
 				if (response.data.errorCode === 'MEMBER_NOT_FOUND') {
@@ -75,24 +75,24 @@
 			} else {
 				au?.setLogined(response.data?.data);
 			}
-			toasterSuccess('👋 로그인에 성공했습니다.');
+			toast.success('👋 로그인에 성공했습니다.');
 
 			// goto('/');
 			au?.goTo('/');
 		} catch (err: any) {
 			errorMsg = err.message || '서버 오류가 발생했습니다.';
-			toasterError(errorMsg);
+			toast.error(errorMsg);
 		}
 	}
 
 	async function handleFindIdSubmit() {
 		if (!findIdName.trim() || !findIdEmail.trim()) {
-			toasterError('이름과 이메일을 모두 입력해주세요.');
+			toast.error('이름과 이메일을 모두 입력해주세요.');
 			return;
 		}
 
 		try {
-			const res = await au.api().GET('/api/member/findId', {
+			const res = await au!.api().GET('/api/member/findId', {
 				params: {
 					query: {
 						name: findIdName.trim(),
@@ -103,8 +103,8 @@
 
 			const apiResponse = res.data;
 
-			if (!apiResponse || apiResponse.statusCode > 399) {
-				toasterError(apiResponse?.message || '아이디 찾기에 실패했습니다.');
+			if (!apiResponse || !isApiSuccess(apiResponse)) {
+				toast.error(apiResponse?.message || '아이디 찾기에 실패했습니다.');
 				return;
 			}
 
@@ -112,18 +112,18 @@
 			activeModal = null;
 			showFindIdResultModal = true;
 		} catch (e: any) {
-			toasterError(e.message || '서버 오류가 발생했습니다.');
+			toast.error(e.message || '서버 오류가 발생했습니다.');
 		}
 	}
 
 	async function handleSendAuthCode() {
 		if (!findPwName.trim() || !findPwEmail.trim() || !findPwId.trim()) {
-			toasterError('이름, 아이디, 이메일을 모두 입력해주세요.');
+			toast.error('이름, 아이디, 이메일을 모두 입력해주세요.');
 			return;
 		}
 
 		try {
-			const res = await au.api().POST('/api/member/findPw', {
+			const res = await au!.api().POST('/api/member/findPw', {
 				params: {
 					query: {
 						name: findPwName.trim(),
@@ -135,26 +135,26 @@
 
 			const apiResponse = res.data;
 
-			if (!apiResponse || apiResponse.statusCode > 399) {
-				toasterError(apiResponse?.message || '인증번호 발송에 실패했습니다.');
+			if (!apiResponse || !isApiSuccess(apiResponse)) {
+				toast.error(apiResponse?.message || '인증번호 발송에 실패했습니다.');
 				return;
 			}
 
-			toasterSuccess('인증번호가 이메일로 발송되었습니다.');
+			toast.success('인증번호가 이메일로 발송되었습니다.');
 			showAuthCodeInput = true;
 		} catch (e: any) {
-			toasterError(e.message || '서버 오류가 발생했습니다.');
+			toast.error(e.message || '서버 오류가 발생했습니다.');
 		}
 	}
 
 	async function handleVerifyAuthCode() {
 		if (!authCode.trim()) {
-			toasterError('인증번호를 입력해주세요.');
+			toast.error('인증번호를 입력해주세요.');
 			return;
 		}
 
 		try {
-			const res = await au.api().PATCH('/api/member/join/verifyCode', {
+			const res = await au!.api().PATCH('/api/member/join/verifyCode', {
 				params: {
 					query: {
 						email: findPwEmail.trim(),
@@ -165,39 +165,39 @@
 
 			const apiResponse = res.data;
 
-			if (!apiResponse || apiResponse.statusCode > 399) {
-				toasterError(apiResponse?.message || '인증번호가 올바르지 않습니다.');
+			if (!apiResponse || !isApiSuccess(apiResponse)) {
+				toast.error(apiResponse?.message || '인증번호가 올바르지 않습니다.');
 				return;
 			}
 
-			toasterSuccess('이메일 인증이 완료되었습니다.');
+			toast.success('이메일 인증이 완료되었습니다.');
 
 			isEmailVerified = true;
 			activeModal = null;
 			showFindPwResultModal = true;
 		} catch (e: any) {
-			toasterError(e.message || '서버 오류가 발생했습니다.');
+			toast.error(e.message || '서버 오류가 발생했습니다.');
 		}
 	}
 
 	async function handleResetPassword() {
 		if (!newPassword || !confirmNewPassword) {
-			toasterError('새 비밀번호를 모두 입력해주세요.');
+			toast.error('새 비밀번호를 모두 입력해주세요.');
 			return;
 		}
 
 		if (!validatePasswordRule(newPassword)) {
-			toasterError('비밀번호는 8~20자이며 공백 없이 영문, 숫자, 특수문자만 사용 가능합니다.');
+			toast.error('비밀번호는 8~20자이며 공백 없이 영문, 숫자, 특수문자만 사용 가능합니다.');
 			return;
 		}
 
 		if (newPassword !== confirmNewPassword) {
-			toasterError('비밀번호가 일치하지 않습니다.');
+			toast.error('비밀번호가 일치하지 않습니다.');
 			return;
 		}
 
 		try {
-			const res = await au.api().PUT('/api/member/resetPassword', {
+			const res = await au!.api().PUT('/api/member/resetPassword', {
 				body: {
 					email: findPwEmail,
 					newPassword: newPassword,
@@ -207,12 +207,12 @@
 
 			const apiResponse = res.data;
 
-			if (!apiResponse || apiResponse.statusCode > 399) {
-				toasterError(apiResponse?.message || '비밀번호 변경에 실패했습니다.');
+			if (!apiResponse || !isApiSuccess(apiResponse)) {
+				toast.error(apiResponse?.message || '비밀번호 변경에 실패했습니다.');
 				return;
 			}
 
-			toasterSuccess('비밀번호가 성공적으로 변경되었습니다.');
+			toast.success('비밀번호가 성공적으로 변경되었습니다.');
 
 			showFindPwResultModal = false;
 
@@ -223,14 +223,8 @@
 			newPassword = '';
 			confirmNewPassword = '';
 		} catch (e: any) {
-			toasterError(e.message || '서버 오류가 발생했습니다.');
+			toast.error(e.message || '서버 오류가 발생했습니다.');
 		}
-	}
-
-	function validatePasswordRule(value: string) {
-		// 8~20자, 공백 불가, 허용문자: 영문/숫자/특수문자
-		const regex = /^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,20}$/;
-		return regex.test(value);
 	}
 
 	function handleFindId() {
@@ -249,13 +243,6 @@
 		activeModal = null;
 	}
 
-	function toasterSuccess(message: string) {
-		toast.success(message);
-	}
-
-	function toasterError(message: string) {
-		toast.error(message);
-	}
 </script>
 
 <Toaster />

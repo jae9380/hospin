@@ -36,7 +36,7 @@ self.addEventListener('notificationclick', function(event) {
       if (clientList.length > 0) {
         clientList[0].focus();
       } else {
-        clients.openWindow('http://localhost:5173');
+        clients.openWindow(self.location.origin);
       }
     })
   );

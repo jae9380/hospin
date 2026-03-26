@@ -6,6 +6,7 @@ import com.hp.hospin.global.jwt.CookieUtil;
 import com.hp.hospin.global.standard.annotations.Monitored;
 import com.hp.hospin.global.standard.base.Empty;
 import com.hp.hospin.member.application.dto.AuthTokenResult;
+import com.hp.hospin.member.application.dto.MemberDTO;
 import com.hp.hospin.member.persentation.dto.JoinRequest;
 import com.hp.hospin.member.persentation.dto.MemberResponse;
 import com.hp.hospin.member.persentation.dto.LoginRequest;
@@ -73,9 +74,9 @@ public class MemberController {
     )
     public ApiResponse<MemberResponse> login(@RequestBody @Valid LoginRequest loginRequest,
                                              HttpServletRequest request, HttpServletResponse response) {
-        memberService.login(mapper.loginRequestToDto(loginRequest));
+        MemberDTO memberDTO = memberService.login(mapper.loginRequestToDto(loginRequest));
 
-        AuthTokenResult tokenResult = authenticationService.authenticateAndIssueTokens(loginRequest.identifier());
+        AuthTokenResult tokenResult = authenticationService.authenticateAndIssueTokens(memberDTO);
         setTokenCookies(request, response, tokenResult.accessToken(), tokenResult.refreshToken());
 
         return ApiResponse.ok(mapper.dtoToResponse(tokenResult.member()));

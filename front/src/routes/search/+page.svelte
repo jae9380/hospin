@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { au } from '$lib/au/au';
-	import { normalizeHospitalListItem } from '$lib/types/hospital/list';
-	import { regionOptions } from '$lib/constants/regions';
-	import { categoryOptions } from '$lib/constants/categories';
-	import type { PageResult, HospitalListItemRaw, HospitalListItem } from '$lib/types/hospital/list';
-	import { allDistrictOptions, getDistrictsByRegion } from '$lib/constants/districts';
+	import { normalizeHospitalListItem } from '$lib/shared/types/hospital';
+	import { regionOptions } from '$lib/shared/constants/regions';
+	import { categoryOptions } from '$lib/shared/constants/categories';
+	import type { PageResult, HospitalListItemRaw, HospitalListItem } from '$lib/shared/types/hospital';
+	import { allDistrictOptions, getDistrictsByRegion } from '$lib/shared/constants/districts';
+	import type { DistrictOption } from '$lib/shared/types/geo';
 	import { browser } from '$app/environment';
 
 	let name = '';
@@ -22,7 +23,7 @@
 	let hasSearched = false;
 	let errorMsg = '';
 
-	let districtOptions: { code: string; parent: string; label: string }[] = [];
+	let districtOptions: DistrictOption[] = [];
 	$: districtOptions = selectedRegion ? getDistrictsByRegion(selectedRegion) : [];
 
 	onMount(() => {

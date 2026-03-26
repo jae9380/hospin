@@ -1,4 +1,4 @@
-// src/lib/naverMapLoader.ts
+// src/lib/shared/naverMapLoader.ts
 export function loadNaverMapScript() {
   return new Promise((resolve, reject) => {
     // 이미 naver 객체가 있으면 다시 안 불러옴

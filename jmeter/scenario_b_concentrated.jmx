@@ -15,7 +15,7 @@ CLI: jmeter -n -t scenario_b_concentrated.jmx -JTS=$(date +%Y%m%d-%H%M%S) -l /de
       <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
     </TestPlan>
     <hashTree>
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group">
         <stringProp name="TestPlan.comments">TS 타임스탬프 초기화. CLI 미전달 시 현재 시각으로 자동 설정</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
@@ -29,16 +29,17 @@ CLI: jmeter -n -t scenario_b_concentrated.jmx -JTS=$(date +%Y%m%d-%H%M%S) -l /de
       <hashTree>
         <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="script">if (!props.get("TS") || props.get("TS") == "1") {
-    props.put("TS", new Date().format("yyyyMMdd-HHmmss"))
+          <stringProp name="script">if (!props.get(&quot;TS&quot;) || props.get(&quot;TS&quot;) == &quot;1&quot;) {
+    props.put(&quot;TS&quot;, new Date().format(&quot;yyyyMMdd-HHmmss&quot;))
 }
-log.info("TS = " + props.get("TS"))</stringProp>
+log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">false</stringProp>
         </JSR223Sampler>
         <hashTree/>
       </hashTree>
-
-      <!-- ===== B-3 Hospital: 전체 목록 + 근처 병원 집중 부하 ===== -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-3] Hospital 집중 부하">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-3] Hospital 집중 부하" enabled="true">
         <stringProp name="TestPlan.comments">파라미터 없는 전체 검색 + 근처 병원 집중 부하
 GET /api/hospital/search (파라미터 없음): 전체 병원 반환 → 대용량 응답, Heap 증가 관찰
 GET /api/hospital/nearby: Haversine CPU 부하 관찰
@@ -109,7 +110,7 @@ GET /api/hospital/nearby: Haversine CPU 부하 관찰
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b3_hospital_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b_concentrated_3_1_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="hospital_search_all" enabled="true">
@@ -165,8 +166,6 @@ GET /api/hospital/nearby: Haversine CPU 부하 관찰
           <hashTree/>
         </hashTree>
       </hashTree>
-
-      <!-- ===== B-3 Search: 다중 조건 검색 집중 부하 ===== -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="[B-3] Search 집중 부하" enabled="true">
         <stringProp name="TestPlan.comments">다중 조건 병원 검색 집중 부하
 4가지 검색 파라미터 순차 실행 (이름/카테고리/지역/페이지)
@@ -238,7 +237,7 @@ DB 슬로우 쿼리 및 Infrastructure 레이어 응답 시간 측정
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/b_${__P(TS)}/b3_search_${__P(TS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/b_${__time(YMDHMS)}/scenario_b_concentrated_3_2_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="search_by_name_seoul" enabled="true">

@@ -1,4 +1,5 @@
-import type { Hospital } from '$lib/types/hospital/hospital';
+import type { Hospital } from '$lib/shared/types/hospital';
+
 export type RecommendedSpecialty = {
 	name: string;
 	reasons: string[];

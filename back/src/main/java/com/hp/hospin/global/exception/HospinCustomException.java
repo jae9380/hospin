@@ -12,4 +12,17 @@ public class HospinCustomException extends HospinException {
             super(HOSPITAL_NOT_EXIST);
         }
     }
+
+    public static class AiResponseParseFailed extends HospinException {
+        public AiResponseParseFailed() {
+            super(AI_RESPONSE_PARSE_FAILED);
+        }
+    }
+
+    public static class AiUnrecognizedDept extends HospinException {
+        public AiUnrecognizedDept() {
+            super(AI_UNRECOGNIZED_DEPT);
+        }
+    }
+
 }

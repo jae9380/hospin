@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
+	import type { ApiResponse } from '$lib/shared/types/apiResponse';
 	import toast, { Toaster } from 'svelte-5-french-toast';
-	import { genderMap } from '$lib/constants/gender';
-	import { goto } from '$app/navigation';
+	import { genderMap } from '$lib/shared/constants/gender';
 	import { au } from '$lib/au/au';
-	import Page from '../+page.svelte';
+	import { validatePasswordRule } from '$lib/shared/validation';
 
 	let identifier = '';
 	let password = '';
@@ -52,7 +51,7 @@
 		if (isIdAvailable) return; // 이미 사용 가능이면 재클릭 방지
 
 		try {
-			const res = await au.api().GET('/api/member/check-duplicate', {
+			const res = await au!.api().GET('/api/member/check-duplicate', {
 				params: { query: { identifier } }
 			});
 
@@ -111,7 +110,7 @@
 
 		try {
 			const { data, error } =
-				(await au.api().POST('/api/member/join', {
+				(await au!.api().POST('/api/member/join', {
 					body: payload
 				})) ?? {};
 
@@ -121,17 +120,11 @@
 			}
 
 			toast.success('회원가입 성공 🎉');
-			goto('/login');
+			au?.goTo('/login');
 		} catch (err: any) {
 			console.error('회원가입 에러:', err);
 			toast.error('서버 오류 발생 ❌');
 		}
-	}
-
-	function validatePasswordRule(value: string) {
-		// 8자 이상, 공백 제외, 허용문자: 영문/숫자/특수문자
-		const regex = /^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}$/;
-		return regex.test(value);
 	}
 
 	// 이메일 정규식 검증 함수
@@ -153,7 +146,7 @@
 		}
 
 		try {
-			const res = await au.api().POST('/api/member/join/sendAuthEmail', {
+			const res = await au!.api().POST('/api/member/join/sendAuthEmail', {
 				params: { query: { email } }
 			});
 
@@ -179,7 +172,7 @@
 		try {
 			isVerifying = true;
 
-			const res = await au.api().PATCH('/api/member/join/verifyCode', {
+			const res = await au!.api().PATCH('/api/member/join/verifyCode', {
 				params: {
 					query: {
 						email,

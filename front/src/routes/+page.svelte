@@ -4,9 +4,10 @@
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 
-	import type { HospitalListResponse } from '$lib/types/hospital/list';
-	import type { ScheduleList } from '$lib/types/schedule/scheduleList';
-	import type { ApiResponse } from '$lib/types/apiResponse/apiResponse';
+	import { getCurrentPosition } from '$lib/shared/geolocation';
+	import type { HospitalListResponse } from '$lib/shared/types/hospital';
+	import type { ScheduleList } from '$lib/shared/types/schedule';
+	import type { ApiResponse } from '$lib/shared/types/apiResponse';
 
 	let nearSchedules: ScheduleList[] = [];
 	let hospitals: HospitalListResponse[] = [];
@@ -17,29 +18,18 @@
 	let hospitalName = '';
 
 	onMount(async () => {
-		if (!navigator.geolocation) {
-			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+		const geo = await getCurrentPosition();
+		if (!geo.position) {
+			error = geo.errorMessage;
 			return;
 		}
-
-		await new Promise<void>((resolve) => {
-			navigator.geolocation.getCurrentPosition(
-				(pos) => {
-					lat = pos.coords.latitude;
-					lng = pos.coords.longitude;
-					resolve();
-				},
-				(err) => {
-					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
-					resolve();
-				}
-			);
-		});
+		lat = geo.position.lat;
+		lng = geo.position.lng;
 
 		if (!lat || !lng) return;
 
 		try {
-			const res = await au.api().GET('/api/hospital/6nearby', {
+			const res = await au!.api().GET('/api/hospital/6nearby', {
 				params: {
 					query: {
 						latitude: String(lat),
@@ -60,9 +50,9 @@
 			toast.error('데이터 로드 실패 ❌');
 		}
 
-		if (au?.isLogin) {
+		if (au?.isLogin()) {
 			try {
-				const res = await au.api().GET('/api/schedule/getClosestSchedule');
+				const res = await au!.api().GET('/api/schedule/getClosestSchedule');
 
 				const apiResponse = res.data as ApiResponse<any[]>;
 
@@ -86,9 +76,7 @@
 		}
 	});
 
-	const handleClick = (url: string) => {
-		au?.goTo(url);
-	};
+
 </script>
 
 <svelte:head>
@@ -126,28 +114,28 @@
 	<div class="grid w-full max-w-3xl grid-cols-2 gap-4">
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/search')}
+			on:click={() => au?.goTo('/search')}
 		>
 			병원 상세 검색
 		</div>
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/map')}
+			on:click={() => au?.goTo('/map')}
 		>
 			근처 병원 찾기
 		</div>
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/schedule')}
+			on:click={() => au?.goTo('/schedule')}
 		>
 			일정 관리
 		</div>
 
 		<div
 			class="cursor-pointer rounded-xl bg-white p-6 shadow-lg transition hover:shadow-xl"
-			on:click={() => handleClick('/symptomCheck')}
+			on:click={() => au?.goTo('/symptomCheck')}
 		>
 			증상 기반 진료과 안내
 		</div>
@@ -164,7 +152,7 @@
 				{#each hospitals as hospital}
 					<div
 						class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
-						on:click={() => handleClick(`/hospital/${hospital.hospital_code}`)}
+						on:click={() => au?.goTo(`/hospital/${hospital.hospital_code}`)}
 					>
 						<p class="font-medium text-gray-800">{hospital.name}</p>
 						<p class="text-xs text-gray-500">{hospital.address}</p>
@@ -183,7 +171,7 @@
 					{#each nearSchedules as schedule}
 						<div
 							class="flex cursor-pointer flex-col justify-center rounded border bg-white px-3 py-2 text-sm transition hover:bg-gray-100"
-							on:click={() => handleClick('/schedule')}
+							on:click={() => au?.goTo('/schedule')}
 						>
 							<p class="font-medium text-gray-800">{schedule.title}</p>
 							<p class="text-xs text-gray-500">{schedule.startTime}</p>

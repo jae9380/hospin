@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { loadNaverMapScript } from '$lib/naverMapLoader';
+	import { loadNaverMapScript } from '$lib/shared/naverMapLoader';
 
 	export let lat: number; // (필수)
 	export let lng: number; // (필수)

@@ -5,3 +5,7 @@ export interface ApiResponse<T> {
 	errorCode?: string;
 	data: T;
 }
+
+export function isApiSuccess<T>(response: ApiResponse<T> | null | undefined): boolean {
+	return response?.resultType === 'SUCCESS';
+}

@@ -3,7 +3,7 @@
 	import { au } from '$lib/au/au';
 	import { onMount, onDestroy } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
-	// import { authStore } from '$lib/stores/authStore';
+	// import { authStore } from '$lib/shared/stores/authStore';
 	import { requestPermissionAndGetToken } from '$lib/fcm/messaging';
 	// import { listenForegroundMessages } from '$lib/firebase-messaging';
 
@@ -20,17 +20,16 @@
 
 			// 2️⃣ 로그인으로 전환되는 순간 FCM 등록
 			if (v) {
-				console.log('Yes');
-				console.log(isLoggedIn);
 				const token = await requestPermissionAndGetToken();
 				if (token) {
-					console.log('FCM 토큰:', token);
 					// 👉 서버로 전송
-					au.api().POST('/api/FCM/register', {
-						body: { token: token }
-					});
-				} else {
-					console.log("don't have token");
+					try {
+						await au!.api().POST('/api/FCM/register', {
+							body: { token: token }
+						});
+					} catch (e) {
+						console.error('FCM 등록 실패:', e);
+					}
 				}
 			}
 		});

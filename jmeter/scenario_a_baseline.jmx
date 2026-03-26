@@ -22,7 +22,7 @@ CLI: jmeter -n -t scenario_a_baseline.jmx -JTS=$(date +%Y%m%d-%H%M%S) -l /dev/nu
         </elementProp>
       </SetupThreadGroup>
       <hashTree>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="TS 초기화 (타임스탬프)" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="script">if (!props.get(&quot;TS&quot;) || props.get(&quot;TS&quot;) == &quot;1&quot;) {
     props.put(&quot;TS&quot;, new Date().format(&quot;yyyyMMdd-HHmmss&quot;))
@@ -34,7 +34,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
         </JSR223Sampler>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Base Line">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Base Line" enabled="true">
         <stringProp name="TestPlan.comments">10명의 사용자
 10초 동안 점진적으로 시작
 각 사용자 30번 시나리오 반복</stringProp>
@@ -48,7 +48,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -64,7 +64,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="filename">/Users/jae/Desktop/jmeter/test_accounts.csv</stringProp>
+          <stringProp name="filename">C:/Users/ljy53/IdeaProjects/hospin/jmeter/data/test_accounts.samole.csv</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -73,7 +73,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
           <stringProp name="variableNames">identifier,password</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager">
+        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
           <collectionProp name="CookieManager.cookies"/>
           <boolProp name="CookieManager.clearEachIteration">true</boolProp>
           <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
@@ -123,7 +123,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/Users/jae/results/a_${__time(YMDHMS)}/scenario_a_${__time(YMDHMS)}.jtl</stringProp>
+          <stringProp name="filename">D:/Jmeter/hospin/results/a_${__time(YMDHMS)}/scenario_a_${__time(YMDHMS)}.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
@@ -202,7 +202,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="hospital_${hospitalCode}">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="hospital_${hospitalCode}" enabled="true">
           <stringProp name="HTTPSampler.path">/api/hospital/${hospitalCode}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -266,7 +266,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
           </ConstantTimer>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="schedule(POST)">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="schedule(POST)" enabled="true">
           <stringProp name="HTTPSampler.path">/api/schedule</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -301,7 +301,7 @@ log.info(&quot;TS = &quot; + props.get(&quot;TS&quot;))</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="schedule_${scheduleId}">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="schedule_${scheduleId}" enabled="true">
           <stringProp name="HTTPSampler.path">/api/schedule/${scheduleId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>

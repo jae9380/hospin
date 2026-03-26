@@ -1,5 +1,7 @@
 package com.hp.hospin.hospital.domain.type;
 
+import com.hp.hospin.global.exception.HospinCustomException;
+
 import java.util.Arrays;
 
 public enum DeptCode {
@@ -111,9 +113,7 @@ public enum DeptCode {
                                 equalsOrContains(normalized, dept.name())
                 )
                 .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException("No matching DeptCode for input: " + input)
-                );
+                .orElseThrow(HospinCustomException.AiUnrecognizedDept::new);
     }
 
     private static boolean equalsOrContains(String input, String target) {

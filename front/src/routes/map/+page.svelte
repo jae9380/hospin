@@ -2,21 +2,15 @@
 	import { onMount } from 'svelte';
 	import { au } from '$lib/au/au';
 	import toast, { Toaster } from 'svelte-5-french-toast';
-	import MapMyLocation from '$lib/MapMyLocation.svelte';
+	import MapMyLocation from '$lib/components/MapMyLocation.svelte';
+	import { getCurrentPosition } from '$lib/shared/geolocation';
+	import type { HospitalListResponse } from '$lib/shared/types/hospital';
 
 	let viewMode: 'map' | 'list' = 'map';
 
 	let lat: number | null = null;
 	let lng: number | null = null;
 	let error: string | null = null;
-
-	type HospitalListResponse = {
-		hospital_code: string;
-		name: string;
-		address: string;
-		latitude: number;
-		longitude: number;
-	};
 
 	let hospitals: HospitalListResponse[] = [];
 
@@ -28,27 +22,16 @@
 	let sortType: 'name' = 'name';
 
 	onMount(async () => {
-		if (!navigator.geolocation) {
-			error = '이 브라우저는 위치 정보를 지원하지 않습니다.';
+		const geo = await getCurrentPosition();
+		if (!geo.position) {
+			error = geo.errorMessage;
 			return;
 		}
-
-		await new Promise<void>((resolve) => {
-			navigator.geolocation.getCurrentPosition(
-				(pos) => {
-					lat = pos.coords.latitude;
-					lng = pos.coords.longitude;
-					resolve();
-				},
-				(err) => {
-					error = '위치 정보를 가져오는데 실패했습니다: ' + err.message;
-					resolve();
-				}
-			);
-		});
+		lat = geo.position.lat;
+		lng = geo.position.lng;
 
 		try {
-			const { data } = await au.api().GET('/api/hospital/nearby', {
+			const { data } = await au!.api().GET('/api/hospital/nearby', {
 				params: {
 					query: {
 						latitude: String(lat),
@@ -96,9 +79,7 @@
 		page = nextPage;
 	}
 
-	const handleClick = (url: string) => {
-		au?.goTo(url);
-	};
+
 </script>
 
 <svelte:head>
@@ -145,7 +126,7 @@
 				{#each pagedHospitals as h}
 					<div
 						class="flex h-[96px] flex-col justify-between rounded-lg border bg-white p-4 shadow-sm"
-						on:click={() => handleClick(`/hospital/${h.hospital_code}`)}
+						on:click={() => au?.goTo(`/hospital/${h.hospital_code}`)}
 					>
 						<div class="line-clamp-1 text-lg font-bold">
 							{h.name}
