@@ -50,6 +50,13 @@ jobs:
         env:
           FIREBASE_ADMIN_SDK_JSON: ${{ secrets.FIREBASE_ADMIN_SDK_JSON }}
 
+      - name: 생성된 파일 확인
+        run: |
+          echo "=== application-secret.yml ==="
+          cat back/src/main/resources/application-secret.yml
+          echo "=== firebase json ==="
+          ls -la back/src/main/resources/
+
       - name: 도커 이미지 Build & GitHub Container Registry로 Push
         uses: docker/build-push-action@v3
         with:
