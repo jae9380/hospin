@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: hospin-prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    # 포트 외부 미노출 - Grafana가 내부망으로 직접 접근
+    networks:
+      - hospin-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: hospin-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      # 데이터소스 자동 등록 (Prometheus 연결)
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      # 대시보드 자동 등록 설정
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      # 대시보드 JSON 파일
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      # 대시보드 데이터 영구 저장
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - hospin-network
+
+volumes:
+  grafana_data:
+
+networks:
+  hospin-network:
+    external: true

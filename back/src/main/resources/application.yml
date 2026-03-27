@@ -6,7 +6,7 @@ spring:
     name: HosPin
 
   profiles:
-    active: dev
+    active: prod
 
   config:
     import: optional:application-secret.yml
