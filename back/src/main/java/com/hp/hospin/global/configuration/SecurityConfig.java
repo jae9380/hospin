@@ -55,6 +55,7 @@ public class SecurityConfig {
                                     "/api/hospital/*", "/api/hospital/nearby","/api/hospital/search",
                                     "/api/member/check-duplicate"
                                 ).permitAll()
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .anyRequest()
                             .authenticated();
 
