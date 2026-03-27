@@ -18,12 +18,13 @@ spring:
 
   data:
     redis:
-      host: 127.0.0.1
+      host: hospin-redis
       port: 6379
+      password: ${redis.password}
 
   ai:
     openai:
       api-key: ${openai.api-key}
 
 cors:
-  allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
+  allowed-origin: https://www.hospin.site
