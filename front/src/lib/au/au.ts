@@ -1,0 +1,247 @@
+import { writable, get } from 'svelte/store';
+import { goto } from '$app/navigation';
+import { browser } from '$app/environment';
+import createClient, { type Middleware } from 'openapi-fetch';
+import type { paths, components } from '$lib/types/api/v1/schema';
+
+type GenderStr = 'MALE' | 'FEMALE' | 'UNDEFINED';
+const toGenderString = (c: number): GenderStr =>
+	c === 0 ? 'MALE' : c === 1 ? 'FEMALE' : 'UNDEFINED';
+const toGenderCode = (s: GenderStr): number => (s === 'MALE' ? 0 : s === 'FEMALE' ? 1 : 2);
+
+export class Au {
+	private _client = createClient<paths>({
+		baseUrl: import.meta.env.VITE_CORE_API_BASE_URL,
+		credentials: 'include',
+		headers: { 'Content-Type': 'application/json' }
+	});
+	private _isRefreshing = false;
+	private _refreshPromise: Promise<boolean> | null = null;
+
+	constructor() {
+		this._client.use(this._buildAuthMiddleware());
+	}
+
+	// 비로그인 사용자도 접근 가능한 공개 페이지 목록
+	private readonly _publicPaths = ['/', '/hospital', '/search', '/map', '/login', '/signup'];
+
+	// 회원 전용 페이지: /schedule (비로그인 접근 시 /login으로 리다이렉트)
+
+	private _isPublicPage(): boolean {
+		if (!browser) return false;
+		const pathname = window.location.pathname;
+		return this._publicPaths.some(
+			(p) => pathname === p || pathname.startsWith(p + '/')
+		);
+	}
+
+	private _buildAuthMiddleware(): Middleware {
+		return {
+			onResponse: async ({ response, request }) => {
+				if (response.status !== 401) return response;
+
+				// refresh 엔드포인트 자체가 401이면 무한루프 방지
+				if (request.url.includes('/api/member/auth/refresh')) {
+					this.setLogout();
+					if (browser && !this._isPublicPage()) goto('/login', { replaceState: true });
+					return response;
+				}
+
+				if (!this._isRefreshing) {
+					this._isRefreshing = true;
+					this._refreshPromise = this._tryRefresh().finally(() => {
+						this._isRefreshing = false;
+						this._refreshPromise = null;
+					});
+				}
+
+				const refreshed = await this._refreshPromise!;
+				if (!refreshed) {
+					this.setLogout();
+					// 공개 페이지에서는 401이 발생해도 로그인 페이지로 강제 이동하지 않음
+					if (browser && !this._isPublicPage()) goto('/login', { replaceState: true });
+					return response;
+				}
+
+				// 갱신 성공 → 원본 요청 재시도
+				return await fetch(request.clone());
+			}
+		};
+	}
+
+	private async _tryRefresh(): Promise<boolean> {
+		try {
+			const res = await fetch(`${import.meta.env.VITE_CORE_API_BASE_URL}/api/member/auth/refresh`, {
+				method: 'POST',
+				credentials: 'include',
+				headers: { 'Content-Type': 'application/json' }
+			});
+			return res.ok;
+		} catch {
+			return false;
+		}
+	}
+
+	private _id = writable(0);
+	private _identifier = writable('');
+	private _name = writable('');
+	private _phone = writable('');
+	private _email = writable('');
+	private _birth = writable('');
+	private _genderCode = writable(2);
+	private _logined = writable(false);
+
+	public readonly logined = this._logined;
+
+	public member = (() => {
+		const id = this._id,
+			identifier = this._identifier,
+			name = this._name;
+		const phone = this._phone,
+			email = this._email,
+			birth = this._birth,
+			genderCode = this._genderCode;
+		const logined = this._logined;
+
+		return {
+			get id() {
+				return get(id);
+			},
+			set id(v: number) {
+				id.set(v);
+			},
+			get identifier() {
+				return get(identifier);
+			},
+			set identifier(v: string) {
+				identifier.set(v);
+			},
+			get name() {
+				return get(name);
+			},
+			set name(v: string) {
+				name.set(v);
+			},
+			get phoneNumber() {
+				return get(phone);
+			},
+			set phoneNumber(v: string) {
+				phone.set(v);
+			},
+			get email() {
+				return get(email);
+			},
+			set email(v: string) {
+				email.set(v);
+			},
+			get birth() {
+				return get(birth);
+			},
+			set birth(v: string) {
+				birth.set(v);
+			},
+			get gender() {
+				return toGenderString(get(genderCode));
+			},
+			set gender(v: GenderStr) {
+				genderCode.set(toGenderCode(v));
+			},
+			get logined() {
+				return get(logined);
+			}
+		};
+	})();
+
+	public api() {
+		return this._client;
+	}
+
+	public async initAuth() {
+		if (!browser) return;
+		try {
+			const { data } = await this.api().GET('/api/member');
+			if (data?.data) {
+				this.setLogined(data.data);
+			} else {
+				this._logined.set(false);
+			}
+		} catch (e) {
+			this._logined.set(false);
+		}
+	}
+
+	public setLogined(dto: components['schemas']['MemberDto']) {
+		this.member.id = dto.id as number;
+		this.member.identifier = dto.identifier as string;
+		this.member.name = dto.name as string;
+		this.member.phoneNumber = dto.phoneNumber as string;
+		this.member.email = dto.email as string;
+
+		const g = (dto as any).genderCode ?? (dto as any).gender;
+		this.member.gender = toGenderString(typeof g === 'number' ? g : toGenderCode(g));
+		this.member.birth = (dto as any).birth ?? '';
+
+		this._logined.set(true);
+	}
+
+	public setLogout() {
+		this.member.id = 0;
+		this.member.identifier = '';
+		this.member.name = '';
+		this.member.phoneNumber = '';
+		this.member.email = '';
+		this.member.gender = 'UNDEFINED';
+		this.member.birth = '';
+		this._logined.set(false);
+	}
+
+	public isLogin() {
+		return get(this._logined);
+	}
+
+	public isLogout() {
+		return !this.isLogin();
+	}
+
+	public goTo(url: string) {
+		if (browser) goto(url, { replaceState: false });
+	}
+	public replace(url: string) {
+		if (browser) goto(url, { replaceState: true });
+	}
+
+	public msgInfo(msg: string) {
+		if (browser) window.alert(msg);
+	}
+	public msgError(msg: string) {
+		if (browser) window.alert(msg);
+	}
+
+	public async logoutAndRedirect(redirectUrl: string = '/') {
+		try {
+			try {
+				await this.api().POST('/api/FCM/deregister', {});
+			} catch (e) {
+				console.log('FCM deregister failed (ignored)', e);
+			}
+			await this.api().POST('/api/member/logout', {});
+		} catch (error) {
+			console.error('Server logout failed:', error);
+		} finally {
+			localStorage.clear();
+			sessionStorage.clear();
+			this.setLogout();
+			if (browser) window.location.href = redirectUrl;
+		}
+	}
+
+
+	public async initAuthAndRedirectOk(url: string) {
+		await this.initAuth();
+		if (this.isLogin()) this.replace(url);
+	}
+}
+
+// SSR 누수 방지
+
+export const au = browser ? new Au() : null;

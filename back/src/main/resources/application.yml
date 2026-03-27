@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: HosPin
+
+  profiles:
+    active: prod
+
+  config:
+    import: optional:application-secret.yml
+
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: HospinHikariCP
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail.username}
+    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info, metrics
+  metrics:
+    enable:
+      jvm: true
+      all: true
+    distribution:
+      percentiles:
+        http.server.requests: 0.95, 0.5
+
+firebaseAdminSdkPath: hospin-57573-firebase-adminsdk-fbsvc-0838118bdb.json

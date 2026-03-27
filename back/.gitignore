@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+.env
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -35,3 +36,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Custom ###
+# Security
+src/main/resources/application-secret.yml
+# DataBase File
+**/data/
+# Firebase Key
+src/main/resources/hospin-57573-firebase-adminsdk*.json

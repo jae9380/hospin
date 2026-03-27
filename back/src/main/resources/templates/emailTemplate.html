@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이메일 인증</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f3f4f6;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#f3f4f6; padding:40px 0;">
+    <tr>
+        <td align="center">
+
+            <table width="600" border="0" cellspacing="0" cellpadding="0"
+                   style="background-color:#ffffff; padding:24px; border-radius:8px;">
+
+                <tr>
+                    <td style="font-size:24px; font-weight:bold; color:#111827; padding-bottom:16px; border-bottom:2px solid #ccc;">
+                        HosPin
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top:16px; font-size:16px; color:#374151; line-height:1.5;">
+                        아래의 인증코드를 복사하여 이메일 인증을 완료해주세요.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top:20px;">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="padding:12px; font-size:18px; font-weight:bold; color:#4b5563; background-color:#f3f4f6; border-radius:4px;">
+                                    인증코드:
+                                    <span th:text="${authCode}">123456</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top:20px; font-size:14px; color:#4b5563;">
+                        개인정보 보호를 위해 이메일 인증코드는 <strong>5분</strong>간 유효합니다.
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://hospin-mariadb:3306/hospin
+    username: user
+    password: ${database.password}
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: validate
+
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
+  data:
+    redis:
+      host: hospin-redis
+      port: 6379
+      password: ${redis.password}
+
+  ai:
+    openai:
+      api-key: ${openai.api-key}
+
+cors:
+  allowed-origin: https://www.hospin.site

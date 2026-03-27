@@ -1,0 +1,49 @@
+package com.hp.hospin.global.exception;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
+
+import javax.naming.NoPermissionException;
+
+@Getter
+@RequiredArgsConstructor
+public enum ErrorCode {
+    // Hospital
+    HOSPITAL_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 병원은 존재하지 않습니다."),
+
+    // File
+    NOT_FOUND_FILE(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
+    FILE_READING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 읽는 중 오류가 발생했습니다."),
+    INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 형식이 올바르지 않습니다."),
+
+    // member
+    DUPLICATE_IDENTFIER(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디 입니다."),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일 입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 회원정보가 없습니다."),
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
+    INVALID_IDENTIFIER_POLICY(HttpStatus.BAD_REQUEST, "아이디 정책에 맞지 않는 형식입니다."),
+    INVALID_MEMBER_INFO(HttpStatus.NOT_FOUND, "회원정보가 일치하지 않습니다."),
+    INVALID_AUTH_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증코드 입니다."),
+    AUTH_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "인증코드가 존재하지 않습니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Refresh Token입니다."),
+
+    // Schedule
+    SCHEDULE_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 스케줄은 존재하지 않습니다."),
+
+    // etc
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    NO_PERMISSION(HttpStatus.FORBIDDEN, "권한에 문제가 발생했습니다."),
+
+    // Notification
+    FCM_NOT_EXIST(HttpStatus.NOT_FOUND, "해당 FCM이 존재하지 않습니다."),
+
+    // SymptomCheck
+    AI_RESPONSE_PARSE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AI 응답 파싱에 실패했습니다."),
+    AI_UNRECOGNIZED_DEPT(HttpStatus.BAD_REQUEST, "AI가 반환한 진료과를 인식할 수 없습니다.");
+
+    private final HttpStatus status;
+    private final String message;
+}
