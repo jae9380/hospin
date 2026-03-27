@@ -79,8 +79,15 @@ class ServiceManager:
         if pid:
             os.system(f"kill -9 {pid} 2>/dev/null")
 
-        os.system(
-            f"nohup socat -t0 TCP-LISTEN:{self.socat_port},fork,reuseaddr TCP:localhost:{self.next_port} &>/dev/null &"
+        subprocess.Popen(
+            [
+                "socat",
+                f"TCP-LISTEN:{self.socat_port},fork,reuseaddr",
+                f"TCP:localhost:{self.next_port}"
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            preexec_fn=os.setpgrp  # ⭐ 핵심
         )
 
     def _is_service_ready(self, port: int) -> bool:
