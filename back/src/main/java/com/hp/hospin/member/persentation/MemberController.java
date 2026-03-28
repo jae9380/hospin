@@ -94,8 +94,9 @@ public class MemberController {
             authenticationService.deleteRefreshToken(memberDetails.getId());
         }
 
+        boolean secure = CookieUtil.isSecure(request);
         Stream.of(REFRESH_TOKEN_COOKIE, ACCESS_TOKEN_COOKIE, "JSESSIONID")
-                .forEach(cookieName -> CookieUtil.deleteCookie(request, response, cookieName));
+                .forEach(cookieName -> CookieUtil.deleteCookie(request, response, cookieName, secure));
 
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -110,8 +111,9 @@ public class MemberController {
         String refreshToken = extractTokenFromCookies(request, REFRESH_TOKEN_COOKIE);
         String newAccessToken = authenticationService.reissueAccessToken(refreshToken);
 
-        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_COOKIE);
-        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE, newAccessToken, ACCESS_TOKEN_MAX_AGE);
+        boolean secure = CookieUtil.isSecure(request);
+        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_COOKIE, secure);
+        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE, newAccessToken, ACCESS_TOKEN_MAX_AGE, secure);
 
         return ApiResponse.noContent();
     }
@@ -186,10 +188,11 @@ public class MemberController {
 
     private void setTokenCookies(HttpServletRequest request, HttpServletResponse response,
                                  String accessToken, String refreshToken) {
-        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_COOKIE);
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE);
-        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE);
-        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE);
+        boolean secure = CookieUtil.isSecure(request);
+        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_COOKIE, secure);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE, secure);
+        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE, secure);
+        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE, secure);
     }
 
     private String extractTokenFromCookies(HttpServletRequest request, String cookieName) {
