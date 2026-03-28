@@ -1,4 +1,13 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+/* 다크모드를 class 기반으로 변경 → prefers-color-scheme 미디어쿼리 무시 */
+@variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: light;
+}
